@@ -1,3 +1,7 @@
+Version 0.1-5
+
+* Removed duplicated setGeneric("dbSetDataMappings") 
+
 Version 0.1-4
 
 * Removed the "valueClass" from some generic functions, namely,

@@ -29,7 +29,7 @@
 }
 \details{
   Not all database engines implement transaction management,
-  SQLite and MySQL, for instance.
+  older versions of MySQL, for instance.
 }
 \references{
   See the Database Interface definition document

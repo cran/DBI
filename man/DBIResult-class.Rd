@@ -19,24 +19,24 @@
   \describe{
 Fetching methods:
 
-    \item{\link{fetch}}{\code{signature(res = "OraResult", n = "numeric")}: ... }
-    \item{\link{fetch}}{\code{signature(res = "OraResult", n = "missing")}: ... }
+    \item{\link{fetch}}{\code{signature(res = "DBIResult", n = "numeric")}: ... }
+    \item{\link{fetch}}{\code{signature(res = "DBIResult", n = "missing")}: ... }
 Close result set:
 
-    \item{\link{dbClearResult}}{\code{signature(res = "OraResult")}: ... }
+    \item{\link{dbClearResult}}{\code{signature(res = "DBIResult")}: ... }
 
 Meta-data:
 
-    \item{\link{dbColumnInfo}}{\code{signature(res = "OraResult")}: ... }
-    \item{\link{dbGetException}}{\code{signature(conn = "OraResult")}: ... }
-    \item{\link{dbGetInfo}}{\code{signature(dbObj = "OraResult")}: ... }
-    \item{\link{dbGetRowCount}}{\code{signature(res = "OraResult")}: ... }
-    \item{\link{dbGetRowsAffected}}{\code{signature(res = "OraResult")}: ... }
-    \item{\link{dbGetStatement}}{\code{signature(res = "OraResult")}: ... }
-    \item{\link{dbHasCompleted}}{\code{signature(res = "OraResult")}: ... }
-    \item{\link{dbListFields}}{\code{signature(conn = "OraResult", name = "missing")}: ... }
-    \item{summary}{\code{signature(object = "OraResult")}: ... }
-    \item{\link{coerce}}{\code{signature(from = "OraConnection", to = "OraResult")}: ... }
+    \item{\link{dbColumnInfo}}{\code{signature(res = "DBIResult")}: ... }
+    \item{\link{dbGetException}}{\code{signature(conn = "DBIResult")}: ... }
+    \item{\link{dbGetInfo}}{\code{signature(dbObj = "DBIResult")}: ... }
+    \item{\link{dbGetRowCount}}{\code{signature(res = "DBIResult")}: ... }
+    \item{\link{dbGetRowsAffected}}{\code{signature(res = "DBIResult")}: ... }
+    \item{\link{dbGetStatement}}{\code{signature(res = "DBIResult")}: ... }
+    \item{\link{dbHasCompleted}}{\code{signature(res = "DBIResult")}: ... }
+    \item{\link{dbListFields}}{\code{signature(conn = "DBIResult", name = "missing")}: ... }
+    \item{summary}{\code{signature(object = "DBIResult")}: ... }
+    \item{\link{coerce}}{\code{signature(from = "DBIConnection", to = "DBIResult")}: ... }
   }
 }
 

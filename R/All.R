@@ -5,7 +5,7 @@
 .conflicts.OK <- TRUE
 require(methods, quietly = TRUE, warn.conflicts = FALSE)
 
-## $Id: DBI.R,v 1.6 2002/08/24 04:53:32 dj Exp dj $
+## $Id: DBI.R,v 1.7 2003/03/28 21:06:27 dj Exp dj $
 ##
 ## 
 ## Database Interface Definition
@@ -174,8 +174,9 @@ setGeneric("dbListFields",
 ##
 ## data conversion
 ##
-setGeneric("dbSetDataMappings",
-   def = function(res, flds, ...) standardGeneric("dbSetDataMappings")
+setGeneric("dbSetDataMappings", 
+   def = function(res, flds, ...) standardGeneric("dbSetDataMappings"),
+   valueClass = "logical"
 )
 
 ##
@@ -219,10 +220,6 @@ setGeneric("dbClearResult",
 setGeneric("dbColumnInfo", 
    def = function(res, ...) standardGeneric("dbColumnInfo"),
    valueClass = "data.frame"
-)
-setGeneric("dbSetDataMappings", 
-   def = function(res, flds, ...) standardGeneric("dbSetDataMappings"),
-   valueClass = "logical"
 )
 setGeneric("dbGetStatement", 
    def = function(res, ...) standardGeneric("dbGetStatement"),

@@ -1,6 +1,6 @@
 Package: DBI
-Version: 0.1-4
-Date: 2002-08-26
+Version: 0.1-5
+Date: 2003-04-06
 Title: R/Splus Database Interface 
 Author: R Special Interest Group on Databases (R-SIG-DB)
 Maintainer: David A. James <dj@bell-labs.com>
