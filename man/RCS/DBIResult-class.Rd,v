@@ -1,4 +1,28 @@
-% $Id: DBIResult-class.Rd,v 1.1 2003/10/07 16:24:09 dj Exp $
+head	1.1;
+access;
+symbols;
+locks
+	dj:1.1; strict;
+comment	@# @;
+
+
+1.1
+date	2003.10.07.16.24.09;	author dj;	state Exp;
+branches;
+next	;
+
+
+desc
+@prior to fixing the S4 doc compatitbilites headaches
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@% $Id$
 \name{DBIResult-class}
 \docType{class}
 \alias{DBIResult-class}
@@ -58,7 +82,7 @@ Meta-data:
 
 \examples{\dontrun{
  drv <- dbDriver("Oracle")
- con <- dbConnect(drv, "user/password@dbname")
+ con <- dbConnect(drv, "user/password@@dbname")
  res <- dbSendQuery(con, "select * from LASERS where prdata > '2002-05-01'")
  summary(res)
  while(dbHasCompleted(res)){
@@ -71,3 +95,4 @@ Meta-data:
 \keyword{interface}
 \keyword{database}
 % vim: syntax=tex
+@

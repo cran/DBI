@@ -7,7 +7,8 @@ Issues that R-SIG-DB hasn't addressed.
    "DBIResult" to represent results of queries that generate data
    (primarily SELECT).
 
-2. Prepare statements need to be defined and methods for executing
+2. (See ROracle version 0.5-3 for an initial implementation.)
+   Prepare statements need to be defined and methods for executing
    them with S bindings.  A mechanism to hook data in SQL
    statements and, say, fields in data.frames needs to be defined.
    Some databases' API explicitly defined these as placeholders,
@@ -43,7 +44,8 @@ Issues that R-SIG-DB hasn't addressed.
 
 4. Do we need more metadata? (e.g., table indices, privileges).
 
-5. Transaction management needs to be fully described.
+5. (See ROracle version 0.5-3 for an initial implementation.)
+   Transaction management needs to be fully described.
 
 6. How do we run SQL scripts (not just single statements) and
    stored procedures.

@@ -1,3 +1,11 @@
+Version 0.1-7
+
+* Had to do a substantial re-formatting of the documentation
+  due to incompatibilities introduced in 1.8.0 S4 method
+  documentation. The contents were not changed (modulo fixing 
+  a few typos).  Thanks to Kurt Hornik and John Chambers for
+  their help.
+
 Version 0.1-6
 
 * Trivial documentation changes (for R CMD check's sake)

@@ -88,22 +88,25 @@ setMethod("summary", "DBIObject",
 setClass("DBIDriver", representation("DBIObject", "VIRTUAL"))
 
 ## The following function "loads" the specific "driver" or package, e.g.,
-##   drv <- dbDriver("ODBC")
-## this will invoke the DBI-RODBC front-end package and the core RODBC package
+##     drv <- dbDriver("MySQL")
+## Typically, drivers are expected to have a function of the same name
+## that does the actual initialization, e.g., Oracle(), MySQL(), ODBC(),
+## SQLite(), ....
 
-"dbDriver" <- 
-function(drvName, ...)
-## this only invokes the function "drvName" in a do.call(). drvName()
-## must initialize/load whatever code the driver needs and return
-## an object whose class extends "DBIDriver"
-{
-   do.call(as.character(drvName), list(...))
-}
+setGeneric("dbDriver", 
+   def = function(drvName, ...) standardGeneric("dbDriver"),
+   valueClass = "DBIDriver")
+
+setMethod("dbDriver", "character",
+   def = function(drvName, ...) {
+      do.call(as.character(drvName), list(...))
+   }
+)
 setGeneric("dbListConnections", 
    def = function(drv, ...) standardGeneric("dbListConnections")
 )
 setGeneric("dbUnloadDriver", 
-   def = function(drv,...) standardGeneric("dbUnloadDriver"),
+   def = function(drv, ...) standardGeneric("dbUnloadDriver"),
    valueClass = "logical"
 )
 
@@ -139,7 +142,6 @@ setGeneric("dbListResults",
    def = function(conn, ...) standardGeneric("dbListResults")
 )
 
-##
 ## Convenience DBIConnection functions, most return a logical
 ## to indicate whether the operation succeeded or not.
 ## These mimic objects(), get(), exists(), remove(), and assign(),
@@ -180,7 +182,7 @@ setGeneric("dbSetDataMappings",
 )
 
 ##
-## Transaction management (untested)
+## Transaction management 
 ##
 setGeneric("dbCommit", 
    def = function(conn, ...) standardGeneric("dbCommit"),
@@ -267,7 +269,7 @@ setGeneric("dbDataType",
 )
 ## by defualt use the SQL92 data types -- individual drivers may need to
 ## overload this 
-setMethod("dbDataType", "DBIObject",
+setMethod("dbDataType", signature(dbObj="DBIObject", obj="ANY"),
    def = function(dbObj, obj, ...) dbDataType.default(obj, ...),
    valueClass = "character"
 )
@@ -300,7 +302,7 @@ setGeneric("make.db.names",
    def = function(dbObj, snames, ...) standardGeneric("make.db.names"),
    valueClass = "character"
 )
-setMethod("make.db.names", "DBIObject",
+setMethod("make.db.names", signature(dbObj="DBIObject", snames="character"),
    def = function(dbObj, snames, ...) make.db.names.default(snames,...),
    valueClass = "character"
 )
@@ -337,7 +339,7 @@ setGeneric("isSQLKeyword",
    def = function(dbObj, name, ...) standardGeneric("isSQLKeyword"),
    valueClass = "logical"
 )
-setMethod("isSQLKeyword", "DBIObject",
+setMethod("isSQLKeyword", signature(dbObj="DBIObject", name="character"),
    def = function(dbObj, name, ...) isSQLKeyword.default(name, ...),
    valueClass = "logical"
 )

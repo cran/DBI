@@ -1,0 +1,60 @@
+head	1.1;
+access;
+symbols;
+locks
+	dj:1.1; strict;
+comment	@# @;
+
+
+1.1
+date	2003.10.15.18.38.34;	author dj;	state Exp;
+branches;
+next	;
+
+
+desc
+@init
+@
+
+
+1.1
+log
+@init methods doc for 1.8.0
+@
+text
+@% $Id: dbCallProc.Rd,v 1.1 2003/10/07 16:24:09 dj Exp $
+\name{dbCallProc-methods}
+\docType{methods}
+\alias{dbCallProc}
+\alias{dbCallProc-methods}
+\alias{dbCallProc,DBIConnection-method}
+\title{
+  Call an SQL stored procedure
+}
+\description{
+  Calls a stored procedure on a remote RDBMS
+}
+\usage{
+  dbCallProc(conn, ...)
+}
+\arguments{
+\item{conn}{
+  a \code{DBIConnection} object.
+}
+\item{\dots }{
+  additional arguments are passed to the implementing method.
+}
+}
+\details{
+  Not yet implemented.
+}
+\references{
+  See the Database Interface definition document
+  \code{DBI.pdf} in the base directory of this package
+  or \url{http://developer.r-project.org/db}.
+}
+\keywords{methods}
+\keyword{interface}
+\keyword{database}
+% vim: syntax=tex
+@

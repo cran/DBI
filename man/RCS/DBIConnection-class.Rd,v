@@ -1,4 +1,28 @@
-% $Id: DBIConnection-class.Rd,v 1.1 2003/10/07 16:24:09 dj Exp $
+head	1.1;
+access;
+symbols;
+locks
+	dj:1.1; strict;
+comment	@# @;
+
+
+1.1
+date	2003.10.07.16.24.09;	author dj;	state Exp;
+branches;
+next	;
+
+
+desc
+@prior to fixing the S4 doc compatitbilites headaches
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@% $Id$
 \name{DBIConnection-class}
 \docType{class}
 \alias{DBIConnection-class}
@@ -79,7 +103,7 @@ Exceptions:
 
 \examples{\dontrun{
 ora <- dbDriver("Oracle")
-con <- dbConnect(ora, "user/password@dbname")
+con <- dbConnect(ora, "user/password@@dbname")
 
 pg <- dbDriver("PostgreSQL")
 con <- dbConnect(pg, "user", "password")
@@ -89,3 +113,4 @@ con <- dbConnect(pg, "user", "password")
 \keyword{database}
 \keyword{interface}
 % vim: syntax=tex
+@

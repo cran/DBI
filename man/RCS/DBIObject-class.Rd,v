@@ -1,4 +1,28 @@
-% $Id: DBIObject-class.Rd,v 1.1 2003/10/07 16:24:09 dj Exp $
+head	1.1;
+access;
+symbols;
+locks
+	dj:1.1; strict;
+comment	@# @;
+
+
+1.1
+date	2003.10.07.16.24.09;	author dj;	state Exp;
+branches;
+next	;
+
+
+desc
+@prior to fixing the S4 doc compatitbilites headaches
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@% $Id$
 \name{DBIObject-class}
 \docType{class}
 \alias{DBIObject-class}
@@ -49,3 +73,4 @@ is(res, "DBIObject")
 \keyword{interface}
 \keyword{database}
 % vim: syntax=tex
+@

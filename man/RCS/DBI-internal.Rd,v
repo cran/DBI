@@ -1,7 +1,30 @@
-\name{DBI-internal}
+head	1.1;
+access;
+symbols;
+locks
+	dj:1.1; strict;
+comment	@# @;
+
+
+1.1
+date	2003.10.08.20.03.12;	author dj;	state Exp;
+branches;
+next	;
+
+
+desc
+@preserve prior to patching
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@\name{DBI-internal}
 \alias{dbDataType.default}
 \alias{make.db.names.default}
-\alias{isSQLKeyword.default}
 \alias{.SQL92Keywords}
 %\alias{.__C__DBIDriver}
 %\alias{.__C__DBIConnection}
@@ -47,3 +70,4 @@
 }
 \keyword{internal}
 % vim: syntax=tex
+@
