@@ -1,3 +1,7 @@
+Version 0.1-9
+
+* Trivial changes.
+
 Version 0.1-8
 
 * A trivial change due to package.description() being deprecated in 1.9.0.

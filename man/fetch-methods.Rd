@@ -4,9 +4,7 @@
 \alias{fetch}
 \alias{fetch-methods}
 \alias{fetch,DBIResult,numeric-method}
-\title{
-  Fetch records from a previously executed query
-}
+\title{Fetch records from a previously executed query}
 \description{
   Fetch records from a previously executed query
 }
@@ -48,10 +46,10 @@
   How the actual fetching is done is implementation-dependent.
   Some implementations may leave the result in the DBMS and bring
   chunks of size \code{n} to prevent exhausting 
-  the R/S-Plus memory, but there may be a performance penalty;  
-  other implementations may copy the entire result set to the a 
+  the R/S-Plus memory, but there may be a performance penalty;
+  other implementations may copy the entire result set to the a
   memory space under the driver's control;
- others may yet return the entire result set directly to R/S-Plus.
+  others may yet return the entire result set directly to R/S-Plus.
   See the individual drivers' documentation.
 }
 \note{

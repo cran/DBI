@@ -71,9 +71,8 @@
   field can store \code{NULL} values, and possibly other DBMS-specific
   information.
 
-  \code{dbHasCompleted} a logical describing whether the operations has
-  been completed by the DBMS or not.
-
+  \code{dbHasCompleted} returns a logical describing whether the operations 
+  has been completed by the DBMS or not.
 }
 \details{
   These functions implement a minimal set of meta-data describing the 
