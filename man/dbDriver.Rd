@@ -16,18 +16,18 @@
 }
 \usage{
   dbDriver(drvName, ...)
-  dbUnloadDriver(drv)     ## free up all resources
+  dbUnloadDriver(drv, ...)     ## free up all resources
 }
 \arguments{
 \item{drvName}{
-  character name of the driver we want to instantiate.
+  character name of the driver to instantiate.
   }
 \item{drv}{
   an object that inherits from \code{DBIDriver} as created by
   \code{dbDriver}.
 }
 \item{...}{
-  any other arguments are passed tp the driver \code{drvName}.
+  any other arguments are passed to the driver \code{drvName}.
   }
 }
 \value{

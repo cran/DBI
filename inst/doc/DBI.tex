@@ -1,15 +1,15 @@
 \documentclass[graphics,times,psfig,dvips,hyper]{article}
-% $Id: DBI.tex,v 1.4 2001/12/07 17:47:19 dj Exp dj $
+% $Id: DBI.tex,v 1.5 2003/06/16 13:43:00 dj Exp dj $
 \usepackage{graphics,times,psfig}
 \usepackage[%
   bookmarks=true,
-  colorlinks=false,
+  colorlinks=true,
   backref=true,
   hyperfigures=true,
-  %pdfpagemode=UseOutlines,
+  pdfpagemode=UseOutlines,
   pdfauthor={R-Databases Special Interest Group (R-SIG-DB)},
   pdftitle={A Common Database Interface (DBI)},
-  pdfkeywords={Databases, Relational DBMS, RDBMS, R, S, Splus, 
+  pdfkeywords={Databases, Relational DBMS, R, S-Plus, 
                PostgreSQL, MySQL, mSQL, Microsoft SQL Server, 
                Oracle, SQLite, Inter-system communications, 
                Distributed computing}
@@ -29,7 +29,7 @@ R-Databases Special Interest Group\\
 \href{mailto:r-sig-db@stat.math.ethz.ch}{r-sig-db@stat.math.ethz.ch}
 }
 
-\date{26 August 2002}
+\date{26 August 2002 (Updated 16 June 2003)}
 
 \maketitle 
 \tableofcontents
@@ -43,7 +43,7 @@ and Microsoft's ODBC.
 \end{abstract}
 
 \section{Version}\label{sec:version}
-This document describes version 0.1-4 of the database interface
+This document describes version 0.1-6 of the database interface
 API (application programming interface).
 
 \section{Introduction}\label{sec:intro}
@@ -121,7 +121,7 @@ The following are the elements of the DBI:
   
   Mappings and conversions between DBMS data types and R/S objects.
   All drivers should implement the ``basic'' primitives (see below), 
-  but may chose to add user-define conversion function to handle
+  but may chose to add user-defined conversion function to handle
   more generic objects (e.g., factors, ordered factors, time series,
   arrays, images).
 
@@ -601,7 +601,7 @@ We do list here the most important ones.
   most DBMS support both synchronous and asynchronous communications,
   allowing applications to submit a query and proceed while
   the database server process the query. The application is then
-  notified (or it may poll the server) when the query has completed.
+  notified (or it may need to poll the server) when the query has completed.
   For large computations, this could be very useful, but the DBI
   would need to specify how to interrupt the server (if necessary)
   plus other details.  Also, some DBMS require applications to use
