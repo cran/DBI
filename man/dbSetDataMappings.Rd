@@ -1,11 +1,11 @@
 \name{dbSetDataMappings}
 \alias{dbSetDataMappings}
 \title{
-  Set data mappings between an DBMS and R/S
+  Set data mappings between an DBMS and R/Splus
 }
 \description{
   Sets one or more conversion functions to handle the translation 
-  of DBMS data types to R/S objects.  
+  of DBMS data types to R/Splus objects.  
   This is only needed for non-primitive data, since all DBI drivers 
   handle the common base types (integers, numeric, strings, etc.)
 }

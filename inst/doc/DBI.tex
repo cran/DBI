@@ -29,7 +29,7 @@ R-Databases Special Interest Group\\
 \href{mailto:r-sig-db@stat.math.ethz.ch}{r-sig-db@stat.math.ethz.ch}
 }
 
-\date{5 December 2001}
+\date{26 August 2002}
 
 \maketitle 
 \tableofcontents
@@ -43,7 +43,7 @@ and Microsoft's ODBC.
 \end{abstract}
 
 \section{Version}\label{sec:version}
-This document describes version 0.1-2 of the database interface
+This document describes version 0.1-4 of the database interface
 API (application programming interface).
 
 \section{Introduction}\label{sec:intro}
@@ -57,7 +57,7 @@ The following example illustrates some of the DBI capabilities:
 \begin{verbatim}
 ## Choose the proper DBMS driver and connect to the server
 
-drv <- dbDriver("RODBC")
+drv <- dbDriver("ODBC")
 con <- dbConnect(drv, "dsn", "usr", "pwd")
 
 ## The interface can work at a higher level importing tables 
@@ -207,12 +207,14 @@ them as they see fit.
 
 \item[\smethod{dbGetInfo(dbObj, ...)}:]
   extracts information (meta-data) relevant for the
-  \sclass{DBIObject} \sobj{dbObj}.  It returns a list
-  of key/value pairs.
+  \sclass{DBIObject} \sobj{dbObj}.  It may return a list
+  of key/value pairs, individual meta-data if supplied
+  in the call, or \sobj{NULL} if the requested meta-data
+  is not available.
 
   \emph{Hint:} Driver implementations may choose to allow an 
   argument \sobj{what} to specify individual meta-data,  e.g., 
-  \sexp{dbGetInfo(drv, what = c("version", "max.connections"))}.
+  \sexp{dbGetInfo(drv, what = "max.connections")}.
 
 \end{description}
 
@@ -305,7 +307,10 @@ The methods defined by the \sclass{DBIConnection} class include:
 
 \item[\smethod{dbGetQuery(conn, statement, ...)}:]
   submit, execute, and extract output in one operation.
-  The resulting object is a \sclass{data.frame}.
+  The resulting object may be a \sclass{data.frame} if
+  the \sobj{statement} generates output.  Otherwise the
+  return value  should be a logical indicating whether
+  the query succeeded or not.
 
 \item[\smethod{dbGetException(conn, ...)}:]
   returns a list with elements \sobj{errNum} and \sobj{errMsg}
@@ -318,7 +323,9 @@ The methods defined by the \sclass{DBIConnection} class include:
 
 \item[\smethod{dbGetInfo(dbObj, ...)}:]
   returns a list of name-value pairs describing the state of the
-  connection.  
+  connection;  it may return one or more meta-data, the actual driver
+  method allows to specify individual pieces of meta-data (e.g., 
+  maximum number of open results/cursors).
 
   \emph{Hint:} Useful entries could include 
   \begin{description} 
@@ -355,8 +362,8 @@ The methods defined by the \sclass{DBIConnection} class include:
 
 \begin{description}
 \item[\smethod{dbListTables(conn, ...)}:]
-  returns a character vector of object (table) names available on
-  the \sobj{conn} connection.
+  returns a character vector (possibly of zero-length) of object (table) 
+  names available on the \sobj{conn} connection.
 
 \item[\smethod{dbReadTable(conn, name, ...)}:]
   imports the data stored remotely in the table \sobj{name}
@@ -540,6 +547,9 @@ defined.
 The core DBI implementation should make available to all
 drivers some common basic utilities.  For instance:
 \begin{description}
+\item[\smethod{dbGetDBIVersion}:]
+  returns the version of the currently attached DBI as a string.
+
 \item[\smethod{dbDataType(dbObj, obj, ...)}:]
   returns a string with the (approximately) appropriate data type for
   the R/S object \sobj{obj}.  The DBI can implement this following
@@ -606,8 +616,8 @@ We do list here the most important ones.
   may need to introduce new methods to loop over multiple results
   (similar to Python's \texttt{nextResultSet}).
 
-\item[BLOBS:]
-  binary objects and large objects present some challenges both
+\item[BLOBS/CLOBS:]
+  large objects (both character and binary) present some challenges both
   to R and S-Plus.  It is becoming more common to store images, sounds,
   and other data types as binary objects in DBMS, some of which can
   be in principle quite large. The SQL-92 ANSI standard allows up

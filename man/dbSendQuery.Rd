@@ -51,9 +51,9 @@
   connected through the \code{conn} object.  The DBMS executes the
   statement, possibly generating vast amounts of data.  Where these
   data reside is driver-specific:  some drivers may choose to leave the
-  output on the server and transfer them piecemeal to R/S, others may
+  output on the server and transfer them piecemeal to R/Splus, others may
   transfer all the data to the client -- but not necessarily to the 
-  memory that R/S manages.  See the individual drivers' 
+  memory that R/Splus manages.  See the individual drivers' 
   \code{\link{dbSendQuery}} method for implementation details.
 }
 \details{

@@ -14,6 +14,9 @@ print.list.pairs(x, ...)
 }
 \arguments{
   \item{x}{a list of key, value pairs}
+  \item{drv}{a driver object}
+  \item{con}{a connection object}
+  \item{res}{a result object}
   \item{\dots}{additional arguments to be passed to \code{cat}}
 }
 \value{

@@ -1,0 +1,32 @@
+Issues that R-SIG-DB hasn't resolved.
+
+1. Should we define separate classes for SQL queries that return data
+   from those that don't return data?  E.g., the "DBIResult"
+   could represent the result of non-data queries (INSERT, DELETE,
+   CREATE, etc.) while "DBIResultSet" (or perhaps "DBICursor")
+   could extend "DBIResult" to represent results of queries that
+   generate data (primarily SELECT).
+
+2. Data conversion.  We need a general method for spcifying data 
+   conversion.  
+
+   The data conversion mechanism used in other inter system packages
+   (e.g., RSPython, RSPerl) does not seem to be suitable without
+   modification.  Those mechanism seem to be geared for converting
+   in one operation whole objects, while in the R/S DBMS case we
+   need to be able to allocate containers as columns of the R/S
+   result list/data.frame, and then transfer individual objects
+   (dates, BLOBS, CLOBS, numerbs, strings) one at a time from the
+   DBMS into the container class inside the C fetching looping.
+     
+3. Other metadata? (e.g., table indices).
+
+4. Transaction management needs to be fully described.
+
+5. How do we run SQL scripts (not just single statements) and
+   stored procedures.
+
+6. "Bind" variables".
+
+7. Asynchronous queries.
+

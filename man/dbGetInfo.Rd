@@ -1,8 +1,11 @@
 \name{dbGetInfo}
+\alias{dbGetDBIVersion}
 \alias{dbGetInfo}
 \alias{dbGetStatement}
-\alias{dbHasCompleted}
+\alias{dbGetRowCount}
+\alias{dbGetRowsAffected}
 \alias{dbColumnInfo}
+\alias{dbHasCompleted}
 \title{
   Database interface meta-data
 }
@@ -10,14 +13,17 @@
   Extract meta-data associated with various objects
 }
 \usage{
+  dbGetDBIVersion()           # DBI version 
   dbGetInfo(dbObj, ...)       # meta-data for any DBIObject
   dbGetStatement(res, ...)    # statement that produced result "res"
-  dbHasCompleted(res, ...)    # are there more rows to fetch on "res"?
+  dbGetRowCount(res, ...)     # number of rows fetched so far
+  dbGetRowsAffected(res, ...) # number of affected rows (e.g., DELETE)
   dbColumnInfo(res, ...)      # result set data types
+  dbHasCompleted(res, ...)    # are there more rows to fetch on "res"?
 }
 \arguments{
 \item{dbObj}{
-  any object that implements some functionality in the R/S
+  any object that implements some functionality in the R/Splus
   interface to databases (a driver, a connection or a result set).
 }
 \item{res}{
@@ -28,24 +34,34 @@
 }
 }
 \value{
+  \code{dbGetDBIVersion} returns a character string with the version
+  of the database interface API.
+
   \code{dbGetInfo} produces either a character vector or a named list 
   of (name, value) pairs.
 
   \code{dbGetStatement} returns a character string with the statement 
   associated with the result set \code{res}.
 
-  \code{dbHasCompleted} a logical describing whether the operations has
-  been completed by the DBMS or not.
+  \code{dbGetRowCount} returns the number of rows fetched so far.
+
+  \code{dbGetRowsAffected} returns the number of affected rows (e.g., 
+  how many rows were deleted, inserted).  Some drivers may set this
+  to the total number of rows a query produces.
 
   \code{dbColumnInfo} returns a data.frame with one row per output field
   in \code{res}.  The columns should report field name, field data type,
   scale and precision (as understood by the DBMS engine), whether the
   field can store \code{NULL} values, and possibly other DBMS-specific
   information.
+
+  \code{dbHasCompleted} a logical describing whether the operations has
+  been completed by the DBMS or not.
+
 }
 \details{
   These functions implement a minimal set of meta-data describing the 
-  most important aspects of the R/S to DBMS interface.
+  most important aspects of the R/Splus to DBMS interface.
 
   The \code{dbGetInfo} works very similarly to the function
   \code{options} in that it attempts to extract what the user may

@@ -6,7 +6,7 @@
 \alias{isSQLKeyword.default}
 \alias{.SQL92Keywords}
 \title{
-  Make R/S identifiers into legal SQL identifiers
+  Make R/Splus identifiers into legal SQL identifiers
 }
 \description{
   Produce legal SQL identifiers from a character vector.
@@ -27,7 +27,7 @@
   any DBI object (e.g., \code{DBIDriver}).
   }
 \item{snames}{
-  a character vector of R/S identifiers (symbols) from which
+  a character vector of R/Splus identifiers (symbols) from which
   we need to make SQL identifiers.
   }
 \item{name}{

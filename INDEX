@@ -1,8 +1,8 @@
 DBI-internal            Version 4 meta-objects
-DBIConnection-class     Class "DBIConnection" ~~~ 
-DBIDriver-class         Class "DBIDriver"
-DBIObject-class         Class "DBIObject" ~~~ 
-DBIResult-class         Class "DBIResult"
+DBIConnection-class     Class DBIConnection
+DBIDriver-class         Class DBIDriver
+DBIObject-class         Class DBIObject
+DBIResult-class         Class DBIResult
 dbCallProc              Call an SQL stored procedure 
 dbCommit                DBMS Transaction Management 
 dbConnect               Create a connection to a DBMS 
@@ -15,7 +15,8 @@ dbReadTable             Convenience functions for Importing/Exporting
                         DBMS tables 
 dbSendQuery             Execute a statement on a given database
                         connection 
-dbSetDataMappings       Set data mappings between an DBMS and R/S 
+dbSetDataMappings       Set data mappings between an DBMS and R/Splus 
 fetch                   Fetch records from a previously executed query 
-make.db.names           Make R/S identifiers into legal SQL identifiers 
+make.db.names           Make R/Splus identifiers into legal SQL
+                        identifiers 
 print.list.pairs        Support functions

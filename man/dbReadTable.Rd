@@ -7,7 +7,7 @@
   Convenience functions for Importing/Exporting DBMS tables
 }
 \description{
-  These functions mimic their R/S counterpart 
+  These functions mimic their R/Splus counterpart 
   \code{get},
   \code{assign},
   \code{exists}, 
@@ -85,7 +85,7 @@ duplicate values on a field that's defined as a primary key).
 The semantics of \code{assign} are slightly extended to allow
 overwriting or appending to an existing table.  
 }
-\note{The translation of identifiers between R/S and SQL is done through
+\note{The translation of identifiers between R/Splus and SQL is done through
   calls to \code{\link{make.names}} and \code{\link{make.db.names}}, 
   but we cannot guarantee that the conversion is reversible.  For
   details see \code{\link{make.db.names}}.

@@ -1,8 +1,11 @@
+## 
+## $Id: setup.R,v 1.1 2002/08/23 19:38:43 dj Exp dj $ 
 ## the following is only needed during package installation,
 ## .First.lib() takes care during attaching....
+.conflicts.OK <- TRUE
 require(methods, quietly = TRUE, warn.conflicts = FALSE)
 
-## $Id: DBI.R,v 1.4 2001/12/07 19:21:58 dj Exp dj $
+## $Id: DBI.R,v 1.6 2002/08/24 04:53:32 dj Exp dj $
 ##
 ## 
 ## Database Interface Definition
@@ -49,8 +52,7 @@ setClass("DBIObject", "VIRTUAL")
 ## this method return version info, and whatever other info is
 ## relevant (e.g., user, password(?), dbname for connections)
 setGeneric("dbGetInfo", 
-   def = function(dbObj, ...) standardGeneric("dbGetInfo"),
-   valueClass = "list",      
+   def = function(dbObj, ...) standardGeneric("dbGetInfo")
 )
 if(!isGeneric("format")){
    setGeneric("format")
@@ -98,8 +100,7 @@ function(drvName, ...)
    do.call(as.character(drvName), list(...))
 }
 setGeneric("dbListConnections", 
-   def = function(drv, ...) standardGeneric("dbListConnections"),
-   valueClass = "list"           ## should be "container" of DBIConnections
+   def = function(drv, ...) standardGeneric("dbListConnections")
 )
 setGeneric("dbUnloadDriver", 
    def = function(drv,...) standardGeneric("dbUnloadDriver"),
@@ -127,18 +128,15 @@ setGeneric("dbSendQuery",
 )
 ## submit, execute, and fetch a statement (all in one operation)
 setGeneric("dbGetQuery", 
-   def = function(conn, statement, ...) standardGeneric("dbGetQuery"),
-   valueClass = "data.frame"
+   def = function(conn, statement, ...) standardGeneric("dbGetQuery")
 )
 setGeneric("dbGetException",  
-   def = function(conn, ...) standardGeneric("dbGetException"),
-   valueClass = "list"   ## should be an exception object, but....
+   def = function(conn, ...) standardGeneric("dbGetException")
 )
 ## return a container with all result objects open in a connection
 ## (some implementation may only allow one open result set per connection)
 setGeneric("dbListResults", 
-   def = function(conn, ...) standardGeneric("dbListResults"),
-   valueClass = "list"  ## container of DBIResults
+   def = function(conn, ...) standardGeneric("dbListResults")
 )
 
 ##
@@ -170,7 +168,14 @@ setGeneric("dbRemoveTable",
 ## this is equivalent to names() on a remote table "name"
 setGeneric("dbListFields", 
    def = function(conn, name, ...) standardGeneric("dbListFields"),
-   valueClass = "list"
+   valueClass = "character"
+)
+
+##
+## data conversion
+##
+setGeneric("dbSetDataMappings",
+   def = function(res, flds, ...) standardGeneric("dbSetDataMappings")
 )
 
 ##
@@ -219,13 +224,6 @@ setGeneric("dbSetDataMappings",
    def = function(res, flds, ...) standardGeneric("dbSetDataMappings"),
    valueClass = "logical"
 )
-
-##
-## Metadata functions.  
-## not sure whether will be part of the final API
-##
-
-## get the (character) statement associated with a dbResult handle
 setGeneric("dbGetStatement", 
    def = function(res, ...) standardGeneric("dbGetStatement"),
    valueClass = "character"
@@ -234,13 +232,27 @@ setGeneric("dbHasCompleted",
    def = function(res, ...) standardGeneric("dbHasCompleted"),
    valueClass = "logical"
 )
+setGeneric("dbGetRowsAffected",
+   def = function(res, ...) standardGeneric("dbGetRowsAffected"),
+   valueClass = "numeric"
+)
+setGeneric("dbGetRowCount",
+   def = function(res, ...) standardGeneric("dbGetRowCount"),
+   valueClass = "numeric"
+)
 ## 
-## $Id: Util.R,v 1.1 2001/12/07 17:52:40 dj Exp dj $
+## $Id: Util.R,v 1.3 2002/08/24 20:26:33 dj Exp dj $
 ##
 ## Utilities.  These actually have been implemented by the DBI, 
 ## but individual driver could overload them;  for instance, the
 ## set of SQL keywords should be extended by the various packages.
 ##
+
+"dbGetDBIVersion" <-
+function()
+{
+   package.description("DBI", field="Version")
+}
 
 "print.list.pairs" <- function(x, ...)
 {
@@ -329,7 +341,7 @@ setGeneric("isSQLKeyword",
    valueClass = "logical"
 )
 setMethod("isSQLKeyword", "DBIObject",
-   def = function(dbObj, name, ...) isSQLKeyword.default(names, ...),
+   def = function(dbObj, name, ...) isSQLKeyword.default(name, ...),
    valueClass = "logical"
 )
 
@@ -356,6 +368,10 @@ setGeneric("SQLKeywords",
    valueClass = "character"
 )
 setMethod("SQLKeywords", "DBIObject", 
+   def = function(dbObj, ...) .SQL92Keywords,
+   valueClass = "character"
+)
+setMethod("SQLKeywords", "missing",
    def = function(dbObj, ...) .SQL92Keywords,
    valueClass = "character"
 )
@@ -395,8 +411,9 @@ c("ABSOLUTE", "ADD", "ALL", "ALLOCATE", "ALTER", "AND", "ANY", "ARE", "AS",
    "VIEW", "WHEN", "WHENEVER", "WHERE", "WITH", "WORK", "WRITE", "YEAR",
    "ZONE"
    )
-## $Id: zzz.R,v 1.2 2001/12/10 01:13:31 dj Exp dj $
+## $Id: zzz.R,v 1.3 2002/08/26 16:16:57 dj Exp dj $
 
+.conflicts.OK <- TRUE
 ".First.lib" <- 
 function(lib, pkg)
 {

@@ -1,33 +1,58 @@
 \name{DBIDriver-class}
 \docType{class}
 \alias{DBIDriver-class}
-\title{Class "DBIDriver"}
-\description{Virtual class that groups all database management
-system drivers (e.g., Oracle, PostgreSQL, ODBC, DB2).
-DBMS drivers should extend this class.
+\title{Class DBIDriver}
+\description{  
+   Base class for all DBMS drivers (e.g., ODBC, Oracle, MySQL, PostgreSQL).
 }
-\section{Objects from the Class}{A virtual Class: No objects may be created from it.}
+\section{Objects from the Class}{
+   A virtual Class: No objects may be created from it.
+}
 \section{Extends}{
 Class \code{"DBIObject"}, directly.
-Class \code{"VIRTUAL"}, directly.
+}
+
+\section{Generator}{
+   The generator for classes that extend \code{DBIDriver} is
+   \code{\link{dbDriver}}.  
 }
 \section{Methods}{
-No methods defined with class "DBIDriver" in the signature.
+  The following methods are defined for classes that extend
+  \code{DBIDriver}:
+
+  \describe{
+    \item{\link{dbUnloadDriver}}{\code{signature(drv = "DBIDriver")}: ... }
+    \item{\link{dbConnect}}{\code{signature(drv = "DBIDriver")}: ... }
+    \item{\link{dbGetInfo}}{\code{signature(dbObj = "DBIDriver")}: ... }
+    \item{\link{dbListConnections}}{\code{signature(drv = "DBIDriver")}: ... }
+    \item{\link{summary}}{\code{signature(object = "DBIDriver")}: ... }
+  }
 }
-\references{http://developer.r-project.org/db}
-\author{The R-Databases Special Interest Group}
+\references{
+  See the Database Interface definition document
+  \code{DBI.pdf} in the base directory of this package
+  or \url{http://developer.r-project.org/db}.
+}
+\author{R-SIG-DB}
 \seealso{
-   Classes 
-   \code{\link{DBIObject-class}},
-   \code{\link{DBIDriver-class}},
-   \code{\link{DBIDriver-class}}, 
-   and \code{\link{DBIResult-class}}.
+ DBI classes:
+ \code{\link{DBIObject-class}}
+ \code{\link{DBIDriver-class}}
+ \code{\link{DBIConnection-class}}
+ \code{\link{DBIResult-class}}
+
+ The function \code{\link{dbConnect}} is the main generator.
+
+ In addition see the help of the methods above.
 }
+
 \examples{\dontrun{
-   drv <- dbDriver("Oracle")
-   is(drv, "DBIDriver")
+drv <- dbDriver("ODBC")
+summary(drv)
+dbListConnections(drv)
 }
 }
 \keyword{classes}
-\keywords{database}
-%% vim:syntax=tex
+\keyword{database}
+\keyword{interface}
+% vim: syntax=tex

@@ -34,7 +34,7 @@
 }
 
 \section{Side Effects}{
-  As the R/S client fetches records the remote database server
+  As the R/Splus client fetches records the remote database server
   updates its cursor accordingly.
 }
 \details{

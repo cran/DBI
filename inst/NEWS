@@ -1,3 +1,20 @@
+Version 0.1-4
+
+* Removed the "valueClass" from some generic functions, namely,
+  dbListConnections, dbListResults, dbGetException, dbGetQuery,
+  and dbGetInfo.  The reason is that methods for these generics
+  could potentially return different classes of objects (e.g., 
+  the call dbGetInfo(res) could return a list of name-value pairs,
+  while dbGetInfo(res, "statement") could be a character vector).
+
+* Added 00Index to inst/doc
+
+* Added dbGetDBIVersion() (simple wrapper to package.description).
+
+Version 0.1-3
+
+* ??? Minor changes?
+
 Version 0.1-2
 
 * An implementation based on version 4 classes and methods.

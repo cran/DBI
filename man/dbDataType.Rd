@@ -16,7 +16,7 @@
   \code{OracleDriver}.
 }
 \item{obj}{
-  R/S object whose SQL type we want to determine.
+  R/Splus object whose SQL type we want to determine.
 }
 \item{\dots }{
   any other parameters that individual methods may need.
@@ -27,7 +27,7 @@
 }
 \details{
   This is a generic function.  The default method determines the
-  SQL type of an R/S object according to the SQL 92 specification,
+  SQL type of an R/Splus object according to the SQL 92 specification,
   which may serve as a starting point for driver implementations.
 }
 \references{

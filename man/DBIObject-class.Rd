@@ -1,36 +1,50 @@
 \name{DBIObject-class}
 \docType{class}
 \alias{DBIObject-class}
-\title{Class "DBIObject" ~~~ }
-\description{Virtual class that groups all remote DBMS objects}
-\section{Objects from the Class}{A virtual Class: No objects may be created from it.}
-
-\section{Extends}{
-Class \code{"VIRTUAL"}, directly.
+\title{Class DBIObject}
+\description{ 
+   Base class for all other DBI classes (e.g., drivers, connections).
+}
+\section{Objects from the Class}{
+   A virtual Class: No objects may be created from it.
 }
 \section{Methods}{
+  Methods defined for classes that extend \code{DBIObject}:
   \describe{
-    \item{dbDataType}{\code{signature(dbObj = "DBIObject")}: ... }
-    \item{isSQLKeyword}{\code{signature(dbObj = "DBIObject")}: ... }
-    \item{make.db.names}{\code{signature(dbObj = "DBIObject")}: ... }
-    \item{SQLKeywords}{\code{signature(dbObj = "DBIObject")}: ... }
-    \item{summary}{\code{signature(object = "DBIObject")}: ... }
+    \item{\link{dbDataType}}{\code{signature(dbObj = "DBIObject")}: ... }
+    \item{\link{isSQLKeyword}}{\code{signature(dbObj = "DBIObject")}: ... }
+    \item{\link{make.db.names}}{\code{signature(dbObj = "DBIObject")}: ... }
+    \item{\link{SQLKeywords}}{\code{signature(dbObj = "DBIObject")}: ... }
+    \item{\link{summary}}{\code{signature(object = "DBIObject")}: ... }
   }
+  Plus many other specific to the other DBI classes.
 }
-\references{http://developer.r-project.org/db}
-\author{R-Databases Special Interest Group}
-\seealso{ 
-   Classes 
-   \code{\link{DBIObject-class}},
-   \code{\link{DBIDriver-class}},
-   \code{\link{DBIDriver-class}}, 
-   and \code{\link{DBIResult-class}}.
+\references{ 
+  See the Database Interface definition document
+  \code{DBI.pdf} in the base directory of this package
+  or
+  \url{http://developer.r-project.org/db}.
 }
+\author{R-SIG-DB}
+
+\seealso{
+ DBI classes:
+ \code{\link{DBIObject-class}}
+ \code{\link{DBIDriver-class}}
+ \code{\link{DBIConnection-class}}
+ \code{\link{DBIResult-class}}
+}
+
 \examples{\dontrun{
-   summary(con)
-   isSQLKeyword(con, "and")
+drv <- dbDriver("MySQL")
+con <- dbConnect(drv, group = "rs-dbi")
+res <- dbSendQuery(con, "select * from vitalSuite")
+is(drv, "DBIObject")   ## True
+is(con, "DBIObject")   ## True
+is(res, "DBIObject")
 }
 }
 \keyword{classes}
+\keyword{interface}
 \keyword{database}
-% vim:syntax=tex
+% vim: syntax=tex
