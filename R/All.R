@@ -250,7 +250,7 @@ setGeneric("dbGetRowCount",
 "dbGetDBIVersion" <-
 function()
 {
-   package.description("DBI", field="Version")
+   packageDescription("DBI", field="Version")
 }
 
 "print.list.pairs" <- function(x, ...)
