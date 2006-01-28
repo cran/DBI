@@ -29,7 +29,7 @@
   \code{DBI.pdf} in the base directory of this package
   or \url{http://developer.r-project.org/db}.
 }
-\keywords{methods}
+\keyword{methods}
 \keyword{interface}
 \keyword{database}
 % vim: syntax=tex

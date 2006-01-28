@@ -128,7 +128,7 @@ names(dbGetInfo(con))
 names(dbGetInfo(rs)) 
 }
 }
-\keywords{methods}
+\keyword{methods}
 \keyword{interface}
 \keyword{database}
 % vim: syntax=tex

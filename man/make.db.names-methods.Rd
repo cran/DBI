@@ -129,7 +129,7 @@ isSQLKeyword(nam, c(.SQL92Keywords, oracle.keywords))
 [1]  T  T  T  F
 }
 }
-\keywords{methods}
+\keyword{methods}
 \keyword{interface}
 \keyword{database}
 % vim: syntax=tex

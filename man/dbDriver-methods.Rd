@@ -97,7 +97,7 @@ pcon <- dbConnect(p, "user", "password", "dbname")
 dbListTables(pcon)
 }
 }
-\keywords{methods}
+\keyword{methods}
 \keyword{interface}
 \keyword{database}
 % vim: syntax=tex

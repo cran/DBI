@@ -57,7 +57,7 @@
   The authorization mechanism is left unspecified, so check the 
   documentation of individual drivers for details.
 }
-\notes{
+\note{
   Make sure you close the connection using \code{dbDisconnect(conn)}
   when it is not longer needed.
 }
@@ -93,7 +93,7 @@ data <- fetch(rs, n = -1)   # extract all rows
 dim(data)
 }
 }
-\keywords{methods}
+\keyword{methods}
 \keyword{interface}
 \keyword{database}
 % vim: syntax=tex

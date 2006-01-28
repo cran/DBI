@@ -48,7 +48,7 @@ ora <- dbDriver("MySQL")
 sql.type <- dbDataType(ora, quakes)
 }
 }
-\keywords{methods}
+\keyword{methods}
 \keyword{interface}
 \keyword{database}
 % docclass is function

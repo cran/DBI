@@ -63,3 +63,11 @@ Issues that R-SIG-DB hasn't addressed.
    event identification and callback dispatching is centralized in
    the RS_DBI level, above the actual R/C drivers code].
 
+8. Additional helper functions.
+
+   * dbBuildTableDefinition(con, name, obj, field.types, ....)
+     Then we could have methods for obj="data.frame", obj="array", etc.
+     By default the DBI method con=DBIObject would construct the 
+     definition acording to the SQL92 or SQL99 standard(s), but 
+     individual implementations could overwrite the methods.
+
