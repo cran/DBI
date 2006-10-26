@@ -1,18 +1,9 @@
-% $Id: dbListTables-methods.Rd,v 1.1 2003/10/15 18:38:34 dj Exp dj $
-\name{dbListTables-methods}
-\docType{methods}
+% $Id: dbListTables.Rd 113 2003-10-08 20:03:12Z dj $
+\name{dbListTables}
 \alias{dbListTables}
 \alias{dbListFields}
 \alias{dbListConnections}
 \alias{dbListResults}
-\alias{dbListTables-methods}
-\alias{dbListFields-methods}
-\alias{dbListConnections-methods}
-\alias{dbListResults-methods}
-\alias{dbListTables,DBIConnection-method}
-\alias{dbListFields,DBIConnection,character-method}
-\alias{dbListConnections,DBIDriver-method}
-\alias{dbListResults,DBIConnection-method}
 \title{
   List items from a remote DBMS and from objects that implement
   the database interface DBI.
@@ -65,14 +56,13 @@
 }
 
 \examples{\dontrun{
-drv <- dbDriver("RSQLite")
+odbc <- dbDriver("ODBC")
 # after working awhile...
 for(con in dbListConnections(odbc)){
    dbGetStatement(dbListResults(con))
 }
 }
 }
-\keyword{methods}
 \keyword{interface}
 \keyword{database}
 % vim: syntax=tex

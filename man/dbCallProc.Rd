@@ -1,9 +1,6 @@
-% $Id: dbCallProc-methods.Rd,v 1.1 2003/10/15 18:38:34 dj Exp dj $
-\name{dbCallProc-methods}
-\docType{methods}
+% $Id: dbCallProc.Rd 111 2003-10-07 16:24:09Z dj $
+\name{dbCallProc}
 \alias{dbCallProc}
-\alias{dbCallProc-methods}
-\alias{dbCallProc,DBIConnection-method}
 \title{
   Call an SQL stored procedure
 }
@@ -29,7 +26,6 @@
   \code{DBI.pdf} in the base directory of this package
   or \url{http://developer.r-project.org/db}.
 }
-\keyword{methods}
 \keyword{interface}
 \keyword{database}
 % vim: syntax=tex

@@ -1,16 +1,13 @@
-% $Id: dbSetDataMappings-methods.Rd,v 1.1 2003/10/15 18:38:34 dj Exp dj $
-\name{dbSetDataMappings-methods}
-\docType{methods}
+% $Id: dbSetDataMappings.Rd 111 2003-10-07 16:24:09Z dj $
+\name{dbSetDataMappings}
 \alias{dbSetDataMappings}
-\alias{dbSetDataMappings-methods}
-\alias{dbSetDataMappings,DBIResult,data.frame-method}
 \title{
-  Set data mappings between an DBMS and R/S-Plus
+  Set data mappings between an DBMS and R/Splus
 }
 \description{
   Sets one or more conversion functions to handle the translation 
-  of DBMS data types to R/S-Plus objects.  
-  This may be only needed for non-primitive data, since all DBI drivers 
+  of DBMS data types to R/Splus objects.  
+  This is only needed for non-primitive data, since all DBI drivers 
   handle the common base types (integers, numeric, strings, etc.)
 }
 \usage{
@@ -21,8 +18,7 @@
   a \code{DBIResult} object as returned by \code{dbSendQuery}.
   }
 \item{flds}{
-  a data.frame with field descriptions as returned by 
-  \code{\link{dbColumnInfo}}.
+  a field description object as returned by \code{dbColumnInfo}.
   }
 \item{\dots }{
   any additional arguments are passed to the implementing method.
@@ -68,7 +64,6 @@ dbSetDataMappings(rs, flds)
 im <- fetch(rs, n = -1)
 }
 }
-\keyword{methods}
 \keyword{interface}
 \keyword{database}
 % vim: syntax=tex

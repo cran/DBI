@@ -1,23 +1,14 @@
-% $Id: dbReadTable-methods.Rd,v 1.1 2003/10/15 18:38:34 dj Exp dj $
-\name{dbReadTable-methods}
-\docType{methods}
+% $Id: dbReadTable.Rd 111 2003-10-07 16:24:09Z dj $
+\name{dbReadTable}
 \alias{dbReadTable}
 \alias{dbWriteTable}
 \alias{dbExistsTable}
 \alias{dbRemoveTable}
-\alias{dbReadTable-methods}
-\alias{dbWriteTable-methods}
-\alias{dbExistsTable-methods}
-\alias{dbRemoveTable-methods}
-\alias{dbReadTable,DBIConnection,character-method}
-\alias{dbWriteTable,DBIConnection,character,data.frame-method}
-\alias{dbExistsTable,DBIConnection,character-method}
-\alias{dbRemoveTable,DBIConnection,character-method}
 \title{
   Convenience functions for Importing/Exporting DBMS tables
 }
 \description{
-  These functions mimic their R/S-Plus counterpart 
+  These functions mimic their R/Splus counterpart 
   \code{get},
   \code{assign},
   \code{exists}, 
@@ -58,8 +49,8 @@
 
   In the case of \code{dbWriteTable}, this argument should be a logical
   specifying whether the \code{row.names} should be output to the
-  output DBMS table; if \code{TRUE}, an extra field whose name will be 
-  whatever the R/S-Plus identifier \code{"row.names"} maps to the DBMS
+  output DBMS table; if \code{TRUE}, the extra field name will be whatever
+  the S identifier \code{"row.names"} maps to the DBMS
   (see \code{\link{make.db.names}}).
   }
 \item{overwrite}{
@@ -68,7 +59,8 @@
   }
 \item{append}{
   a logical specifying whether to append to an existing table
-  in the DBMS.  Its default is \code{FALSE}.
+  in the DBMS.
+  Its default is \code{FALSE}.
   }
 \item{\dots }{
   any optional arguments that the underlying database driver
@@ -91,10 +83,10 @@ out of available connections and/or result sets, or the operation
 violates DBMS integrity constraints (e.g., attempting to write
 duplicate values on a field that's defined as a primary key).
 
-\code{dbWritetable} slightly extend the semantics of \code{assign} to 
-allow overwriting or appending to an existing table.  
+The semantics of \code{assign} are slightly extended to allow
+overwriting or appending to an existing table.  
 }
-\note{The translation of identifiers between R/S-Plus and SQL is done through
+\note{The translation of identifiers between R/Splus and SQL is done through
   calls to \code{\link{make.names}} and \code{\link{make.db.names}}, 
   but we cannot guarantee that the conversion is reversible.  For
   details see \code{\link{make.db.names}}.
@@ -117,7 +109,7 @@ allow overwriting or appending to an existing table.
 }
 \examples{\dontrun{
 conn <- dbConnect("MySQL", group = "vitalAnalysis")
-con2 <- dbConnect("Oracle", username = "user", password = "pwd")
+con2 <- dbConnect("ODBC", "dsn", "user", "pwd")
 if(dbExistsTable(con2, "fuel_frame")){
    fuel.frame <- dbReadTable(con2, "fuel_frame")
    dbRemoveTable(conn, "fuel_frame")
@@ -130,7 +122,6 @@ else
 }
 }
 }
-\keyword{methods}
 \keyword{interface}
 \keyword{database}
 % vim: syntax=tex

@@ -1,12 +1,7 @@
-% $Id: dbConnect-methods.Rd,v 1.1 2003/10/15 18:38:34 dj Exp dj $
-\name{dbConnect-methods}
-\docType{methods}
+% $Id: dbConnect.Rd 201 2006-10-25 18:08:19Z sethf $
+\name{dbConnect}
 \alias{dbDisconnect}
 \alias{dbConnect}
-\alias{dbDisconnect-methods}
-\alias{dbConnect-methods}
-\alias{dbDisconnect,DBIConnection-method}
-\alias{dbConnect,DBIDriver-method}
 \title{
   Create a connection to a DBMS
 }
@@ -22,7 +17,7 @@
 \item{drv}{
   an object that inherits from \code{DBIDriver},
   a character string specifying the DBMS driver, e.g., "RPgSQL", 
-  "ROracle", "Informix", "RSQLite", or possibly another \code{dbConnect} object.
+  "ROracle", "Informix", or possibly another \code{dbConnect} object.
   }
 \item{conn}{
   a  connection object as produced by \code{dbConnect}.
@@ -44,8 +39,8 @@
   the operation succeeded or not.
 }
 \section{Side Effects}{
-  A connection between R/S-Plus and the database server is established,
-  and the R/S-Plus program becomes a client of the database engine.
+  A connection between R/Splus and the database server is established,
+  and the R/Splus program becomes a client of the database engine.
   Typically the connections is through the TCP/IP protocol, 
   but this will depend on vendor-specific details.
 }
@@ -57,7 +52,7 @@
   The authorization mechanism is left unspecified, so check the 
   documentation of individual drivers for details.
 }
-\note{
+\section{notes}{
   Make sure you close the connection using \code{dbDisconnect(conn)}
   when it is not longer needed.
 }
@@ -76,11 +71,12 @@
   \code{\link{dbReadTable}}
 }
 \examples{\dontrun{
-# create an Oracle instance and create one connection.
-drv <- dbDriver("Oracle")
+# create an RODBC instance and create one connection.
+m <- dbDriver("RODBC")
 
 # open the connection using user, passsword, etc., as
-con <- dbConnect(drv, "user/password@dbname")
+# specified in the file \file{\$HOME/.my.cnf}
+con <- dbConnect(m, dsn="data.source", uid="user", pwd="password"))    
 
 # Run an SQL statement by creating first a resultSet object
 rs <- dbSendQuery(con, statement = paste(
@@ -93,7 +89,6 @@ data <- fetch(rs, n = -1)   # extract all rows
 dim(data)
 }
 }
-\keyword{methods}
 \keyword{interface}
 \keyword{database}
 % vim: syntax=tex

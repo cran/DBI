@@ -1,25 +1,15 @@
-% $Id: dbSendQuery-methods.Rd,v 1.1 2003/10/15 18:38:34 dj Exp dj $
-\name{dbSendQuery-methods}
-\docType{methods}
+% $Id: dbSendQuery.Rd 111 2003-10-07 16:24:09Z dj $
+\name{dbSendQuery}
 \alias{dbSendQuery}
 \alias{dbGetQuery}
 \alias{dbClearResult}
 \alias{dbGetException}
-\alias{dbSendQuery-methods}
-\alias{dbGetQuery-methods}
-\alias{dbClearResult-methods}
-\alias{dbGetException-methods}
-\alias{dbSendQuery,DBIConnection,character-method}
-\alias{dbGetQuery,DBIConnection,character-method}
-\alias{dbClearResult,DBIResult-method}
-\alias{dbGetException,DBIConnection-method}
 \title{
   Execute a statement on a given database connection
 }
 \description{
-  Methods for submiting and executing arbitrary SQL statements on a
-  specific connection, clearing result sets, and extracting exception
-  information from the DBMS.
+  Submits and executes an arbitrary SQL statement on a
+  specific connection.  Also, clears (closes) a result set.
 }
 \usage{
   dbSendQuery(conn, statement, ...)
@@ -62,9 +52,9 @@
   connected through the \code{conn} object.  The DBMS executes the
   statement, possibly generating vast amounts of data.  Where these
   data reside is driver-specific:  some drivers may choose to leave the
-  output on the server and transfer them piecemeal to R/S-Plus, others may
+  output on the server and transfer them piecemeal to R/Splus, others may
   transfer all the data to the client -- but not necessarily to the 
-  memory that R/S-Plus manages.  See the individual drivers' 
+  memory that R/Splus manages.  See the individual drivers' 
   \code{\link{dbSendQuery}} method for implementation details.
 }
 \details{
@@ -102,7 +92,6 @@ res <- dbSendQuery(con, "SELECT * from liv25")
 data <- fetch(res, n = -1)
 }
 }
-\keyword{methods}
 \keyword{interface}
 \keyword{database}
 % vim: syntax=tex

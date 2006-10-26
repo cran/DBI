@@ -1,8 +1,12 @@
-% $Id: DBIDriver-class.Rd,v 1.1 2003/10/07 16:24:09 dj Exp $
+% $Id: DBIDriver-class.Rd 201 2006-10-25 18:08:19Z sethf $
 \name{DBIDriver-class}
 \docType{class}
+
 \alias{DBIDriver-class}
+\alias{summary,DBIObject-method}
+
 \title{Class DBIDriver}
+
 \description{  
    Base class for all DBMS drivers (e.g., ODBC, Oracle, MySQL, PostgreSQL).
 }

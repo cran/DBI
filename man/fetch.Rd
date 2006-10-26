@@ -1,12 +1,11 @@
-% $Id: fetch-methods.Rd,v 1.1 2003/10/15 18:38:34 dj Exp dj $
-\name{fetch-methods}
-\docType{methods}
+% $Id: fetch.Rd 111 2003-10-07 16:24:09Z dj $
+\name{fetch}
 \alias{fetch}
-\alias{fetch-methods}
-\alias{fetch,DBIResult,numeric-method}
-\title{Fetch records from a previously executed query}
-\description{
+\title{
   Fetch records from a previously executed query
+}
+\description{
+  Fetch records from a previously executed query.
 }
 \usage{
   fetch(res, n, ...)
@@ -23,10 +22,7 @@
 \item{n}{
   maximum number of records to retrieve per fetch.
   Use \code{n = -1} to retrieve all pending records.
-  Some implementations may recognize other special values, e.g.,
-  \code{RMySQL}, \code{ROracle}, and \code{RSQLite} use a value 
-  of \code{n = 0} for fetching the defined \code{fetch.default.rec} in 
-  the \code{\link{dbDriver}} invocation.
+  Some implementations may recognize other special values.
   }
 \item{\dots }{
   any other database-engine specific arguments.
@@ -39,18 +35,11 @@
 }
 
 \section{Side Effects}{
-  As the R/S-Plus client fetches records the remote database server
+  As the R/Splus client fetches records the remote database server
   updates its cursor accordingly.
 }
 \details{
-  How the actual fetching is done is implementation-dependent.
-  Some implementations may leave the result in the DBMS and bring
-  chunks of size \code{n} to prevent exhausting 
-  the R/S-Plus memory, but there may be a performance penalty;
-  other implementations may copy the entire result set to the a
-  memory space under the driver's control;
-  others may yet return the entire result set directly to R/S-Plus.
-  See the individual drivers' documentation.
+  See the notes for the various database server implementations.
 }
 \note{
   Make sure you close the result set with \code{\link{dbClearResult}}
@@ -72,7 +61,7 @@
 }
 \examples{\dontrun{
 # Run an SQL statement by creating first a resultSet object
-drv <- dbDriver("Oracle")
+drv <- dbDriver("ODBC")
 con <- dbConnect(drv, ...)
 res <- dbSendQuery(con, statement = paste(
                       "SELECT w.laser_id, w.wavelength, p.cut_off",
@@ -89,7 +78,6 @@ dbHasCompleted(res)
 data2 <- fetch(res, n = -1)
 }
 }
-\keyword{methods}
 \keyword{interface}
 \keyword{database}
 % vim: syntax=tex

@@ -1,21 +1,16 @@
-% $Id: dbDriver-methods.Rd,v 1.1 2003/10/15 18:38:34 dj Exp dj $
-\name{dbDriver-methods}
-\docType{methods}
+% $Id: dbDriver.Rd 201 2006-10-25 18:08:19Z sethf $
+\name{dbDriver}
 \alias{dbDriver}
-\alias{dbUnloadDriver}
-\alias{dbDriver-methods}
-\alias{dbUnloadDriver-methods}
 \alias{dbDriver,character-method}
-\alias{dbUnloadDriver,DBIDriver-method}
+\alias{dbUnloadDriver}
 \title{
   Database Interface (DBI) Classes and drivers
 }
 \description{
-  The \emph{virtual} classes and generics in the \code{DBI} package
-  define the interface to database management systems (DBMS).  They 
-  are extended by packages or drivers that implement the methods in 
-  the context of specific DBMS (e.g., Informix, MySQL, Oracle, ODBC, 
-  PostgreSQL, SQLite).
+  These \emph{virtual} classes and their methods define the interface to
+  database management systems (DBMS).  They are extended by packages
+  or drivers that implement the methods in the context of specific
+  DBMS (e.g., Berkeley DB, MySQL, Oracle, ODBC, PostgreSQL, SQLite).
 }
 \usage{
   dbDriver(drvName, ...)
@@ -50,7 +45,7 @@
 \details{
   The virtual class \code{DBIDriver} defines the operations 
   for creating connections and defining data type mappings.
-  Actual driver classes, for instance \code{RSQLite}, \code{RMySQL}, etc.
+  Actual driver classes, for instance \code{RPgSQL}, \code{RMySQL}, etc.
   implement these operations in a DBMS-specific manner.
 
   More generally, the DBI defines a very small set of classes and
@@ -97,7 +92,6 @@ pcon <- dbConnect(p, "user", "password", "dbname")
 dbListTables(pcon)
 }
 }
-\keyword{methods}
 \keyword{interface}
 \keyword{database}
 % vim: syntax=tex

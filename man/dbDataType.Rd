@@ -1,14 +1,13 @@
-% $Id: dbDataType-methods.Rd,v 1.1 2003/10/15 18:38:34 dj Exp dj $
-\name{dbDataType-methods}
-\docType{methods}
+% $Id: dbDataType.Rd 201 2006-10-25 18:08:19Z sethf $
+\name{dbDataType}
 \alias{dbDataType}
-\alias{dbDataType-methods}
 \alias{dbDataType,DBIObject-method}
+\alias{dbDataType.default}
 \title{
   Determine the SQL Data Type of an S object
 }
 \description{
-  Determine an (approximately) appropriate SQL data type for an R/S-Plus object.
+  Determine an (approximately) appropriate SQL data type for an S object.
 }
 \usage{
   dbDataType(dbObj, obj, ...)
@@ -19,7 +18,7 @@
   \code{OracleDriver}.
 }
 \item{obj}{
-  R/S-Plus object whose SQL type we want to determine.
+  R/Splus object whose SQL type we want to determine.
 }
 \item{\dots }{
   any other parameters that individual methods may need.
@@ -30,7 +29,7 @@
 }
 \details{
   This is a generic function.  The default method determines the
-  SQL type of an R/S-Plus object according to the SQL 92 specification,
+  SQL type of an R/Splus object according to the SQL 92 specification,
   which may serve as a starting point for driver implementations.
 }
 \references{
@@ -43,12 +42,10 @@
   \code{\link{make.db.names}}
 }
 \examples{\dontrun{
-data(quakes)
-ora <- dbDriver("MySQL")
-sql.type <- dbDataType(ora, quakes)
+ora <- dbDriver("Oracle")
+sql.type <- dbDataType(ora, x)
 }
 }
-\keyword{methods}
 \keyword{interface}
 \keyword{database}
 % docclass is function

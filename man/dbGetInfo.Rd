@@ -1,6 +1,5 @@
-% $Id: dbGetInfo-methods.Rd,v 1.1 2003/10/15 18:38:34 dj Exp dj $
-\name{dbGetInfo-methods}
-\docType{methods}
+% $Id: dbGetInfo.Rd 112 2003-10-08 20:03:12Z dj $
+\name{dbGetInfo}
 \alias{dbGetInfo}
 \alias{dbGetDBIVersion}
 \alias{dbGetStatement}
@@ -8,20 +7,6 @@
 \alias{dbGetRowsAffected}
 \alias{dbColumnInfo}
 \alias{dbHasCompleted}
-\alias{dbGetInfo-methods}
-\alias{dbGetDBIVersion-methods}
-\alias{dbGetStatement-methods}
-\alias{dbGetRowCount-methods}
-\alias{dbGetRowsAffected-methods}
-\alias{dbColumnInfo-methods}
-\alias{dbHasCompleted-methods}
-\alias{dbGetInfo,DBIObject-method}
-\alias{dbGetDBIVersion,-method}
-\alias{dbGetStatement,DBIResult-method}
-\alias{dbGetRowCount,DBIResult-method}
-\alias{dbGetRowsAffected,DBIResult-method}
-\alias{dbColumnInfo,DBIResult-method}
-\alias{dbHasCompleted,DBIResult-method}
 \title{
   Database interface meta-data
 }
@@ -30,7 +15,7 @@
 }
 \usage{
   dbGetInfo(dbObj, ...)       # meta-data for any DBIObject
-  dbGetDBIVersion()           # DBI version 
+  dbGetDBIVersion(...)           # DBI version 
   dbGetStatement(res, ...)    # statement that produced result "res"
   dbGetRowCount(res, ...)     # number of rows fetched so far
   dbGetRowsAffected(res, ...) # number of affected rows (e.g., DELETE)
@@ -39,14 +24,14 @@
 }
 \arguments{
 \item{dbObj}{
-  any object that implements some functionality in the R/S-Plus
+  any object that implements some functionality in the R/Splus
   interface to databases (a driver, a connection or a result set).
 }
 \item{res}{
   refers to a \code{DBIResult} object.
 }
 \item{\dots}{
-  driver-specific arguments. 
+  any driver-specific arguments. 
 }
 }
 \value{
@@ -71,16 +56,17 @@
   field can store \code{NULL} values, and possibly other DBMS-specific
   information.
 
-  \code{dbHasCompleted} returns a logical describing whether the operations 
-  has been completed by the DBMS or not.
+  \code{dbHasCompleted} a logical describing whether the operations has
+  been completed by the DBMS or not.
+
 }
 \details{
   These functions implement a minimal set of meta-data describing the 
-  most important aspects of the R/S-Plus to DBMS interface.
+  most important aspects of the R/Splus to DBMS interface.
 
   The \code{dbGetInfo} works very similarly to the function
   \code{options} in that it attempts to extract what the user may
-  request, possibly \code{NULL} if it can't locate the specific piece
+  request, possibly NULL if it can't locate the specific piece
   of meta-data.
 }
 \section{Note}{
@@ -128,7 +114,6 @@ names(dbGetInfo(con))
 names(dbGetInfo(rs)) 
 }
 }
-\keyword{methods}
 \keyword{interface}
 \keyword{database}
 % vim: syntax=tex

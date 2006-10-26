@@ -1,45 +1,36 @@
-% $Id: make.db.names-methods.Rd,v 1.1 2003/10/15 18:38:34 dj Exp dj $
-\name{make.db.names-methods}
-\docType{methods}
+% $Id: make.db.names.Rd 201 2006-10-25 18:08:19Z sethf $
+\name{make.db.names}
 \alias{make.db.names}
-\alias{SQLKeywords}
-\alias{isSQLKeyword}
-\alias{make.db.names-methods}
-\alias{SQLKeywords-methods}
-\alias{isSQLKeyword-methods}
 \alias{make.db.names,DBIObject,character-method}
+\alias{SQLKeywords}
 \alias{SQLKeywords,DBIObject-method}
 \alias{SQLKeywords,missing-method}
+\alias{isSQLKeyword}
 \alias{isSQLKeyword,DBIObject,character-method}
 \title{
-  Make R/S-Plus identifiers into legal SQL identifiers
+  Make R/Splus identifiers into legal SQL identifiers
 }
 \description{
   Produce legal SQL identifiers from a character vector.
 }
-\synopsis{
-  make.db.names(dbObj, snames, ...)
-  SQLKeywords(dbObj, ...)
-  isSQLKeyword(dbObj, name, ...)
-}
 \usage{
-  make.db.names(dbObj, snames, unique=T, allow.keywords=T)
+  make.db.names(dbObj, snames, keywords, unique=TRUE, allow.keywords=TRUE, ...)
   SQLKeywords(dbObj, ...)
   isSQLKeyword(dbObj, name, keywords=.SQL92Keywords, 
-                  case=c("lower", "upper", "any")[3])
+                  case=c("lower", "upper", "any")[3], ...)
 }
 \arguments{
 \item{dbObj}{
   any DBI object (e.g., \code{DBIDriver}).
   }
 \item{snames}{
-  a character vector of R/S-Plus identifiers (symbols) from which
+  a character vector of R/Splus identifiers (symbols) from which
   we need to make SQL identifiers.
   }
 \item{name}{
-  a character vector of SQL identifiers we want to check against
-  keywords from the DBMS.
-}
+  a character vector with database identifier candidates we need to
+  determine whether they are legal SQL identifiers or not.
+  }
 \item{unique}{
   logical describing whether the resulting set of SQL names should
   be unique.  Its default is \code{TRUE}.  Following the SQL 92
@@ -52,7 +43,7 @@
   }
 \item{keywords}{
   a character vector with SQL keywords, by default it's 
-  \code{.SQL92Keywords} defined in the \code{DBI} package.
+  \code{.SQL92Keywords} defined by the DBI.
   }
 \item{case}{
   a character string specifying whether to make the comparison
@@ -129,7 +120,6 @@ isSQLKeyword(nam, c(.SQL92Keywords, oracle.keywords))
 [1]  T  T  T  F
 }
 }
-\keyword{methods}
 \keyword{interface}
 \keyword{database}
 % vim: syntax=tex

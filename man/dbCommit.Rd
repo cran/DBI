@@ -1,12 +1,7 @@
-% $Id: dbCommit-methods.Rd,v 1.1 2003/10/15 18:38:34 dj Exp dj $
-\name{dbCommit-methods}
-\docType{methods}
+% $Id: dbCommit.Rd 111 2003-10-07 16:24:09Z dj $
+\name{dbCommit}
 \alias{dbCommit}
 \alias{dbRollback}
-\alias{dbCommit-methods}
-\alias{dbRollback-methods}
-\alias{dbCommit,DBIConnection-method}
-\alias{dbRollback,DBIConnection-method}
 \title{
   DBMS Transaction Management
 }
@@ -63,7 +58,6 @@ if(dbGetInfo(rs, what = "rowsAffected") > 250){
 }
 }
 }
-\keyword{methods}
 \keyword{interface}
 \keyword{database}
 % vim: syntax=tex
