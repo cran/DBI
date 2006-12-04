@@ -1,6 +1,15 @@
-\documentclass[graphics,times,psfig,dvips,hyper]{article}
-% $Id: DBI.tex 163 2006-08-31 23:02:35Z sethf $
-\usepackage{graphics,times,psfig}
+%
+% NOTE -- ONLY EDIT THE .Rnw FILE!!!  The .tex file is
+% likely to be overwritten.
+%
+%\VignetteIndexEntry{A Common Database Interface (DBI)}
+%\VignetteDepends{}
+%\VignetteKeywords{Databases, Relational DBMS, MySQL, SQLite, Oracle, PostgreSQL}
+%\VignettePackage{DBI}
+\documentclass{article}
+% $Id: DBI.Rnw 245 2006-11-25 17:34:11Z rgentlem $
+
+\usepackage{graphicx,times}
 \usepackage[%
   bookmarks=true,
   colorlinks=true,
@@ -153,7 +162,7 @@ The DBI classes are \sclass{DBIObject}, \sclass{DBIDriver},
 these, e.g., \sclass{PgSQLDriver}, \sclass{PgSQLConnection}, and
 so on.
 \begin{figure}
-\psfig{figure=figure1.eps,width=\textwidth,silent=}
+\includegraphics[width=\textwidth]{figure1}
 \caption{Class hierarchy for the DBI. The top two layers
 are comprised of virtual classes and each lower layer represents
 a set of driver-specific implementation classes that provide
