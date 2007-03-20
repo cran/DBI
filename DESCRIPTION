@@ -1,5 +1,5 @@
 Package: DBI
-Version: 0.1-12
+Version: 0.2-0
 Title: R Database Interface 
 Author: R Special Interest Group on Databases (R-SIG-DB)
 Maintainer: David A. James <daj025@gmail.com>
@@ -11,4 +11,4 @@ Description: A database interface (DBI) definition for
 SaveImage: yes
 License: GPL (version 2 or later)
 Collate: setup.R DBI.R Util.R zzz.R
-Packaged: Mon Dec  4 06:57:30 2006; sfalcon
+Packaged: Tue Mar 20 10:48:10 2007; sfalcon
