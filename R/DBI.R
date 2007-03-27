@@ -1,4 +1,4 @@
-## $Id: DBI.R 163 2006-08-31 23:02:35Z sethf $
+## $Id$
 ##
 ## 
 ## Database Interface Definition
@@ -47,18 +47,7 @@ setClass("DBIObject", "VIRTUAL")
 setGeneric("dbGetInfo", 
    def = function(dbObj, ...) standardGeneric("dbGetInfo")
 )
-if(!isGeneric("format")){
-   setGeneric("format")
-}
-if(!isGeneric("print")){
-   setGeneric("print")
-}
-if(!isGeneric("show")){
-   setGeneric("show")
-}
-if(!isGeneric("summary")){
-   setGeneric("summary")
-}
+
 ## implementations may overload this method for all or some of its classes
 setMethod("summary", "DBIObject", 
    def = function(object, ...){

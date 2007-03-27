@@ -1,4 +1,4 @@
-% $Id: dbDriver.Rd 201 2006-10-25 18:08:19Z sethf $
+% $Id$
 \name{dbDriver}
 \alias{dbDriver}
 \alias{dbDriver,character-method}

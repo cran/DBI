@@ -1,4 +1,4 @@
-% $Id: print.list.pairs.Rd 111 2003-10-07 16:24:09Z dj $
+% $Id$
 \name{print.list.pairs}
 \alias{print.list.pairs}
 \alias{print}
