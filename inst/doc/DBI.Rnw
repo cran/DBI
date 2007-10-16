@@ -7,7 +7,7 @@
 %\VignetteKeywords{Databases, Relational DBMS, MySQL, SQLite, Oracle, PostgreSQL}
 %\VignettePackage{DBI}
 \documentclass{article}
-% $Id$
+% $Id: DBI.Rnw 245 2006-11-25 17:34:11Z rgentlem $
 
 \usepackage{graphicx,times}
 \usepackage[%

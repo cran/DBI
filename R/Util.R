@@ -1,5 +1,5 @@
 ## 
-## $Id$
+## $Id: Util.R 201 2006-10-25 18:08:19Z sethf $
 ##
 ## Utilities.  These actually have been implemented by the DBI, 
 ## but individual driver could overload them;  for instance, the

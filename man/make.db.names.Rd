@@ -1,4 +1,4 @@
-% $Id$
+% $Id: make.db.names.Rd 201 2006-10-25 18:08:19Z sethf $
 \name{make.db.names}
 \alias{make.db.names}
 \alias{make.db.names,DBIObject,character-method}

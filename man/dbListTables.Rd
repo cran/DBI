@@ -1,4 +1,4 @@
-% $Id$
+% $Id: dbListTables.Rd 113 2003-10-08 20:03:12Z dj $
 \name{dbListTables}
 \alias{dbListTables}
 \alias{dbListFields}

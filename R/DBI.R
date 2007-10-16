@@ -1,4 +1,4 @@
-## $Id$
+## $Id: DBI.R 286 2007-03-27 22:39:41Z sethf $
 ##
 ## 
 ## Database Interface Definition

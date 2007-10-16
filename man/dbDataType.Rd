@@ -1,4 +1,4 @@
-% $Id$
+% $Id: dbDataType.Rd 201 2006-10-25 18:08:19Z sethf $
 \name{dbDataType}
 \alias{dbDataType}
 \alias{dbDataType,DBIObject-method}

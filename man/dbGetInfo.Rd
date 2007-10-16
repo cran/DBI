@@ -1,4 +1,4 @@
-% $Id$
+% $Id: dbGetInfo.Rd 112 2003-10-08 20:03:12Z dj $
 \name{dbGetInfo}
 \alias{dbGetInfo}
 \alias{dbGetDBIVersion}

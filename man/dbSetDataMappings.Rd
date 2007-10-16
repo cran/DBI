@@ -1,4 +1,4 @@
-% $Id$
+% $Id: dbSetDataMappings.Rd 111 2003-10-07 16:24:09Z dj $
 \name{dbSetDataMappings}
 \alias{dbSetDataMappings}
 \title{

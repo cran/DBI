@@ -1,4 +1,4 @@
-% $Id$
+% $Id: DBIConnection-class.Rd 111 2003-10-07 16:24:09Z dj $
 \name{DBIConnection-class}
 \docType{class}
 \alias{DBIConnection-class}

@@ -1,4 +1,4 @@
-% $Id$
+% $Id: DBIDriver-class.Rd 201 2006-10-25 18:08:19Z sethf $
 \name{DBIDriver-class}
 \docType{class}
 
