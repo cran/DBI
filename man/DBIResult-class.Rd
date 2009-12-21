@@ -1,4 +1,4 @@
-% $Id: DBIResult-class.Rd 111 2003-10-07 16:24:09Z dj $
+% $Id$
 \name{DBIResult-class}
 \docType{class}
 \alias{DBIResult-class}

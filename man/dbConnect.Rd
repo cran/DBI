@@ -1,4 +1,4 @@
-% $Id: dbConnect.Rd 201 2006-10-25 18:08:19Z sethf $
+% $Id$
 \name{dbConnect}
 \alias{dbDisconnect}
 \alias{dbConnect}

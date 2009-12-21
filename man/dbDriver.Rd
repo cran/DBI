@@ -1,4 +1,4 @@
-% $Id: dbDriver.Rd 337 2007-10-17 01:42:26Z daj025@gmail.com $
+% $Id$
 \name{dbDriver}
 \alias{dbDriver}
 \alias{dbDriver,character-method}

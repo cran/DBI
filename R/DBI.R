@@ -1,4 +1,4 @@
-## $Id: DBI.R 286 2007-03-27 22:39:41Z sethf $
+## $Id$
 ##
 ## 
 ## Database Interface Definition
@@ -50,7 +50,7 @@ setGeneric("dbGetInfo",
 
 ## implementations may overload this method for all or some of its classes
 setMethod("summary", "DBIObject", 
-   def = function(object, ...){
+   definition = function(object, ...){
       info <- dbGetInfo(dbObj = object, ...)
       cat(class(object),"\n")
       print.list.pairs(info)
@@ -80,7 +80,7 @@ setGeneric("dbDriver",
    valueClass = "DBIDriver")
 
 setMethod("dbDriver", "character",
-   def = function(drvName, ...) {
+   definition = function(drvName, ...) {
       do.call(as.character(drvName), list(...))
    }
 )
