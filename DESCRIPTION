@@ -1,6 +1,6 @@
 Package: DBI
-Version: 0.4
-Date: 2016-04-30
+Version: 0.4-1
+Date: 2016-05-07
 Title: R Database Interface
 Description: A database interface definition for communication
     between R and relational database management systems.  All
@@ -24,10 +24,10 @@ Collate: 'DBObject.R' 'DBDriver.R' 'DBConnection.R' 'ANSI.R'
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
 NeedsCompilation: no
-Packaged: 2016-04-30 14:46:21 UTC; muelleki
+Packaged: 2016-05-07 13:24:22 UTC; muelleki
 Author: R Special Interest Group on Databases (R-SIG-DB) [aut],
   Hadley Wickham [aut],
   Kirill Müller [aut, cre]
 Maintainer: Kirill Müller <krlmlr+r@mailbox.org>
 Repository: CRAN
-Date/Publication: 2016-05-02 13:21:04
+Date/Publication: 2016-05-08 09:53:30
