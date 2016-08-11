@@ -2,7 +2,6 @@
 % Please edit documentation in R/DBResult.R
 \name{dbGetRowCount}
 \alias{dbGetRowCount}
-\alias{dbGetRowCount,DBIResult-method}
 \title{The number of rows fetched so far}
 \usage{
 dbGetRowCount(res, ...)
@@ -19,11 +18,29 @@ a numeric vector of length 1
 This value is increased by calls to \code{\link{dbFetch}}. For a data
 modifying query, the return value is 0.
 }
+\examples{
+con <- dbConnect(RSQLite::SQLite(), ":memory:")
+
+dbWriteTable(con, "mtcars", mtcars)
+rs <- dbSendQuery(con, "SELECT * FROM mtcars")
+
+dbGetRowCount(rs)
+ret1 <- dbFetch(rs, 10)
+dbGetRowCount(rs)
+ret2 <- dbFetch(rs)
+dbGetRowCount(rs)
+nrow(ret1) + nrow(ret2)
+
+dbClearResult(rs)
+dbDisconnect(con)
+}
 \seealso{
-Other DBIResult generics: \code{\link{dbClearResult}},
-  \code{\link{dbColumnInfo}}, \code{\link{dbFetch}},
+Other DBIResult generics: \code{\link{DBIResult-class}},
+  \code{\link{SQL}}, \code{\link{dbBind}},
+  \code{\link{dbClearResult}}, \code{\link{dbColumnInfo}},
+  \code{\link{dbFetch}}, \code{\link{dbGetInfo}},
   \code{\link{dbGetRowsAffected}},
   \code{\link{dbGetStatement}},
-  \code{\link{dbHasCompleted}}
+  \code{\link{dbHasCompleted}}, \code{\link{dbIsValid}}
 }
 

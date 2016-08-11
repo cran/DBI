@@ -2,7 +2,7 @@
 % Please edit documentation in R/DBDriver.R
 \name{dbListConnections}
 \alias{dbListConnections}
-\title{List currently open connections.}
+\title{List currently open connections}
 \usage{
 dbListConnections(drv, ...)
 }
@@ -18,5 +18,11 @@ a list
 Drivers that implement only a single connections MUST return a list
 containing a single element. If no connection are open, methods MUST
 return an empty list.
+}
+\seealso{
+Other DBIDriver generics: \code{\link{DBIDriver-class}},
+  \code{\link{dbConnect}}, \code{\link{dbDataType}},
+  \code{\link{dbDriver}}, \code{\link{dbGetInfo}},
+  \code{\link{dbIsValid}}
 }
 

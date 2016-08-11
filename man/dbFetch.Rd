@@ -2,9 +2,8 @@
 % Please edit documentation in R/DBResult.R
 \name{dbFetch}
 \alias{dbFetch}
-\alias{dbFetch,DBIResult-method}
 \alias{fetch}
-\title{Fetch records from a previously executed query.}
+\title{Fetch records from a previously executed query}
 \usage{
 dbFetch(res, n = -1, ...)
 
@@ -31,37 +30,39 @@ as a data.frame.
 \code{fetch} is provided for compatibility with older DBI clients - for all
 new code you are strongly encouraged to use \code{dbFetch}. The default
 method for \code{dbFetch} calls \code{fetch} so that it is compatible with
-existing code. Implementors should provide methods for both \code{fetch} and
-\code{dbFetch} until \code{fetch} is deprecated in 2015.
+existing code. Implementors are free to provide methods for \code{dbFetch}
+only.
 }
 \examples{
-if (!require("RSQLite")) {
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
+
 dbWriteTable(con, "mtcars", mtcars)
 
 # Fetch all results
-res <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = 4")
-dbFetch(res)
-dbClearResult(res)
+rs <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = 4")
+dbFetch(rs)
+dbClearResult(rs)
 
 # Fetch in chunks
-res <- dbSendQuery(con, "SELECT * FROM mtcars")
-while (!dbHasCompleted(res)) {
-  chunk <- fetch(res, 10)
+rs <- dbSendQuery(con, "SELECT * FROM mtcars")
+while (!dbHasCompleted(rs)) {
+  chunk <- fetch(rs, 10)
   print(nrow(chunk))
 }
-dbClearResult(res)
+
+dbClearResult(rs)
 dbDisconnect(con)
-}
 }
 \seealso{
 close the result set with \code{\link{dbClearResult}} as soon as you
   finish retrieving the records you want.
 
-Other DBIResult generics: \code{\link{dbClearResult}},
-  \code{\link{dbColumnInfo}}, \code{\link{dbGetRowCount}},
+Other DBIResult generics: \code{\link{DBIResult-class}},
+  \code{\link{SQL}}, \code{\link{dbBind}},
+  \code{\link{dbClearResult}}, \code{\link{dbColumnInfo}},
+  \code{\link{dbGetInfo}}, \code{\link{dbGetRowCount}},
   \code{\link{dbGetRowsAffected}},
   \code{\link{dbGetStatement}},
-  \code{\link{dbHasCompleted}}
+  \code{\link{dbHasCompleted}}, \code{\link{dbIsValid}}
 }
 

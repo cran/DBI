@@ -2,7 +2,7 @@
 % Please edit documentation in R/DBConnection.R
 \name{dbListResults}
 \alias{dbListResults}
-\title{A list of all pending results.}
+\title{A list of all pending results}
 \usage{
 dbListResults(conn, ...)
 }
@@ -20,11 +20,13 @@ a list. If no results are active, an empty list. If only
 List of \linkS4class{DBIResult} objects currently active on the connection.
 }
 \seealso{
-Other connection methods: \code{\link{dbDisconnect}},
-  \code{\link{dbExistsTable}},
-  \code{\link{dbGetException}}, \code{\link{dbGetQuery}},
+Other DBIConnection generics: \code{\link{DBIConnection-class}},
+  \code{\link{dbDataType}}, \code{\link{dbDisconnect}},
+  \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
+  \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
+  \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
   \code{\link{dbListFields}}, \code{\link{dbListTables}},
   \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
-  \code{\link{dbSendQuery}}
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}}
 }
 

@@ -1,4 +1,4 @@
-#' DBIDriver class.
+#' DBIDriver class
 #'
 #' Base class for all DBMS drivers (e.g., RSQLite, MySQL, PostgreSQL).
 #' The virtual class \code{DBIDriver} defines the operations for creating
@@ -9,11 +9,12 @@
 #' @docType class
 #' @name DBIDriver-class
 #' @family DBI classes
+#' @family DBIDriver generics
 #' @export
 #' @include DBObject.R
-setClass("DBIDriver", representation("DBIObject", "VIRTUAL"))
+setClass("DBIDriver", contains = c("DBIObject", "VIRTUAL"))
 
-#' Load and unload database drivers.
+#' Load and unload database drivers
 #'
 #' \code{dbDriver} is a helper method used to create an new driver object
 #' given the name of a database or the corresponding R package. It works
@@ -39,29 +40,28 @@ setClass("DBIDriver", representation("DBIObject", "VIRTUAL"))
 #'   In the case of \code{dbUnloadDriver}, a logical indicating whether the
 #'   operation succeeded or not.
 #' @import methods
+#' @family DBIDriver generics
 #' @examples
-#' if (require("RSQLite")) {
 #' # Create a RSQLite driver with a string
 #' d <- dbDriver("SQLite")
 #' d
 #'
 #' # But better, access the object directly
 #' RSQLite::SQLite()
-#' }
-#' @aliases dbDriver,character-method
 #' @export
 setGeneric("dbDriver",
   def = function(drvName, ...) standardGeneric("dbDriver"),
   valueClass = "DBIDriver")
 
+#' @rdname hidden_aliases
 setMethod("dbDriver", "character",
   definition = function(drvName, ...) {
     findDriver(drvName)(...)
   }
 )
 
+#' @rdname hidden_aliases
 #' @param object Object to display
-#' @rdname DBIDriver-class
 #' @export
 setMethod("show", "DBIDriver", function(object) {
   tryCatch(
@@ -113,13 +113,14 @@ is_attached <- function(x) {
 }
 
 #' @rdname dbDriver
+#' @family DBIDriver generics
 #' @export
 setGeneric("dbUnloadDriver",
   def = function(drv, ...) standardGeneric("dbUnloadDriver"),
   valueClass = "logical"
 )
 
-#' Create a connection to a DBMS.
+#' Create a connection to a DBMS
 #'
 #' Connect to a DBMS going through the appropriate authorization procedure.
 #' Some implementations may allow you to have multiple connections open, so you
@@ -131,35 +132,34 @@ setGeneric("dbUnloadDriver",
 #' \code{"dbname"} for the database name, \code{"username"}, and
 #' \code{"password"}.
 #'
-#' @param drv an object that inherits from \code{\linkS4class{DBIDriver}}, or
-#'   a character string specifying the name of DBMS driver, e.g., "RSQLite",
-#'   "RMySQL", "RPostgreSQL", or an existing \code{\linkS4class{DBIConnection}}
+#' @param drv an object that inherits from \code{\linkS4class{DBIDriver}},
+#'   or an existing \code{\linkS4class{DBIConnection}}
 #'   object (in order to clone an existing connection).
 #' @param ... authorization arguments needed by the DBMS instance; these
 #'   typically include \code{user}, \code{password}, \code{dbname}, \code{host},
 #'   \code{port}, etc.  For details see the appropriate \code{DBIDriver}.
 #' @return An object that extends \code{\linkS4class{DBIConnection}} in a
-#'   database-specific manner. For instance \code{dbConnect("MySQL")} produces
+#'   database-specific manner. For instance \code{dbConnect(RMySQL::MySQL())} produces
 #'   an object of class \code{MySQLConnection}. This object is used to direct
 #'   commands to the database engine.
 #' @seealso \code{\link{dbDisconnect}} to disconnect from a database.
+#' @family DBIDriver generics
 #' @export
 #' @examples
-#' if (require("RSQLite")) {
 #' # SQLite only needs a path to the database. Other database drivers
 #' # will require more details (like username, password, host, port etc)
 #' con <- dbConnect(RSQLite::SQLite(), ":memory:")
 #' con
 #'
 #' dbListTables(con)
+#'
 #' dbDisconnect(con)
-#' }
 setGeneric("dbConnect",
   def = function(drv, ...) standardGeneric("dbConnect"),
   valueClass = "DBIConnection"
 )
 
-#' List currently open connections.
+#' List currently open connections
 #'
 #' Drivers that implement only a single connections MUST return a list
 #' containing a single element. If no connection are open, methods MUST
@@ -167,13 +167,14 @@ setGeneric("dbConnect",
 #'
 #' @param drv A object inheriting from \code{\linkS4class{DBIDriver}}
 #' @param ... Other arguments passed on to methods.
+#' @family DBIDriver generics
 #' @export
 #' @return a list
 setGeneric("dbListConnections",
   def = function(drv, ...) standardGeneric("dbListConnections")
 )
 
-#' Determine the SQL data type of an object.
+#' Determine the SQL data type of an object
 #'
 #' This is a generic function. The default method determines the SQL type of an
 #' R object according to the SQL 92 specification, which may serve as a starting
@@ -190,12 +191,13 @@ setGeneric("dbListConnections",
 #' Notice that many DBMS do not follow IEEE arithmetic, so there are potential
 #' problems with under/overflows and loss of precision.
 #'
-#' @aliases dbDataType,DBIObject-method
 #' @inheritParams dbListConnections
 #' @param dbObj A object inheriting from \code{\linkS4class{DBIDriver}}
+#'   or \code{\linkS4class{DBIConnection}}
 #' @param obj An R object whose SQL type we want to determine.
 #' @return A character string specifying the SQL data type for \code{obj}.
-#' @seealso \code{\link{isSQLKeyword}} \code{\link{make.db.names}}
+#' @family DBIDriver generics
+#' @family DBIConnection generics
 #' @examples
 #' dbDataType(ANSI(), 1:5)
 #' dbDataType(ANSI(), 1)
@@ -208,14 +210,30 @@ setGeneric("dbListConnections",
 #' dbDataType(ANSI(), I(3))
 #'
 #' dbDataType(ANSI(), iris)
+#'
+#' con <- dbConnect(RSQLite::SQLite(), ":memory:")
+#'
+#' dbDataType(con, 1:5)
+#' dbDataType(con, 1)
+#' dbDataType(con, TRUE)
+#' dbDataType(con, Sys.Date())
+#' dbDataType(con, Sys.time())
+#' dbDataType(con, Sys.time() - as.POSIXct(Sys.Date()))
+#' dbDataType(con, c("x", "abc"))
+#' dbDataType(con, list(raw(10), raw(20)))
+#' dbDataType(con, I(3))
+#'
+#' dbDataType(con, iris)
+#'
+#' dbDisconnect(con)
 #' @export
 setGeneric("dbDataType",
   def = function(dbObj, obj, ...) standardGeneric("dbDataType"),
   valueClass = "character"
 )
 
+#' @rdname hidden_aliases
 #' @export
-#' @rdname dbDataType
 setMethod("dbDataType", "DBIObject", function(dbObj, obj, ...) {
   dbiDataType(obj)
 })

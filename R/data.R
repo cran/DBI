@@ -1,9 +1,10 @@
-#' Convert a data frame into form suitable for upload to a SQL database.
+#' Convert a data frame into form suitable for upload to a SQL database
 #'
 #' This is a generic method that coerces R objects into vectors suitable for
 #' upload to the database. The output will vary a little from method to
 #' method depending on whether the main upload device is through a single
 #' SQL string or multiple parameterised queries.
+#' This method is mostly useful for backend implementers.
 #'
 #' The default method:
 #' \itemize{
@@ -17,11 +18,18 @@
 #' @inheritParams rownames
 #' @param value A data frame
 #' @export
+#' @examples
+#' con <- dbConnect(RSQLite::SQLite(), ":memory:")
+#'
+#' sqlData(con, head(iris))
+#' sqlData(con, head(mtcars))
+#'
+#' dbDisconnect(con)
 setGeneric("sqlData", function(con, value, row.names = NA, ...) {
   standardGeneric("sqlData")
 })
 
-#' @rdname sqlData
+#' @rdname hidden_aliases
 #' @export
 setMethod("sqlData", "DBIConnection", function(con, value, row.names = NA, ...) {
   value <- sqlRownamesToColumn(value, row.names)

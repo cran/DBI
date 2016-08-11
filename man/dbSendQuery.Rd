@@ -2,7 +2,7 @@
 % Please edit documentation in R/DBConnection.R
 \name{dbSendQuery}
 \alias{dbSendQuery}
-\title{Execute a statement on a given database connection.}
+\title{Execute a query on a given database connection}
 \usage{
 dbSendQuery(conn, statement, ...)
 }
@@ -16,47 +16,54 @@ dbSendQuery(conn, statement, ...)
 }
 \value{
 An object that inherits from \code{\linkS4class{DBIResult}}.
-  If the statement generates output (e.g., a \code{SELECT} statement) the
-  result set can be used with \code{\link{dbFetch}} to extract records.
-
+  The result set can be used with \code{\link{dbFetch}} to extract records.
   Once you have finished using a result, make sure to disconnect it
   with \code{\link{dbClearResult}}.
 }
 \description{
 The function \code{dbSendQuery} only submits and synchronously executes the
-SQL statement to the database engine.  It does \emph{not} extract any
+SQL query to the database engine.  It does \emph{not} extract any
 records --- for that you need to use the function \code{\link{dbFetch}}, and
 then you must call \code{\link{dbClearResult}} when you finish fetching the
 records you need. For interactive use, you should almost always prefer
 \code{\link{dbGetQuery}}.
 }
+\details{
+This function is for \code{SELECT} queries only.  Some backends may
+support data manipulation queries through this function for compatibility
+reasons.  However, callers are strongly advised to use
+\code{\link{dbSendStatement}} for data manipulation statements.
+}
 \section{Side Effects}{
 
-The statement is submitted to the database server and the DBMS executes the
-statement, possibly generating vast amounts of data. Where these data live
+The query is submitted to the database server and the DBMS executes it,
+possibly generating vast amounts of data. Where these data live
 is driver-specific: some drivers may choose to leave the output on the server
 and transfer them piecemeal to R, others may transfer all the data to the
 client -- but not necessarily to the memory that R manages. See individual
-drivers \code{dbSendQuery} documentation for details.
+drivers' \code{dbSendQuery} documentation for details.
 }
 \examples{
-if (require("RSQLite")) {
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
 dbWriteTable(con, "mtcars", mtcars)
-res <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = 4;")
-dbFetch(res)
-dbClearResult(res)
+rs <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = 4;")
+dbFetch(rs)
+dbClearResult(rs)
 
 dbDisconnect(con)
 }
-}
 \seealso{
-Other connection methods: \code{\link{dbDisconnect}},
-  \code{\link{dbExistsTable}},
-  \code{\link{dbGetException}}, \code{\link{dbGetQuery}},
+For updates: \code{\link{dbSendStatement}} and \code{\link{dbExecute}}.
+
+Other DBIConnection generics: \code{\link{DBIConnection-class}},
+  \code{\link{dbDataType}}, \code{\link{dbDisconnect}},
+  \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
+  \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
+  \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
   \code{\link{dbListFields}}, \code{\link{dbListResults}},
   \code{\link{dbListTables}}, \code{\link{dbReadTable}},
-  \code{\link{dbRemoveTable}}
+  \code{\link{dbRemoveTable}},
+  \code{\link{dbSendStatement}}
 }
 

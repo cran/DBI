@@ -2,7 +2,7 @@
 % Please edit documentation in R/DBConnection.R
 \name{dbListFields}
 \alias{dbListFields}
-\title{List field names of a remote table.}
+\title{List field names of a remote table}
 \usage{
 dbListFields(conn, name, ...)
 }
@@ -18,16 +18,26 @@ dbListFields(conn, name, ...)
 a character vector
 }
 \description{
-List field names of a remote table.
+List field names of a remote table
+}
+\examples{
+con <- dbConnect(RSQLite::SQLite(), ":memory:")
+
+dbWriteTable(con, "mtcars", mtcars)
+dbListFields(con, "mtcars")
+
+dbDisconnect(con)
 }
 \seealso{
 \code{\link{dbColumnInfo}} to get the type of the fields.
 
-Other connection methods: \code{\link{dbDisconnect}},
-  \code{\link{dbExistsTable}},
-  \code{\link{dbGetException}}, \code{\link{dbGetQuery}},
+Other DBIConnection generics: \code{\link{DBIConnection-class}},
+  \code{\link{dbDataType}}, \code{\link{dbDisconnect}},
+  \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
+  \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
+  \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
   \code{\link{dbListResults}}, \code{\link{dbListTables}},
   \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
-  \code{\link{dbSendQuery}}
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}}
 }
 

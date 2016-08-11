@@ -3,14 +3,7 @@
 \docType{class}
 \name{DBIConnection-class}
 \alias{DBIConnection-class}
-\alias{show,DBIConnection-method}
-\title{DBIConnection class.}
-\usage{
-\S4method{show}{DBIConnection}(object)
-}
-\arguments{
-\item{object}{Object to display}
-}
+\title{DBIConnection class}
 \description{
 This virtual class encapsulates the connection to a DBMS, and it provides
 access to dynamic queries, result sets, DBMS session management
@@ -22,11 +15,13 @@ Individual drivers are free to implement single or multiple simultaneous
 connections.
 }
 \examples{
-\dontrun{
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
+con
 dbDisconnect(con)
 
+\dontrun{
 con <- dbConnect(RPostgreSQL::PostgreSQL(), "username", "passsword")
+con
 dbDisconnect(con)
 }
 }
@@ -34,5 +29,15 @@ dbDisconnect(con)
 Other DBI classes: \code{\link{DBIDriver-class}},
   \code{\link{DBIObject-class}},
   \code{\link{DBIResult-class}}
+
+Other DBIConnection generics: \code{\link{dbDataType}},
+  \code{\link{dbDisconnect}}, \code{\link{dbExecute}},
+  \code{\link{dbExistsTable}},
+  \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
+  \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
+  \code{\link{dbListFields}}, \code{\link{dbListResults}},
+  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
+  \code{\link{dbRemoveTable}}, \code{\link{dbSendQuery}},
+  \code{\link{dbSendStatement}}
 }
 

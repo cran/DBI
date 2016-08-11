@@ -2,7 +2,7 @@
 % Please edit documentation in R/DBConnection.R
 \name{dbListTables}
 \alias{dbListTables}
-\title{List remote tables.}
+\title{List remote tables}
 \usage{
 dbListTables(conn, ...)
 }
@@ -19,12 +19,23 @@ a character vector. If no tables present, a character vector
 \description{
 This should, where possible, include temporary tables.
 }
+\examples{
+con <- dbConnect(RSQLite::SQLite(), ":memory:")
+
+dbListTables(con)
+dbWriteTable(con, "mtcars", mtcars)
+dbListTables(con)
+
+dbDisconnect(con)
+}
 \seealso{
-Other connection methods: \code{\link{dbDisconnect}},
-  \code{\link{dbExistsTable}},
-  \code{\link{dbGetException}}, \code{\link{dbGetQuery}},
+Other DBIConnection generics: \code{\link{DBIConnection-class}},
+  \code{\link{dbDataType}}, \code{\link{dbDisconnect}},
+  \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
+  \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
+  \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
   \code{\link{dbListFields}}, \code{\link{dbListResults}},
   \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
-  \code{\link{dbSendQuery}}
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}}
 }
 

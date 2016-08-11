@@ -3,14 +3,7 @@
 \docType{class}
 \name{DBIResult-class}
 \alias{DBIResult-class}
-\alias{show,DBIResult-method}
-\title{DBIResult class.}
-\usage{
-\S4method{show}{DBIResult}(object)
-}
-\arguments{
-\item{object}{Object to display}
-}
+\title{DBIResult class}
 \description{
 This virtual class describes the result and state of execution of
 a DBMS statement (any statement, query or non-query).  The result set
@@ -30,5 +23,13 @@ DBI generics.
 Other DBI classes: \code{\link{DBIConnection-class}},
   \code{\link{DBIDriver-class}},
   \code{\link{DBIObject-class}}
+
+Other DBIResult generics: \code{\link{SQL}},
+  \code{\link{dbBind}}, \code{\link{dbClearResult}},
+  \code{\link{dbColumnInfo}}, \code{\link{dbFetch}},
+  \code{\link{dbGetInfo}}, \code{\link{dbGetRowCount}},
+  \code{\link{dbGetRowsAffected}},
+  \code{\link{dbGetStatement}},
+  \code{\link{dbHasCompleted}}, \code{\link{dbIsValid}}
 }
 

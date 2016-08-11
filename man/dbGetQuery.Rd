@@ -2,8 +2,7 @@
 % Please edit documentation in R/DBConnection.R
 \name{dbGetQuery}
 \alias{dbGetQuery}
-\alias{dbGetQuery,DBIConnection,character-method}
-\title{Send query, retrieve results and then clear result set.}
+\title{Send query, retrieve results and then clear result set}
 \usage{
 dbGetQuery(conn, statement, ...)
 }
@@ -20,31 +19,35 @@ dbGetQuery(conn, statement, ...)
 \code{\link{dbSendQuery}}, then \code{\link{dbFetch}}, ensuring that
 the result is always free-d by \code{\link{dbClearResult}}.
 }
+\details{
+This function is for \code{SELECT} queries only.  Some backends may
+support data manipulation statements through this function for compatibility
+reasons.  However callers are strongly advised to use
+\code{\link{dbExecute}} for data manipulation statements.
+}
 \section{Implementation notes}{
 
 Subclasses should override this method only if they provide some sort of
 performance optimisation.
 }
 \examples{
-if (require("RSQLite")) {
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
 dbWriteTable(con, "mtcars", mtcars)
 dbGetQuery(con, "SELECT * FROM mtcars")
 
-dbBegin(con)
-dbGetQuery(con, "DELETE FROM mtcars WHERE cyl == 4")
-dbRollback(con)
-
 dbDisconnect(con)
 }
-}
 \seealso{
-Other connection methods: \code{\link{dbDisconnect}},
-  \code{\link{dbExistsTable}},
-  \code{\link{dbGetException}}, \code{\link{dbListFields}},
+For updates: \code{\link{dbSendStatement}} and \code{\link{dbExecute}}.
+
+Other DBIConnection generics: \code{\link{DBIConnection-class}},
+  \code{\link{dbDataType}}, \code{\link{dbDisconnect}},
+  \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
+  \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
+  \code{\link{dbIsValid}}, \code{\link{dbListFields}},
   \code{\link{dbListResults}}, \code{\link{dbListTables}},
   \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
-  \code{\link{dbSendQuery}}
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}}
 }
 

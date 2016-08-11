@@ -2,7 +2,7 @@
 % Please edit documentation in R/DBResult.R
 \name{dbClearResult}
 \alias{dbClearResult}
-\title{Clear a result set.}
+\title{Clear a result set}
 \usage{
 dbClearResult(res, ...)
 }
@@ -16,15 +16,26 @@ a logical indicating whether clearing the
   result set was successful or not.
 }
 \description{
-Frees all resources (local and remote) associated with a result set.  It some
+Frees all resources (local and remote) associated with a result set.  In some
 cases (e.g., very large result sets) this can be a critical step to avoid
 exhausting resources (memory, file descriptors, etc.)
 }
+\examples{
+con <- dbConnect(RSQLite::SQLite(), ":memory:")
+
+rs <- dbSendQuery(con, "SELECT 1")
+print(dbFetch(rs))
+
+dbClearResult(rs)
+dbDisconnect(con)
+}
 \seealso{
-Other DBIResult generics: \code{\link{dbColumnInfo}},
-  \code{\link{dbFetch}}, \code{\link{dbGetRowCount}},
+Other DBIResult generics: \code{\link{DBIResult-class}},
+  \code{\link{SQL}}, \code{\link{dbBind}},
+  \code{\link{dbColumnInfo}}, \code{\link{dbFetch}},
+  \code{\link{dbGetInfo}}, \code{\link{dbGetRowCount}},
   \code{\link{dbGetRowsAffected}},
   \code{\link{dbGetStatement}},
-  \code{\link{dbHasCompleted}}
+  \code{\link{dbHasCompleted}}, \code{\link{dbIsValid}}
 }
 

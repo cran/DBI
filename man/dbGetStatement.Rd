@@ -2,7 +2,6 @@
 % Please edit documentation in R/DBResult.R
 \name{dbGetStatement}
 \alias{dbGetStatement}
-\alias{dbGetStatement,DBIResult-method}
 \title{Get the statement associated with a result set}
 \usage{
 dbGetStatement(res, ...)
@@ -18,11 +17,23 @@ a character vector
 \description{
 Returns the statement that was passed to \code{\link{dbSendQuery}}.
 }
+\examples{
+con <- dbConnect(RSQLite::SQLite(), ":memory:")
+
+dbWriteTable(con, "mtcars", mtcars)
+rs <- dbSendQuery(con, "SELECT * FROM mtcars")
+dbGetStatement(rs)
+
+dbClearResult(rs)
+dbDisconnect(con)
+}
 \seealso{
-Other DBIResult generics: \code{\link{dbClearResult}},
-  \code{\link{dbColumnInfo}}, \code{\link{dbFetch}},
+Other DBIResult generics: \code{\link{DBIResult-class}},
+  \code{\link{SQL}}, \code{\link{dbBind}},
+  \code{\link{dbClearResult}}, \code{\link{dbColumnInfo}},
+  \code{\link{dbFetch}}, \code{\link{dbGetInfo}},
   \code{\link{dbGetRowCount}},
   \code{\link{dbGetRowsAffected}},
-  \code{\link{dbHasCompleted}}
+  \code{\link{dbHasCompleted}}, \code{\link{dbIsValid}}
 }
 

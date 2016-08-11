@@ -3,7 +3,7 @@
 \name{dbReadTable}
 \alias{dbReadTable}
 \alias{dbWriteTable}
-\title{Copy data frames to and from database tables.}
+\title{Copy data frames to and from database tables}
 \usage{
 dbReadTable(conn, name, ...)
 
@@ -33,7 +33,6 @@ The translation of identifiers between R and SQL is done through calls
   \code{\link{make.db.names}}.
 }
 \examples{
-if (require("RSQLite")) {
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
 dbWriteTable(con, "mtcars", mtcars[1:10, ])
@@ -41,13 +40,14 @@ dbReadTable(con, "mtcars")
 
 dbDisconnect(con)
 }
-}
 \seealso{
-Other connection methods: \code{\link{dbDisconnect}},
-  \code{\link{dbExistsTable}},
-  \code{\link{dbGetException}}, \code{\link{dbGetQuery}},
+Other DBIConnection generics: \code{\link{DBIConnection-class}},
+  \code{\link{dbDataType}}, \code{\link{dbDisconnect}},
+  \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
+  \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
+  \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
   \code{\link{dbListFields}}, \code{\link{dbListResults}},
   \code{\link{dbListTables}}, \code{\link{dbRemoveTable}},
-  \code{\link{dbSendQuery}}
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}}
 }
 

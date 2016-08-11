@@ -1,9 +1,9 @@
-#' DBIObject class.
+#' DBIObject class
 #'
 #' Base class for all other DBI classes (e.g., drivers, connections). This
 #' is a virtual Class: No objects may be created from it.
 #'
-#' More generally, the DBI defines a very small set of classes and methods that
+#' More generally, the DBI defines a very small set of classes and generics that
 #' allows users and applications access DBMS with a common interface.  The
 #' virtual classes are \code{DBIDriver} that individual drivers extend,
 #' \code{DBIConnection} that represent instances of DBMS connections, and
@@ -30,19 +30,21 @@
 #' @docType class
 #' @family DBI classes
 #' @examples
-#' \dontrun{
-#' drv <- dbDriver("MySQL")
-#' con <- dbConnect(drv, group = "rs-dbi")
-#' res <- dbSendQuery(con, "select * from vitalSuite")
+#' drv <- RSQLite::SQLite()
+#' con <- dbConnect(drv)
+#'
+#' rs <- dbSendQuery(con, "SELECT 1")
 #' is(drv, "DBIObject")   ## True
 #' is(con, "DBIObject")   ## True
-#' is(res, "DBIObject")
-#' }
+#' is(rs, "DBIObject")
+#'
+#' dbClearResult(rs)
+#' dbDisconnect(con)
 #' @export
 #' @name DBIObject-class
 setClass("DBIObject", "VIRTUAL")
 
-#' Get DBMS metadata.
+#' Get DBMS metadata
 #'
 #' @section Implementation notes:
 #' For \code{DBIDriver} subclasses, this should include the version of the
@@ -67,7 +69,9 @@ setClass("DBIObject", "VIRTUAL")
 #'  i.e. \code{\linkS4class{DBIDriver}}, \code{\linkS4class{DBIConnection}},
 #'  or a \code{\linkS4class{DBIResult}}
 #' @param ... Other arguments to methods.
-#' @family DBObject methods
+#' @family DBIDriver generics
+#' @family DBIConnection generics
+#' @family DBIResult generics
 #' @return a named list
 #' @export
 setGeneric("dbGetInfo",
@@ -81,8 +85,24 @@ setGeneric("dbGetInfo",
 #'
 #' @inheritParams dbGetInfo
 #' @return a logical of length 1
-#' @family DBObject methods
+#' @family DBIDriver generics
+#' @family DBIConnection generics
+#' @family DBIResult generics
 #' @export
+#' @examples
+#' dbIsValid(RSQLite::SQLite())
+#'
+#' con <- dbConnect(RSQLite::SQLite(), ":memory:")
+#' dbIsValid(con)
+#'
+#' rs <- dbSendQuery(con, "SELECT 1")
+#' dbIsValid(rs)
+#'
+#' dbClearResult(rs)
+#' dbIsValid(rs)
+#'
+#' dbDisconnect(con)
+#' dbIsValid(con)
 setGeneric("dbIsValid",
   def = function(dbObj, ...) standardGeneric("dbIsValid"),
   valueClass = "logical")

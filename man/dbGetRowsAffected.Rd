@@ -2,7 +2,6 @@
 % Please edit documentation in R/DBResult.R
 \name{dbGetRowsAffected}
 \alias{dbGetRowsAffected}
-\alias{dbGetRowsAffected,DBIResult-method}
 \title{The number of rows affected}
 \usage{
 dbGetRowsAffected(res, ...)
@@ -17,13 +16,27 @@ a numeric vector of length 1
 }
 \description{
 This function returns the number of rows that were added, deleted, or updated
-by data modifying query. For a selection query, this function returns 0.
+by a data manipulation statement. For a selection query, this function
+returns 0.
+}
+\examples{
+con <- dbConnect(RSQLite::SQLite(), ":memory:")
+
+dbWriteTable(con, "mtcars", mtcars)
+rs <- dbSendStatement(con, "DELETE FROM mtcars")
+dbGetRowsAffected(rs)
+nrow(mtcars)
+
+dbClearResult(rs)
+dbDisconnect(con)
 }
 \seealso{
-Other DBIResult generics: \code{\link{dbClearResult}},
-  \code{\link{dbColumnInfo}}, \code{\link{dbFetch}},
+Other DBIResult generics: \code{\link{DBIResult-class}},
+  \code{\link{SQL}}, \code{\link{dbBind}},
+  \code{\link{dbClearResult}}, \code{\link{dbColumnInfo}},
+  \code{\link{dbFetch}}, \code{\link{dbGetInfo}},
   \code{\link{dbGetRowCount}},
   \code{\link{dbGetStatement}},
-  \code{\link{dbHasCompleted}}
+  \code{\link{dbHasCompleted}}, \code{\link{dbIsValid}}
 }
 

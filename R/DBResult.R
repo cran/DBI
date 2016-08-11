@@ -1,4 +1,4 @@
-#' DBIResult class.
+#' DBIResult class
 #'
 #' This virtual class describes the result and state of execution of
 #' a DBMS statement (any statement, query or non-query).  The result set
@@ -16,12 +16,13 @@
 #' @name DBIResult-class
 #' @docType class
 #' @family DBI classes
+#' @family DBIResult generics
 #' @export
 #' @include DBObject.R
-setClass("DBIResult", representation("DBIObject", "VIRTUAL"))
+setClass("DBIResult", contains = c("DBIObject", "VIRTUAL"))
 
+#' @rdname hidden_aliases
 #' @param object Object to display
-#' @rdname DBIResult-class
 #' @export
 setMethod("show", "DBIResult", function(object) {
   # to protect drivers that fail to implement the required methods (e.g.,
@@ -45,7 +46,7 @@ show_result <- function(object) {
   }
 }
 
-#' Fetch records from a previously executed query.
+#' Fetch records from a previously executed query
 #'
 #' Fetch the next \code{n} elements (rows) from the result set and return them
 #' as a data.frame.
@@ -53,10 +54,9 @@ show_result <- function(object) {
 #' \code{fetch} is provided for compatibility with older DBI clients - for all
 #' new code you are strongly encouraged to use \code{dbFetch}. The default
 #' method for \code{dbFetch} calls \code{fetch} so that it is compatible with
-#' existing code. Implementors should provide methods for both \code{fetch} and
-#' \code{dbFetch} until \code{fetch} is deprecated in 2015.
+#' existing code. Implementors are free to provide methods for \code{dbFetch}
+#' only.
 #'
-#' @aliases dbFetch,DBIResult-method
 #' @param res An object inheriting from \code{\linkS4class{DBIResult}}.
 #' @param n maximum number of records to retrieve per fetch. Use \code{n = -1}
 #'   to retrieve all pending records.  Some implementations may recognize other
@@ -68,30 +68,32 @@ show_result <- function(object) {
 #'   finish retrieving the records you want.
 #' @family DBIResult generics
 #' @examples
-#' if (!require("RSQLite")) {
 #' con <- dbConnect(RSQLite::SQLite(), ":memory:")
+#'
 #' dbWriteTable(con, "mtcars", mtcars)
 #'
 #' # Fetch all results
-#' res <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = 4")
-#' dbFetch(res)
-#' dbClearResult(res)
+#' rs <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = 4")
+#' dbFetch(rs)
+#' dbClearResult(rs)
 #'
 #' # Fetch in chunks
-#' res <- dbSendQuery(con, "SELECT * FROM mtcars")
-#' while (!dbHasCompleted(res)) {
-#'   chunk <- fetch(res, 10)
+#' rs <- dbSendQuery(con, "SELECT * FROM mtcars")
+#' while (!dbHasCompleted(rs)) {
+#'   chunk <- fetch(rs, 10)
 #'   print(nrow(chunk))
 #' }
-#' dbClearResult(res)
+#'
+#' dbClearResult(rs)
 #' dbDisconnect(con)
-#' }
 #' @export
 setGeneric("dbFetch",
   def = function(res, n = -1, ...) standardGeneric("dbFetch"),
   valueClass = "data.frame"
 )
 
+#' @rdname hidden_aliases
+#' @export
 setMethod("dbFetch", "DBIResult", function(res, n = -1, ...) {
   fetch(res, n = n, ...)
 })
@@ -103,9 +105,9 @@ setGeneric("fetch",
   valueClass = "data.frame"
 )
 
-#' Clear a result set.
+#' Clear a result set
 #'
-#' Frees all resources (local and remote) associated with a result set.  It some
+#' Frees all resources (local and remote) associated with a result set.  In some
 #' cases (e.g., very large result sets) this can be a critical step to avoid
 #' exhausting resources (memory, file descriptors, etc.)
 #'
@@ -115,12 +117,20 @@ setGeneric("fetch",
 #'   result set was successful or not.
 #' @family DBIResult generics
 #' @export
+#' @examples
+#' con <- dbConnect(RSQLite::SQLite(), ":memory:")
+#'
+#' rs <- dbSendQuery(con, "SELECT 1")
+#' print(dbFetch(rs))
+#'
+#' dbClearResult(rs)
+#' dbDisconnect(con)
 setGeneric("dbClearResult",
   def = function(res, ...) standardGeneric("dbClearResult"),
   valueClass = "logical"
 )
 
-#' Information about result types.
+#' Information about result types
 #'
 #' Produces a data.frame that describes the output of a query. The data.frame
 #' should have as many rows as there are output fields in the result set, and
@@ -135,6 +145,15 @@ setGeneric("dbClearResult",
 #'   field can store \code{NULL}s.
 #' @family DBIResult generics
 #' @export
+#' @examples
+#' con <- dbConnect(RSQLite::SQLite(), ":memory:")
+#'
+#' rs <- dbSendQuery(con, "SELECT 1 AS a, 2 AS b")
+#' dbColumnInfo(rs)
+#' dbFetch(rs)
+#'
+#' dbClearResult(rs)
+#' dbDisconnect(con)
 setGeneric("dbColumnInfo",
   def = function(res, ...) standardGeneric("dbColumnInfo"),
   valueClass = "data.frame"
@@ -145,10 +164,18 @@ setGeneric("dbColumnInfo",
 #' Returns the statement that was passed to \code{\link{dbSendQuery}}.
 #'
 #' @inheritParams dbClearResult
-#' @aliases dbGetStatement,DBIResult-method
 #' @return a character vector
 #' @family DBIResult generics
 #' @export
+#' @examples
+#' con <- dbConnect(RSQLite::SQLite(), ":memory:")
+#'
+#' dbWriteTable(con, "mtcars", mtcars)
+#' rs <- dbSendQuery(con, "SELECT * FROM mtcars")
+#' dbGetStatement(rs)
+#'
+#' dbClearResult(rs)
+#' dbDisconnect(con)
 setGeneric("dbGetStatement",
   def = function(res, ...) standardGeneric("dbGetStatement"),
   valueClass = "character"
@@ -158,12 +185,27 @@ setGeneric("dbGetStatement",
 #' Completion status
 #'
 #' This method returns if the operation has completed.
+#' A \code{SELECT} query is completed if all rows have been fetched.
+#' A data manipulation statement is completed if it has been executed.
 #'
 #' @inheritParams dbClearResult
-#' @aliases dbHasCompleted,DBIResult-method
 #' @return a logical vector of length 1
 #' @family DBIResult generics
 #' @export
+#' @examples
+#' con <- dbConnect(RSQLite::SQLite(), ":memory:")
+#'
+#' dbWriteTable(con, "mtcars", mtcars)
+#' rs <- dbSendQuery(con, "SELECT * FROM mtcars")
+#'
+#' dbHasCompleted(rs)
+#' ret1 <- dbFetch(rs, 10)
+#' dbHasCompleted(rs)
+#' ret2 <- dbFetch(rs)
+#' dbHasCompleted(rs)
+#'
+#' dbClearResult(rs)
+#' dbDisconnect(con)
 setGeneric("dbHasCompleted",
   def = function(res, ...) standardGeneric("dbHasCompleted"),
   valueClass = "logical"
@@ -173,13 +215,23 @@ setGeneric("dbHasCompleted",
 #' The number of rows affected
 #'
 #' This function returns the number of rows that were added, deleted, or updated
-#' by data modifying query. For a selection query, this function returns 0.
+#' by a data manipulation statement. For a selection query, this function
+#' returns 0.
 #'
 #' @inheritParams dbClearResult
-#' @aliases dbGetRowsAffected,DBIResult-method
 #' @return a numeric vector of length 1
 #' @family DBIResult generics
 #' @export
+#' @examples
+#' con <- dbConnect(RSQLite::SQLite(), ":memory:")
+#'
+#' dbWriteTable(con, "mtcars", mtcars)
+#' rs <- dbSendStatement(con, "DELETE FROM mtcars")
+#' dbGetRowsAffected(rs)
+#' nrow(mtcars)
+#'
+#' dbClearResult(rs)
+#' dbDisconnect(con)
 setGeneric("dbGetRowsAffected",
   def = function(res, ...) standardGeneric("dbGetRowsAffected"),
   valueClass = "numeric"
@@ -192,22 +244,38 @@ setGeneric("dbGetRowsAffected",
 #' modifying query, the return value is 0.
 #'
 #' @inheritParams dbClearResult
-#' @aliases dbGetRowCount,DBIResult-method
 #' @return a numeric vector of length 1
 #' @family DBIResult generics
 #' @export
+#' @examples
+#' con <- dbConnect(RSQLite::SQLite(), ":memory:")
+#'
+#' dbWriteTable(con, "mtcars", mtcars)
+#' rs <- dbSendQuery(con, "SELECT * FROM mtcars")
+#'
+#' dbGetRowCount(rs)
+#' ret1 <- dbFetch(rs, 10)
+#' dbGetRowCount(rs)
+#' ret2 <- dbFetch(rs)
+#' dbGetRowCount(rs)
+#' nrow(ret1) + nrow(ret2)
+#'
+#' dbClearResult(rs)
+#' dbDisconnect(con)
 setGeneric("dbGetRowCount",
   def = function(res, ...) standardGeneric("dbGetRowCount"),
   valueClass = "numeric"
 )
 
 
-#' @rdname dbGetInfo
+#' @name dbGetInfo
 #' @section Implementation notes:
 #' The default implementation for \code{DBIResult objects}
 #' constructs such a list from the return values of the corresponding methods,
 #' \code{\link{dbGetStatement}}, \code{\link{dbGetRowCount}},
 #' \code{\link{dbGetRowsAffected}}, and \code{\link{dbHasCompleted}}.
+NULL
+#' @rdname hidden_aliases
 setMethod("dbGetInfo", "DBIResult", function(dbObj, ...) {
   list(
     statement = dbGetStatement(dbObj),
@@ -218,15 +286,50 @@ setMethod("dbGetInfo", "DBIResult", function(dbObj, ...) {
 })
 
 
-#' Bind values to a parameterised/prepared statement.
+#' Bind values to a parameterised/prepared statement
+#'
+#' The \code{\link{dbSendQuery}} function can be called with queries
+#' that contain placeholders for values. This function binds these placeholders
+#' to actual values, and is intended to be called on the result of
+#' \code{\link{dbSendQuery}} before calling \code{\link{dbFetch}}.
+#'
+#' Parametrised or prepared statements are executed as follows:
+#'
+#' \enumerate{
+#'   \item Call \code{\link{dbSendQuery}} with a query that contains placeholders,
+#'     store the returned \code{\linkS4class{DBIResult}} object in a variable.
+#'     Currently, the syntax for the placeholders is backend-specific,
+#'     e.g., \code{?}, \code{$}, \code{$name} and \code{:name}.
+#'     Mixing placeholders (in particular, named and unnamed ones) is not
+#'     recommended.
+#'   \item Call \code{\link{dbBind}} on the \code{DBIResult} object with a list
+#'     that specifies actual values for the placeholders.  The list must be
+#'     named or unnamed, depending on the kind of placeholders used.
+#'     Named values are matched to named paramters, unnamed values
+#'     are matched by position.
+#'   \item Call \code{\link{dbFetch}} on the same \code{DBIResult} object.
+#'   \item Repeat 2. and 3. as necessary.
+#'   \item Close the result set via \code{\link{dbClearResult}}.
+#' }
 #'
 #' @inheritParams dbClearResult
-#' @param params A list of bindings. Named values should be matched to
-#'   named paramters (if supported by the DBI backend). Unnamed values
-#'   will be matched by position. I don't recommend mixing named and unnamed
-#'   values.
+#' @param params A list of bindings
+#' @family DBIResult generics
 #' @export
+#' @examples
+#' \dontrun{
+#' con <- dbConnect(RSQLite::SQLite(), ":memory:")
+#'
+#' dbWriteTable(con, "iris", iris)
+#' iris_result <- dbSendQuery(con, "SELECT * FROM iris WHERE [Petal.Width] > ?")
+#' dbBind(iris_result, list(2.3))
+#' dbFetch(iris_result)
+#' dbBind(iris_result, list(3))
+#' dbFetch(iris_result)
+#'
+#' dbClearResult(iris_result)
+#' dbDisconnect(con)
+#' }
 setGeneric("dbBind", function(res, params, ...) {
   standardGeneric("dbBind")
 })
-

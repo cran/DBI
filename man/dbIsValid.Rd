@@ -20,7 +20,43 @@ a logical of length 1
 This generic tests whether a database object is still valid (i.e. it hasn't
 been disconnected or cleared).
 }
+\examples{
+dbIsValid(RSQLite::SQLite())
+
+con <- dbConnect(RSQLite::SQLite(), ":memory:")
+dbIsValid(con)
+
+rs <- dbSendQuery(con, "SELECT 1")
+dbIsValid(rs)
+
+dbClearResult(rs)
+dbIsValid(rs)
+
+dbDisconnect(con)
+dbIsValid(con)
+}
 \seealso{
-Other DBObject methods: \code{\link{dbGetInfo}}
+Other DBIConnection generics: \code{\link{DBIConnection-class}},
+  \code{\link{dbDataType}}, \code{\link{dbDisconnect}},
+  \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
+  \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
+  \code{\link{dbGetQuery}}, \code{\link{dbListFields}},
+  \code{\link{dbListResults}}, \code{\link{dbListTables}},
+  \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}}
+
+Other DBIDriver generics: \code{\link{DBIDriver-class}},
+  \code{\link{dbConnect}}, \code{\link{dbDataType}},
+  \code{\link{dbDriver}}, \code{\link{dbGetInfo}},
+  \code{\link{dbListConnections}}
+
+Other DBIResult generics: \code{\link{DBIResult-class}},
+  \code{\link{SQL}}, \code{\link{dbBind}},
+  \code{\link{dbClearResult}}, \code{\link{dbColumnInfo}},
+  \code{\link{dbFetch}}, \code{\link{dbGetInfo}},
+  \code{\link{dbGetRowCount}},
+  \code{\link{dbGetRowsAffected}},
+  \code{\link{dbGetStatement}},
+  \code{\link{dbHasCompleted}}
 }
 

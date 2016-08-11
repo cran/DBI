@@ -1,4 +1,4 @@
-#' Safely interpolate values into an SQL string.
+#' Safely interpolate values into an SQL string
 #'
 #' @section Backend authors:
 #' If you are implementing a SQL backend with non-ANSI quoting rules, you'll
@@ -12,20 +12,21 @@
 #'   identifier, i.e. it must start with a letter or \code{.}, and be followed
 #'   by a letter, digit, \code{.} or \code{_}.
 #' @param ... Named values to interpolate into string. All strings
-#'   will be first escaped with \code{\link[DBI]{dbQuoteString}} prior
-#'   to interpolation to protect against SQL interpolation attacks.
+#'   will be first escaped with \code{\link{dbQuoteString}} prior
+#'   to interpolation to protect against SQL injection attacks.
 #' @export
 #' @examples
 #' sql <- "SELECT * FROM X WHERE name = ?name"
 #' sqlInterpolate(ANSI(), sql, name = "Hadley")
+#'
 #' # This is safe because the single quote has been double escaped
 #' sqlInterpolate(ANSI(), sql, name = "H'); DROP TABLE--;")
 setGeneric("sqlInterpolate", function(`_con`, `_sql`, ...) {
   standardGeneric("sqlInterpolate")
 })
 
+#' @rdname hidden_aliases
 #' @export
-#' @rdname sqlInterpolate
 setMethod("sqlInterpolate", "DBIConnection", function(`_con`, `_sql`, ...) {
   sql <- `_sql`
   pos <- sqlParseVariables(`_con`, sql)
@@ -91,8 +92,8 @@ setGeneric("sqlParseVariables", function(con, sql, ...) {
   standardGeneric("sqlParseVariables")
 })
 
+#' @rdname hidden_aliases
 #' @export
-#' @rdname sqlParseVariables
 setMethod("sqlParseVariables", "DBIConnection", function(con, sql, ...) {
   sqlParseVariablesImpl(sql,
     list(

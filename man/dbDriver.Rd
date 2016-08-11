@@ -2,9 +2,8 @@
 % Please edit documentation in R/DBDriver.R
 \name{dbDriver}
 \alias{dbDriver}
-\alias{dbDriver,character-method}
 \alias{dbUnloadDriver}
-\title{Load and unload database drivers.}
+\title{Load and unload database drivers}
 \usage{
 dbDriver(drvName, ...)
 
@@ -42,7 +41,6 @@ connecting to the database engine itself needs to be done through calls to
 \code{dbConnect}.
 }
 \examples{
-if (require("RSQLite")) {
 # Create a RSQLite driver with a string
 d <- dbDriver("SQLite")
 d
@@ -50,5 +48,15 @@ d
 # But better, access the object directly
 RSQLite::SQLite()
 }
+\seealso{
+Other DBIDriver generics: \code{\link{DBIDriver-class}},
+  \code{\link{dbConnect}}, \code{\link{dbDataType}},
+  \code{\link{dbGetInfo}}, \code{\link{dbIsValid}},
+  \code{\link{dbListConnections}}
+
+Other DBIDriver generics: \code{\link{DBIDriver-class}},
+  \code{\link{dbConnect}}, \code{\link{dbDataType}},
+  \code{\link{dbGetInfo}}, \code{\link{dbIsValid}},
+  \code{\link{dbListConnections}}
 }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/DBConnection.R
 \name{dbRemoveTable}
 \alias{dbRemoveTable}
-\title{Remove a table from the database.}
+\title{Remove a table from the database}
 \usage{
 dbRemoveTable(conn, name, ...)
 }
@@ -20,12 +20,25 @@ a logical vector of length 1 indicating success or failure.
 \description{
 Executes the sql \code{DROP TABLE name}.
 }
+\examples{
+con <- dbConnect(RSQLite::SQLite(), ":memory:")
+
+dbExistsTable(con, "iris")
+dbWriteTable(con, "iris", iris)
+dbExistsTable(con, "iris")
+dbRemoveTable(con, "iris")
+dbExistsTable(con, "iris")
+
+dbDisconnect(con)
+}
 \seealso{
-Other connection methods: \code{\link{dbDisconnect}},
-  \code{\link{dbExistsTable}},
-  \code{\link{dbGetException}}, \code{\link{dbGetQuery}},
+Other DBIConnection generics: \code{\link{DBIConnection-class}},
+  \code{\link{dbDataType}}, \code{\link{dbDisconnect}},
+  \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
+  \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
+  \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
   \code{\link{dbListFields}}, \code{\link{dbListResults}},
   \code{\link{dbListTables}}, \code{\link{dbReadTable}},
-  \code{\link{dbSendQuery}}
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}}
 }
 

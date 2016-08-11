@@ -2,7 +2,7 @@
 % Please edit documentation in R/DBResult.R
 \name{dbColumnInfo}
 \alias{dbColumnInfo}
-\title{Information about result types.}
+\title{Information about result types}
 \usage{
 dbColumnInfo(res, ...)
 }
@@ -24,11 +24,23 @@ should have as many rows as there are output fields in the result set, and
 each column in the data.frame should describe an aspect of the result set
 field (field name, type, etc.)
 }
+\examples{
+con <- dbConnect(RSQLite::SQLite(), ":memory:")
+
+rs <- dbSendQuery(con, "SELECT 1 AS a, 2 AS b")
+dbColumnInfo(rs)
+dbFetch(rs)
+
+dbClearResult(rs)
+dbDisconnect(con)
+}
 \seealso{
-Other DBIResult generics: \code{\link{dbClearResult}},
-  \code{\link{dbFetch}}, \code{\link{dbGetRowCount}},
+Other DBIResult generics: \code{\link{DBIResult-class}},
+  \code{\link{SQL}}, \code{\link{dbBind}},
+  \code{\link{dbClearResult}}, \code{\link{dbFetch}},
+  \code{\link{dbGetInfo}}, \code{\link{dbGetRowCount}},
   \code{\link{dbGetRowsAffected}},
   \code{\link{dbGetStatement}},
-  \code{\link{dbHasCompleted}}
+  \code{\link{dbHasCompleted}}, \code{\link{dbIsValid}}
 }
 

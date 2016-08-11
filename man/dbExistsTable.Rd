@@ -20,11 +20,23 @@ a logical vector of length 1.
 \description{
 Does a table exist?
 }
+\examples{
+con <- dbConnect(RSQLite::SQLite(), ":memory:")
+
+dbExistsTable(con, "iris")
+dbWriteTable(con, "iris", iris)
+dbExistsTable(con, "iris")
+
+dbDisconnect(con)
+}
 \seealso{
-Other connection methods: \code{\link{dbDisconnect}},
-  \code{\link{dbGetException}}, \code{\link{dbGetQuery}},
-  \code{\link{dbListFields}}, \code{\link{dbListResults}},
-  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
-  \code{\link{dbRemoveTable}}, \code{\link{dbSendQuery}}
+Other DBIConnection generics: \code{\link{DBIConnection-class}},
+  \code{\link{dbDataType}}, \code{\link{dbDisconnect}},
+  \code{\link{dbExecute}}, \code{\link{dbGetException}},
+  \code{\link{dbGetInfo}}, \code{\link{dbGetQuery}},
+  \code{\link{dbIsValid}}, \code{\link{dbListFields}},
+  \code{\link{dbListResults}}, \code{\link{dbListTables}},
+  \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}}
 }
 
