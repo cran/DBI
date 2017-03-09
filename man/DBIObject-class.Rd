@@ -22,18 +22,19 @@ or parent of the class hierarchy.
 An implementation MUST provide methods for the following generics:
 
 \itemize{
-  \item \code{\link{dbGetInfo}}.
+\item \code{\link[=dbGetInfo]{dbGetInfo()}}.
 }
 
 It MAY also provide methods for:
 
 \itemize{
-  \item \code{\link{summary}}. Print a concise description of the
-    object. The default method invokes \code{dbGetInfo(dbObj)} and prints
-    the name-value pairs one per line.  Individual implementations may
-    tailor this appropriately.
+\item \code{\link[=summary]{summary()}}. Print a concise description of the
+object. The default method invokes \code{dbGetInfo(dbObj)} and prints
+the name-value pairs one per line.  Individual implementations may
+tailor this appropriately.
 }
 }
+
 \examples{
 drv <- RSQLite::SQLite()
 con <- dbConnect(drv)
@@ -51,4 +52,3 @@ Other DBI classes: \code{\link{DBIConnection-class}},
   \code{\link{DBIDriver-class}},
   \code{\link{DBIResult-class}}
 }
-

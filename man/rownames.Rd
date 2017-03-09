@@ -2,8 +2,8 @@
 % Please edit documentation in R/rownames.R
 \name{rownames}
 \alias{rownames}
-\alias{sqlColumnToRownames}
 \alias{sqlRownamesToColumn}
+\alias{sqlColumnToRownames}
 \title{Convert row names back and forth between columns}
 \usage{
 sqlRownamesToColumn(df, row.names = NA)
@@ -15,18 +15,18 @@ sqlColumnToRownames(df, row.names = NA)
 
 \item{row.names}{Either \code{TRUE}, \code{FALSE}, \code{NA} or a string.
 
-  If \code{TRUE}, always translate row names to a column called "row_names".
-  If \code{FALSE}, never translate row names. If \code{NA}, translate
-  rownames only if they're a character vector.
+If \code{TRUE}, always translate row names to a column called "row_names".
+If \code{FALSE}, never translate row names. If \code{NA}, translate
+rownames only if they're a character vector.
 
-  A string is equivalent to \code{TRUE}, but allows you to override the
-  default name.
+A string is equivalent to \code{TRUE}, but allows you to override the
+default name.
 
-  For backward compatibility, \code{NULL} is equivalent to \code{FALSE}.}
+For backward compatibility, \code{NULL} is equivalent to \code{FALSE}.}
 }
 \description{
 These functions provide a reasonably automatic way of preserving the row
-names of data frame during back-and-forth translation to a SQL table.
+names of data frame during back-and-forth translation to an SQL table.
 By default, row names will be converted to an explicit column
 called "row_names", and any query returning a column called "row_names"
 will have those automatically set as row names.
@@ -44,4 +44,3 @@ sqlRownamesToColumn(head(iris), TRUE)
 sqlRownamesToColumn(head(iris), "ROWNAMES")
 
 }
-

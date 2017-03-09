@@ -4,30 +4,32 @@
 \alias{sqlInterpolate}
 \title{Safely interpolate values into an SQL string}
 \usage{
-sqlInterpolate(`_con`, `_sql`, ...)
+sqlInterpolate(conn, sql, ..., .dots = list())
 }
 \arguments{
-\item{_con}{A database connection.}
+\item{conn}{A database connection.}
 
-\item{...}{Named values to interpolate into string. All strings
-will be first escaped with \code{\link{dbQuoteString}} prior
-to interpolation to protect against SQL injection attacks.}
-
-\item{`_sql`}{A SQL string containing containing variables to interpolate.
+\item{sql}{A SQL string containing variables to interpolate.
 Variables must start with a question mark and can be any valid R
 identifier, i.e. it must start with a letter or \code{.}, and be followed
 by a letter, digit, \code{.} or \code{_}.}
+
+\item{..., .dots}{Named values (for \code{...}) or a named list (for \code{.dots})
+to interpolate into a string. All strings
+will be first escaped with \code{\link[=dbQuoteString]{dbQuoteString()}} prior
+to interpolation to protect against SQL injection attacks.}
 }
 \description{
 Safely interpolate values into an SQL string
 }
 \section{Backend authors}{
 
-If you are implementing a SQL backend with non-ANSI quoting rules, you'll
-need to implement a method for \code{\link{sqlParseVariables}}. Failure to
+If you are implementing an SQL backend with non-ANSI quoting rules, you'll
+need to implement a method for \code{\link[=sqlParseVariables]{sqlParseVariables()}}. Failure to
 do so does not expose you to SQL injection attacks, but will (rarely) result
 in errors matching supplied and interpolated variables.
 }
+
 \examples{
 sql <- "SELECT * FROM X WHERE name = ?name"
 sqlInterpolate(ANSI(), sql, name = "Hadley")
@@ -35,4 +37,3 @@ sqlInterpolate(ANSI(), sql, name = "Hadley")
 # This is safe because the single quote has been double escaped
 sqlInterpolate(ANSI(), sql, name = "H'); DROP TABLE--;")
 }
-

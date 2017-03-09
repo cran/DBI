@@ -7,15 +7,15 @@
 dbGetException(conn, ...)
 }
 \arguments{
-\item{conn}{A \code{\linkS4class{DBIConnection}} object, as produced by
-\code{\link{dbConnect}}.}
+\item{conn}{A \linkS4class{DBIConnection} object, as returned by
+\code{\link[=dbConnect]{dbConnect()}}.}
 
 \item{...}{Other parameters passed on to methods.}
 }
 \value{
 a list with elements \code{errorNum} (an integer error number) and
-  \code{errorMsg} (a character string) describing the last error in the
-  connection \code{conn}.
+\code{errorMsg} (a character string) describing the last error in the
+connection \code{conn}.
 }
 \description{
 Get DBMS exceptions
@@ -28,6 +28,6 @@ Other DBIConnection generics: \code{\link{DBIConnection-class}},
   \code{\link{dbIsValid}}, \code{\link{dbListFields}},
   \code{\link{dbListResults}}, \code{\link{dbListTables}},
   \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
-  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}}
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}},
+  \code{\link{dbWriteTable}}
 }
-

@@ -7,7 +7,7 @@
 dbSetDataMappings(res, flds, ...)
 }
 \arguments{
-\item{res}{An object inheriting from \code{\linkS4class{DBIResult}}.}
+\item{res}{An object inheriting from \linkS4class{DBIResult}.}
 
 \item{flds}{a field description object as returned by \code{dbColumnInfo}.}
 
@@ -25,4 +25,3 @@ The details on conversion functions (e.g., arguments, whether they can invoke
 initializers and/or destructors) have not been specified.
 }
 \keyword{internal}
-

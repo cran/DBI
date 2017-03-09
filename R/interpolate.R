@@ -1,18 +1,19 @@
 #' Safely interpolate values into an SQL string
 #'
 #' @section Backend authors:
-#' If you are implementing a SQL backend with non-ANSI quoting rules, you'll
-#' need to implement a method for \code{\link{sqlParseVariables}}. Failure to
+#' If you are implementing an SQL backend with non-ANSI quoting rules, you'll
+#' need to implement a method for [sqlParseVariables()]. Failure to
 #' do so does not expose you to SQL injection attacks, but will (rarely) result
 #' in errors matching supplied and interpolated variables.
 #'
-#' @param _con A database connection.
-#' @param `_sql` A SQL string containing containing variables to interpolate.
+#' @param conn A database connection.
+#' @param sql A SQL string containing variables to interpolate.
 #'   Variables must start with a question mark and can be any valid R
-#'   identifier, i.e. it must start with a letter or \code{.}, and be followed
-#'   by a letter, digit, \code{.} or \code{_}.
-#' @param ... Named values to interpolate into string. All strings
-#'   will be first escaped with \code{\link{dbQuoteString}} prior
+#'   identifier, i.e. it must start with a letter or `.`, and be followed
+#'   by a letter, digit, `.` or `_`.
+#' @param ...,.dots Named values (for `...`) or a named list (for `.dots`)
+#'   to interpolate into a string. All strings
+#'   will be first escaped with [dbQuoteString()] prior
 #'   to interpolation to protect against SQL injection attacks.
 #' @export
 #' @examples
@@ -21,21 +22,21 @@
 #'
 #' # This is safe because the single quote has been double escaped
 #' sqlInterpolate(ANSI(), sql, name = "H'); DROP TABLE--;")
-setGeneric("sqlInterpolate", function(`_con`, `_sql`, ...) {
-  standardGeneric("sqlInterpolate")
-})
+setGeneric(
+  "sqlInterpolate",
+  function(conn, sql, ..., .dots = list()) standardGeneric("sqlInterpolate")
+)
 
 #' @rdname hidden_aliases
 #' @export
-setMethod("sqlInterpolate", "DBIConnection", function(`_con`, `_sql`, ...) {
-  sql <- `_sql`
-  pos <- sqlParseVariables(`_con`, sql)
+setMethod("sqlInterpolate", "DBIConnection", function(conn, sql, ..., .dots = list()) {
+  pos <- sqlParseVariables(conn, sql)
 
   if (length(pos$start) == 0)
     return(SQL(sql))
 
   vars <- substring(sql, pos$start + 1, pos$end)
-  values <- list(...)
+  values <- c(list(...), .dots)
   if (!setequal(vars, names(values))) {
     stop("Supplied vars don't match vars to interpolate", call. = FALSE)
   }
@@ -43,7 +44,7 @@ setMethod("sqlInterpolate", "DBIConnection", function(`_con`, `_sql`, ...) {
 
   safe_values <- vapply(values, function(x) {
     if (is.character(x)) {
-      dbQuoteString(`_con`, x)
+      dbQuoteString(conn, x)
     } else {
       as.character(x)
     }
@@ -63,17 +64,17 @@ setMethod("sqlInterpolate", "DBIConnection", function(`_con`, `_sql`, ...) {
 #' Parse interpolated variables from SQL.
 #'
 #' If you're implementing a backend that uses non-ANSI quoting or commenting
-#' rules, you'll need to implement a method for \code{sqlParseVariables} that
-#' calls \code{sqlParseVariablesImpl} with the appropriate quote and
+#' rules, you'll need to implement a method for `sqlParseVariables` that
+#' calls `sqlParseVariablesImpl` with the appropriate quote and
 #' comment specifications.
 #'
 #'
 #' @param start,end Start and end characters for quotes and comments
 #' @param endRequired Is the ending character of a comment required?
 #' @param doubleEscape Can quoting characters be escaped by doubling them?
-#'   Defaults to \code{TRUE}.
+#'   Defaults to `TRUE`.
 #' @param escape What character can be used to escape quoting characters?
-#'   Defaults to \code{""}, i.e. nothing.
+#'   Defaults to `""`, i.e. nothing.
 #' @keywords internal
 #' @export
 #' @examples
@@ -88,13 +89,14 @@ setMethod("sqlInterpolate", "DBIConnection", function(`_con`, `_sql`, ...) {
 #'   list(sqlQuoteSpec("'", "'"), sqlQuoteSpec('"', '"')),
 #'   list(sqlCommentSpec("#", "\n", FALSE))
 #' )
-setGeneric("sqlParseVariables", function(con, sql, ...) {
-  standardGeneric("sqlParseVariables")
-})
+setGeneric(
+  "sqlParseVariables",
+  function(conn, sql, ...) standardGeneric("sqlParseVariables")
+)
 
 #' @rdname hidden_aliases
 #' @export
-setMethod("sqlParseVariables", "DBIConnection", function(con, sql, ...) {
+setMethod("sqlParseVariables", "DBIConnection", function(conn, sql, ...) {
   sqlParseVariablesImpl(sql,
     list(
       sqlQuoteSpec('"', '"'),
@@ -121,10 +123,10 @@ sqlQuoteSpec <- function(start, end, escape = "", doubleEscape = TRUE) {
 
 #' @export
 #' @rdname sqlParseVariables
-#' @param sql SQL to parse (a character vector of length 1)
-#' @param quotes A list of \code{QuoteSpec} calls defining the quoting
+#' @param sql SQL to parse (a character string)
+#' @param quotes A list of `QuoteSpec` calls defining the quoting
 #'   specification.
-#' @param comments A list of \code{CommentSpec} calls defining the commenting
+#' @param comments A list of `CommentSpec` calls defining the commenting
 #'   specification.
 sqlParseVariablesImpl <- function(sql, quotes, comments) {
   sql_arr <- c(strsplit(as.character(sql), "", fixed = TRUE)[[1]], " ")
@@ -140,7 +142,6 @@ sqlParseVariablesImpl <- function(sql, quotes, comments) {
   quote_spec_offset <- 0L
   comment_spec_offset <- 0L
   sql_variable_start <- 0L
-  sql_variable_end <- 0L
 
   # prepare comments & quotes for quicker comparisions
   for(c in seq_along(comments)) {

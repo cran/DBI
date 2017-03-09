@@ -2,14 +2,15 @@
 % Please edit documentation in R/DBObject.R, R/DBResult.R
 \name{dbGetInfo}
 \alias{dbGetInfo}
+\alias{dbGetInfo}
 \title{Get DBMS metadata}
 \usage{
 dbGetInfo(dbObj, ...)
 }
 \arguments{
-\item{dbObj}{An object inheriting from \code{\linkS4class{DBIObject}},
-i.e. \code{\linkS4class{DBIDriver}}, \code{\linkS4class{DBIConnection}},
-or a \code{\linkS4class{DBIResult}}}
+\item{dbObj}{An object inheriting from \linkS4class{DBIObject},
+i.e. \linkS4class{DBIDriver}, \linkS4class{DBIConnection},
+or a \linkS4class{DBIResult}}
 
 \item{...}{Other arguments to methods.}
 }
@@ -22,9 +23,8 @@ Get DBMS metadata
 \section{Implementation notes}{
 
 For \code{DBIDriver} subclasses, this should include the version of the
-package (\code{driver.version}), the version of the underlying client
-library (\code{client.version}), and the maximum number of connections
-(\code{max.connections}).
+package (\code{driver.version}) and the version of the underlying client
+library (\code{client.version}).
 
 For \code{DBIConnection} objects this should report the version of
 the DBMS engine (\code{db.version}), database name (\code{dbname}),
@@ -42,9 +42,10 @@ being executed (\code{statement}), how many rows have been fetched so far
 
 The default implementation for \code{DBIResult objects}
 constructs such a list from the return values of the corresponding methods,
-\code{\link{dbGetStatement}}, \code{\link{dbGetRowCount}},
-\code{\link{dbGetRowsAffected}}, and \code{\link{dbHasCompleted}}.
+\code{\link[=dbGetStatement]{dbGetStatement()}}, \code{\link[=dbGetRowCount]{dbGetRowCount()}},
+\code{\link[=dbGetRowsAffected]{dbGetRowsAffected()}}, and \code{\link[=dbHasCompleted]{dbHasCompleted()}}.
 }
+
 \seealso{
 Other DBIDriver generics: \code{\link{DBIDriver-class}},
   \code{\link{dbConnect}}, \code{\link{dbDataType}},
@@ -58,14 +59,16 @@ Other DBIConnection generics: \code{\link{DBIConnection-class}},
   \code{\link{dbIsValid}}, \code{\link{dbListFields}},
   \code{\link{dbListResults}}, \code{\link{dbListTables}},
   \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
-  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}}
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}},
+  \code{\link{dbWriteTable}}
 
 Other DBIResult generics: \code{\link{DBIResult-class}},
-  \code{\link{SQL}}, \code{\link{dbBind}},
-  \code{\link{dbClearResult}}, \code{\link{dbColumnInfo}},
-  \code{\link{dbFetch}}, \code{\link{dbGetRowCount}},
+  \code{\link{dbBind}}, \code{\link{dbClearResult}},
+  \code{\link{dbColumnInfo}}, \code{\link{dbFetch}},
+  \code{\link{dbGetRowCount}},
   \code{\link{dbGetRowsAffected}},
   \code{\link{dbGetStatement}},
-  \code{\link{dbHasCompleted}}, \code{\link{dbIsValid}}
+  \code{\link{dbHasCompleted}}, \code{\link{dbIsValid}},
+  \code{\link{dbQuoteIdentifier}},
+  \code{\link{dbQuoteString}}
 }
-

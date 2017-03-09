@@ -1,6 +1,6 @@
 Package: DBI
-Version: 0.5-1
-Date: 2016-09-09
+Version: 0.6
+Date: 2017-03-08
 Title: R Database Interface
 Description: A database interface definition for communication
     between R and relational database management systems.  All
@@ -12,7 +12,8 @@ Authors@R: c(
     person("Kirill", "Müller", email = "krlmlr+r@mailbox.org", role = c("aut", "cre"))
     )
 Depends: R (>= 2.15.0), methods
-Suggests: testthat, RSQLite, knitr, rmarkdown, covr
+Suggests: covr, hms, knitr, magrittr, rprojroot, rmarkdown, RSQLite (>=
+        1.1-2), testthat, xml2
 Encoding: UTF-8
 License: LGPL (>= 2)
 URL: http://rstats-db.github.io/DBI
@@ -24,12 +25,12 @@ Collate: 'DBObject.R' 'DBDriver.R' 'DBConnection.R' 'ANSI.R'
         'rownames.R' 'table-create.R' 'table-insert.R' 'table.R'
         'transactions.R' 'util.R'
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1.9000
+RoxygenNote: 6.0.1
 NeedsCompilation: no
-Packaged: 2016-09-09 21:32:04 UTC; muelleki
+Packaged: 2017-03-08 14:20:41 UTC; muelleki
 Author: R Special Interest Group on Databases (R-SIG-DB) [aut],
   Hadley Wickham [aut],
   Kirill Müller [aut, cre]
 Maintainer: Kirill Müller <krlmlr+r@mailbox.org>
 Repository: CRAN
-Date/Publication: 2016-09-10 01:27:20
+Date/Publication: 2017-03-09 08:18:20

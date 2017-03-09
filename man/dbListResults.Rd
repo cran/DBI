@@ -7,14 +7,14 @@
 dbListResults(conn, ...)
 }
 \arguments{
-\item{conn}{A \code{\linkS4class{DBIConnection}} object, as produced by
-\code{\link{dbConnect}}.}
+\item{conn}{A \linkS4class{DBIConnection} object, as returned by
+\code{\link[=dbConnect]{dbConnect()}}.}
 
 \item{...}{Other parameters passed on to methods.}
 }
 \value{
 a list. If no results are active, an empty list. If only
-  a single result is active, a list with one element.
+a single result is active, a list with one element.
 }
 \description{
 List of \linkS4class{DBIResult} objects currently active on the connection.
@@ -27,6 +27,6 @@ Other DBIConnection generics: \code{\link{DBIConnection-class}},
   \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
   \code{\link{dbListFields}}, \code{\link{dbListTables}},
   \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
-  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}}
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}},
+  \code{\link{dbWriteTable}}
 }
-

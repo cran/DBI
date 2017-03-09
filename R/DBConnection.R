@@ -50,50 +50,47 @@ show_connection <- function(object) {
 #' This closes the connection, discards all pending work, and frees
 #' resources (e.g., memory, sockets).
 #'
-#' @param conn A \code{\linkS4class{DBIConnection}} object, as produced by
-#'   \code{\link{dbConnect}}.
-#' @param ... Other parameters passed on to methods.
-#' @return a logical vector of length 1, indicating success or failure.
+#' @inherit DBItest::spec_connection_disconnect return
+#' @inheritSection DBItest::spec_connection_disconnect Specification
+#'
+#' @inheritParams dbGetQuery
 #' @family DBIConnection generics
 #' @export
 #' @examples
 #' con <- dbConnect(RSQLite::SQLite(), ":memory:")
 #' dbDisconnect(con)
 setGeneric("dbDisconnect",
-  def = function(conn, ...) standardGeneric("dbDisconnect"),
-  valueClass = "logical"
+  def = function(conn, ...) standardGeneric("dbDisconnect")
 )
 
 #' Execute a query on a given database connection
 #'
-#' The function \code{dbSendQuery} only submits and synchronously executes the
+#' The `dbSendQuery()` method only submits and synchronously executes the
 #' SQL query to the database engine.  It does \emph{not} extract any
-#' records --- for that you need to use the function \code{\link{dbFetch}}, and
-#' then you must call \code{\link{dbClearResult}} when you finish fetching the
+#' records --- for that you need to use the [dbFetch()] method, and
+#' then you must call [dbClearResult()] when you finish fetching the
 #' records you need. For interactive use, you should almost always prefer
-#' \code{\link{dbGetQuery}}.
+#' [dbGetQuery()].
 #'
-#' This function is for \code{SELECT} queries only.  Some backends may
-#' support data manipulation queries through this function for compatibility
-#' reasons.  However, callers are strongly advised to use
-#' \code{\link{dbSendStatement}} for data manipulation statements.
+#' This method is for `SELECT` queries only.  Some backends may
+#' support data manipulation queries through this method for compatibility
+#' reasons.  However, callers are strongly encouraged to use
+#' [dbSendStatement()] for data manipulation statements.
 #'
-#' @inheritParams dbDisconnect
-#' @param statement a character vector of length 1 containing SQL.
-#' @return An object that inherits from \code{\linkS4class{DBIResult}}.
-#'   The result set can be used with \code{\link{dbFetch}} to extract records.
-#'   Once you have finished using a result, make sure to disconnect it
-#'   with \code{\link{dbClearResult}}.
-#'
-#' @section Side Effects:
 #' The query is submitted to the database server and the DBMS executes it,
 #' possibly generating vast amounts of data. Where these data live
 #' is driver-specific: some drivers may choose to leave the output on the server
 #' and transfer them piecemeal to R, others may transfer all the data to the
 #' client -- but not necessarily to the memory that R manages. See individual
-#' drivers' \code{dbSendQuery} documentation for details.
+#' drivers' `dbSendQuery()` documentation for details.
+#' @inherit DBItest::spec_result_send_query return
+#' @inheritSection DBItest::spec_result_send_query Specification
+#'
+#' @inheritParams dbGetQuery
+#' @param statement a character string containing SQL.
+#'
 #' @family DBIConnection generics
-#' @seealso For updates: \code{\link{dbSendStatement}} and \code{\link{dbExecute}}.
+#' @seealso For updates: [dbSendStatement()] and [dbExecute()].
 #' @examples
 #' con <- dbConnect(RSQLite::SQLite(), ":memory:")
 #'
@@ -111,26 +108,26 @@ setGeneric("dbSendQuery",
 
 #' Execute a data manipulation statement on a given database connection
 #'
-#' The function \code{dbSendStatement} only submits and synchronously executes the
-#' SQL data manipulation statement (e.g., \code{UPDATE}, \code{DELETE},
-#' \code{INSERT INTO}, \code{DROP TABLE}, ...) to the database engine.  To query
-#' the number of affected rows, call \code{\link{dbGetRowsAffected}} on the
-#' returned result object.  You must also call \code{\link{dbClearResult}} after
+#' The `dbSendStatement()` method only submits and synchronously executes the
+#' SQL data manipulation statement (e.g., `UPDATE`, `DELETE`,
+#' `INSERT INTO`, `DROP TABLE`, ...) to the database engine.  To query
+#' the number of affected rows, call [dbGetRowsAffected()] on the
+#' returned result object.  You must also call [dbClearResult()] after
 #' that. For interactive use, you should almost always prefer
-#' \code{\link{dbExecute}}.
+#' [dbExecute()].
 #'
-#' \code{\link{dbSendStatement}} comes with a default implementation that simply
-#' forwards to \code{\link{dbSendQuery}}, to support backends that only
+#' [dbSendStatement()] comes with a default implementation that simply
+#' forwards to [dbSendQuery()], to support backends that only
 #' implement the latter.
 #'
-#' @inheritParams dbDisconnect
-#' @param statement a character vector of length 1 containing SQL.
-#' @return An object that inherits from \code{\linkS4class{DBIResult}}.
-#'   Once you have finished using a result, make sure to disconnect it
-#'   with \code{\link{dbClearResult}}.
+#' @inherit DBItest::spec_result_send_statement return
+#' @inheritSection DBItest::spec_result_send_statement Specification
+#'
+#' @inheritParams dbGetQuery
+#' @param statement a character string containing SQL.
 #'
 #' @family DBIConnection generics
-#' @seealso For queries: \code{\link{dbSendQuery}} and \code{\link{dbGetQuery}}.
+#' @seealso For queries: [dbSendQuery()] and [dbGetQuery()].
 #' @examples
 #' con <- dbConnect(RSQLite::SQLite(), ":memory:")
 #'
@@ -160,23 +157,30 @@ setMethod(
 
 #' Send query, retrieve results and then clear result set
 #'
-#' \code{dbGetQuery} comes with a default implementation that calls
-#' \code{\link{dbSendQuery}}, then \code{\link{dbFetch}}, ensuring that
-#' the result is always free-d by \code{\link{dbClearResult}}.
+#' Returns the result of a query as a data frame.
+#' `dbGetQuery()` comes with a default implementation
+#' (which should work with most backends) that calls
+#' [dbSendQuery()], then [dbFetch()], ensuring that
+#' the result is always free-d by [dbClearResult()].
 #'
-#' This function is for \code{SELECT} queries only.  Some backends may
-#' support data manipulation statements through this function for compatibility
-#' reasons.  However callers are strongly advised to use
-#' \code{\link{dbExecute}} for data manipulation statements.
+#' This method is for `SELECT` queries only.  Some backends may
+#' support data manipulation statements through this method for compatibility
+#' reasons.  However, callers are strongly advised to use
+#' [dbExecute()] for data manipulation statements.
+#'
+#' @inherit DBItest::spec_result_get_query return
+#' @inheritSection DBItest::spec_result_get_query Specification
 #'
 #' @section Implementation notes:
 #' Subclasses should override this method only if they provide some sort of
-#' performance optimisation.
+#' performance optimization.
 #'
-#' @inheritParams dbDisconnect
-#' @param statement a character vector of length 1 containing SQL.
+#' @param conn A [DBIConnection-class] object, as returned by
+#'   [dbConnect()].
+#' @param statement a character string containing SQL.
+#' @param ... Other parameters passed on to methods.
 #' @family DBIConnection generics
-#' @seealso For updates: \code{\link{dbSendStatement}} and \code{\link{dbExecute}}.
+#' @seealso For updates: [dbSendStatement()] and [dbExecute()].
 #' @export
 #' @examples
 #' con <- dbConnect(RSQLite::SQLite(), ":memory:")
@@ -196,13 +200,7 @@ setMethod("dbGetQuery", signature("DBIConnection", "character"),
     rs <- dbSendQuery(conn, statement, ...)
     on.exit(dbClearResult(rs))
 
-    df <- tryCatch(
-      dbFetch(rs, n = -1, ...),
-      error = function(e) {
-        warning(conditionMessage(e), call. = conditionCall(e))
-        NULL
-      }
-    )
+    df <- dbFetch(rs, n = -1, ...)
 
     if (!dbHasCompleted(rs)) {
       warning("Pending rows", call. = FALSE)
@@ -214,16 +212,22 @@ setMethod("dbGetQuery", signature("DBIConnection", "character"),
 
 #' Execute an update statement, query number of rows affected, and then close result set
 #'
-#' \code{dbExecute} comes with a default implementation
+#' Executes a statement and returns the number of rows affected.
+#' `dbExecute()` comes with a default implementation
 #' (which should work with most backends) that calls
-#' \code{\link{dbSendStatement}}, then \code{\link{dbGetRowsAffected}}, ensuring that
-#' the result is always free-d by \code{\link{dbClearResult}}.
+#' [dbSendStatement()], then [dbGetRowsAffected()], ensuring that
+#' the result is always free-d by [dbClearResult()].
 #'
-#' @inheritParams dbDisconnect
-#' @param statement a character vector of length 1 containing SQL.
-#' @return The number of rows affected by the \code{statement}
+#' @section Implementation notes:
+#' Subclasses should override this method only if they provide some sort of
+#' performance optimization.
+#'
+#' @inherit DBItest::spec_result_execute return
+#'
+#' @inheritParams dbGetQuery
+#' @param statement a character string containing SQL.
 #' @family DBIConnection generics
-#' @seealso For queries: \code{\link{dbSendQuery}} and \code{\link{dbGetQuery}}.
+#' @seealso For queries: [dbSendQuery()] and [dbGetQuery()].
 #' @export
 #' @examples
 #' con <- dbConnect(RSQLite::SQLite(), ":memory:")
@@ -253,11 +257,11 @@ setMethod(
 
 #' Get DBMS exceptions
 #'
-#' @inheritParams dbDisconnect
+#' @inheritParams dbGetQuery
 #' @family DBIConnection generics
-#' @return a list with elements \code{errorNum} (an integer error number) and
-#'   \code{errorMsg} (a character string) describing the last error in the
-#'   connection \code{conn}.
+#' @return a list with elements `errorNum` (an integer error number) and
+#'   `errorMsg` (a character string) describing the last error in the
+#'   connection `conn`.
 #' @export
 setGeneric("dbGetException",
   def = function(conn, ...) standardGeneric("dbGetException")
@@ -265,9 +269,9 @@ setGeneric("dbGetException",
 
 #' A list of all pending results
 #'
-#' List of \linkS4class{DBIResult} objects currently active on the connection.
+#' List of [DBIResult-class] objects currently active on the connection.
 #'
-#' @inheritParams dbDisconnect
+#' @inheritParams dbGetQuery
 #' @family DBIConnection generics
 #' @return a list. If no results are active, an empty list. If only
 #'   a single result is active, a list with one element.
@@ -278,11 +282,11 @@ setGeneric("dbListResults",
 
 #' List field names of a remote table
 #'
-#' @inheritParams dbDisconnect
+#' @inheritParams dbGetQuery
 #' @param name a character string with the name of the remote table.
 #' @return a character vector
 #' @family DBIConnection generics
-#' @seealso \code{\link{dbColumnInfo}} to get the type of the fields.
+#' @seealso [dbColumnInfo()] to get the type of the fields.
 #' @export
 #' @examples
 #' con <- dbConnect(RSQLite::SQLite(), ":memory:")
@@ -298,11 +302,14 @@ setGeneric("dbListFields",
 
 #' List remote tables
 #'
-#' This should, where possible, include temporary tables.
+#' Returns the unquoted names of remote tables accessible through this
+#' connection.
+#' This should, where possible, include temporary tables, and views.
 #'
-#' @inheritParams dbDisconnect
-#' @return a character vector. If no tables present, a character vector
-#'   of length 0.
+#' @inherit DBItest::spec_sql_list_tables return
+#' @inheritSection DBItest::spec_sql_list_tables Additional arguments
+#'
+#' @inheritParams dbGetQuery
 #' @family DBIConnection generics
 #' @export
 #' @examples
@@ -318,20 +325,20 @@ setGeneric("dbListTables",
   valueClass = "character"
 )
 
-#' Copy data frames to and from database tables
+#' Copy data frames from database tables
 #'
-#' \code{dbReadTable}: database table -> data frame; \code{dbWriteTable}:
-#' data frame -> database table.
+#' Reads a database table to a data frame, optionally converting
+#' a column to row names and converting the column names to valid
+#' R identifiers.
 #'
-#' @note The translation of identifiers between R and SQL is done through calls
-#'   to \code{\link{make.names}} and \code{\link{make.db.names}}, but we cannot
-#'   guarantee that the conversion is reversible.  For details see
-#'   \code{\link{make.db.names}}.
-#' @inheritParams dbDisconnect
-#' @param name A character string specifying a DBMS table name.
-#' @param value a data.frame (or coercible to data.frame).
+#' @inherit DBItest::spec_sql_read_table return
+#' @inheritSection DBItest::spec_sql_read_table Additional arguments
+#' @inheritSection DBItest::spec_sql_read_table Specification
+#'
+#' @inheritParams dbGetQuery
+#' @param name A character string specifying the unquoted DBMS table name,
+#'   or the result of a call to [dbQuoteIdentifier()].
 #' @family DBIConnection generics
-#' @return a data.frame.
 #' @export
 #' @examples
 #' con <- dbConnect(RSQLite::SQLite(), ":memory:")
@@ -342,26 +349,79 @@ setGeneric("dbListTables",
 #' dbDisconnect(con)
 setGeneric("dbReadTable", valueClass = "data.frame",
   signature = c("conn", "name"),
-  function(conn, name, ...) {
-    standardGeneric("dbReadTable")
+  function(conn, name, ...) standardGeneric("dbReadTable")
+)
+
+#' @rdname hidden_aliases
+#' @export
+setMethod("dbReadTable", c("DBIConnection", "character"),
+  function(conn, name, ..., row.names = NA, check.names = TRUE) {
+    sql_name <- dbQuoteIdentifier(conn, x = name, ...)
+    if (length(sql_name) != 1L) {
+      stop("Invalid name: ", format(name), call. = FALSE)
+    }
+    stopifnot(length(row.names) == 1L)
+    stopifnot(is.null(row.names) || is.logical(row.names) || is.character(row.names))
+    stopifnot(length(check.names) == 1L)
+    stopifnot(is.logical(check.names))
+    stopifnot(!is.na(check.names))
+
+    out <- dbGetQuery(paste0("SELECT * FROM ", sql_name))
+    out <- sqlColumnToRownames(out, row.names)
+    if (check.names) {
+      names(out) <- make.names(names(out), unique = TRUE)
+    }
+    out
   }
 )
 
-#' @rdname dbReadTable
+#' Copy data frames to database tables
+#'
+#' Writes, overwrites or appends a data frame to a database table, optionally
+#' converting row names to a column and specifying SQL data types for fields.
+#'
+#' @inherit DBItest::spec_sql_write_table return
+#' @inheritSection DBItest::spec_sql_write_table Additional arguments
+#' @inheritSection DBItest::spec_sql_write_table Specification
+#'
+#' @inheritParams dbGetQuery
+#' @inheritParams dbReadTable
+#' @param value a [data.frame] (or coercible to data.frame).
+#' @family DBIConnection generics
 #' @export
-setGeneric("dbWriteTable", valueClass = "logical",
+#' @examples
+#' con <- dbConnect(RSQLite::SQLite(), ":memory:")
+#'
+#' dbWriteTable(con, "mtcars", mtcars[1:5, ])
+#' dbReadTable(con, "mtcars")
+#'
+#' dbWriteTable(con, "mtcars", mtcars[6:10, ], append = TRUE)
+#' dbReadTable(con, "mtcars")
+#'
+#' dbWriteTable(con, "mtcars", mtcars[1:10, ], overwrite = TRUE)
+#' dbReadTable(con, "mtcars")
+#'
+#' # No row names
+#' dbWriteTable(con, "mtcars", mtcars[1:10, ], overwrite = TRUE, row.names = FALSE)
+#' dbReadTable(con, "mtcars")
+#'
+#' @export
+setGeneric("dbWriteTable",
   signature = c("conn", "name", "value"),
-  function(conn, name, value, ...) {
-    standardGeneric("dbWriteTable")
-  }
+  function(conn, name, value, ...) standardGeneric("dbWriteTable")
 )
 
 #' Does a table exist?
 #'
-#' @inheritParams dbDisconnect
+#' Returns if a table given by name exists in the database.
+#'
+#' @inherit DBItest::spec_sql_exists_table return
+#' @inheritSection DBItest::spec_sql_exists_table Additional arguments
+#' @inheritSection DBItest::spec_sql_exists_table Specification
+#'
+#' @inheritParams dbGetQuery
 #' @param name A character string specifying a DBMS table name.
 #' @family DBIConnection generics
-#' @return a logical vector of length 1.
 #' @export
 #' @examples
 #' con <- dbConnect(RSQLite::SQLite(), ":memory:")
@@ -378,12 +438,15 @@ setGeneric("dbExistsTable",
 
 #' Remove a table from the database
 #'
-#' Executes the sql \code{DROP TABLE name}.
+#' Remove a remote table (e.g., created by [dbWriteTable()])
+#' from the database.
 #'
-#' @inheritParams dbDisconnect
+#' @inherit DBItest::spec_sql_remove_table return
+#' @inheritSection DBItest::spec_sql_remove_table Specification
+#'
+#' @inheritParams dbGetQuery
 #' @param name A character string specifying a DBMS table name.
 #' @family DBIConnection generics
-#' @return a logical vector of length 1 indicating success or failure.
 #' @export
 #' @examples
 #' con <- dbConnect(RSQLite::SQLite(), ":memory:")
@@ -396,6 +459,5 @@ setGeneric("dbExistsTable",
 #'
 #' dbDisconnect(con)
 setGeneric("dbRemoveTable",
-  def = function(conn, name, ...) standardGeneric("dbRemoveTable"),
-  valueClass = "logical"
+  def = function(conn, name, ...) standardGeneric("dbRemoveTable")
 )

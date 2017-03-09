@@ -1,3 +1,29 @@
+# DBI 0.6 (2017-03-08)
+
+- Interface changes
+    - Deprecated `dbDriver()` and `dbUnloadDriver()` by documentation (#21).
+    - Renamed arguments to  `sqlInterpolate()` and `sqlParseVariables()` to be more consistent with the rest of the interface, and added `.dots` argument to `sqlParseVariables`. DBI drivers are now expected to implement `sqlParseVariables(conn, sql, ..., .dots)` and `sqlInterpolate(conn, sql, ...)` (#147).
+
+- Interface enhancements
+    - Removed `valueClass = "logical"` for those generics where the return value is meaningless, to allow backends to return invisibly (#135).
+    - Avoiding using braces in the definitions of generics if possible, so that standard generics can be detected (#146).
+    - Added default implementation for `dbReadTable()`.
+    - All standard generics are required to have an ellipsis (with test), for future extensibility.    - Improved default implementation of `dbQuoteString()` and `dbQuoteIdentifier()` (#77).
+    - Removed `tryCatch()` call in `dbGetQuery()` (#113).
+
+- Documentation improvements
+    - Finalized first draft of DBI specification, now in a vignette.
+    - Most methods now draw documentation from `DBItest`, only those where the behavior is not finally decided don't do this yet yet.
+    - Removed `max.connections` requirement from documentation (#56).
+    - Improved `dbBind()` documentation and example (#136).
+    - Change `omegahat.org` URL to `omegahat.net`, the particular document still doesn't exist below the new domain.
+
+- Internal
+    - Use roxygen2 inheritance to copy DBI specification to this package.
+    - Use `tic` package for building documentation.
+    - Use markdown in documentation.
+
+
 # DBI 0.5-1 (2016-09-09)
 
 - Documentation and example updates.

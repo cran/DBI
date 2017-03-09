@@ -14,6 +14,7 @@ access to dynamic queries, result sets, DBMS session management
 Individual drivers are free to implement single or multiple simultaneous
 connections.
 }
+
 \examples{
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 con
@@ -38,6 +39,5 @@ Other DBIConnection generics: \code{\link{dbDataType}},
   \code{\link{dbListFields}}, \code{\link{dbListResults}},
   \code{\link{dbListTables}}, \code{\link{dbReadTable}},
   \code{\link{dbRemoveTable}}, \code{\link{dbSendQuery}},
-  \code{\link{dbSendStatement}}
+  \code{\link{dbSendStatement}}, \code{\link{dbWriteTable}}
 }
-

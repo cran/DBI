@@ -7,16 +7,16 @@
 dbColumnInfo(res, ...)
 }
 \arguments{
-\item{res}{An object inheriting from \code{\linkS4class{DBIResult}}.}
+\item{res}{An object inheriting from \linkS4class{DBIResult}.}
 
 \item{...}{Other arguments passed on to methods.}
 }
 \value{
 A data.frame with one row per output field in \code{res}. Methods
-  MUST include \code{name}, \code{field.type} (the SQL type),
-  and \code{data.type} (the R data type) columns, and MAY contain other
-  database specific information like scale and precision or whether the
-  field can store \code{NULL}s.
+MUST include \code{name}, \code{field.type} (the SQL type),
+and \code{data.type} (the R data type) columns, and MAY contain other
+database specific information like scale and precision or whether the
+field can store \code{NULL}s.
 }
 \description{
 Produces a data.frame that describes the output of a query. The data.frame
@@ -36,11 +36,12 @@ dbDisconnect(con)
 }
 \seealso{
 Other DBIResult generics: \code{\link{DBIResult-class}},
-  \code{\link{SQL}}, \code{\link{dbBind}},
-  \code{\link{dbClearResult}}, \code{\link{dbFetch}},
-  \code{\link{dbGetInfo}}, \code{\link{dbGetRowCount}},
+  \code{\link{dbBind}}, \code{\link{dbClearResult}},
+  \code{\link{dbFetch}}, \code{\link{dbGetInfo}},
+  \code{\link{dbGetRowCount}},
   \code{\link{dbGetRowsAffected}},
   \code{\link{dbGetStatement}},
-  \code{\link{dbHasCompleted}}, \code{\link{dbIsValid}}
+  \code{\link{dbHasCompleted}}, \code{\link{dbIsValid}},
+  \code{\link{dbQuoteIdentifier}},
+  \code{\link{dbQuoteString}}
 }
-

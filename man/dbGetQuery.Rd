@@ -7,29 +7,63 @@
 dbGetQuery(conn, statement, ...)
 }
 \arguments{
-\item{conn}{A \code{\linkS4class{DBIConnection}} object, as produced by
-\code{\link{dbConnect}}.}
+\item{conn}{A \linkS4class{DBIConnection} object, as returned by
+\code{\link[=dbConnect]{dbConnect()}}.}
 
-\item{statement}{a character vector of length 1 containing SQL.}
+\item{statement}{a character string containing SQL.}
 
 \item{...}{Other parameters passed on to methods.}
 }
+\value{
+\code{dbGetQuery()} always returns a \link{data.frame}
+with as many rows as records were fetched and as many
+columns as fields in the result set,
+even if the result is a single value
+or has one
+or zero rows.
+An error is raised when issuing a query over a closed
+or invalid connection,
+if the syntax of the query is invalid,
+or if the query is not a non-\code{NA} string.
+If the \code{n} argument is not an atomic whole number
+greater or equal to -1 or Inf, an error is raised,
+but a subsequent call to \code{dbGetQuery()} with proper \code{n} argument succeeds.
+}
 \description{
-\code{dbGetQuery} comes with a default implementation that calls
-\code{\link{dbSendQuery}}, then \code{\link{dbFetch}}, ensuring that
-the result is always free-d by \code{\link{dbClearResult}}.
+Returns the result of a query as a data frame.
+\code{dbGetQuery()} comes with a default implementation
+(which should work with most backends) that calls
+\code{\link[=dbSendQuery]{dbSendQuery()}}, then \code{\link[=dbFetch]{dbFetch()}}, ensuring that
+the result is always free-d by \code{\link[=dbClearResult]{dbClearResult()}}.
 }
 \details{
-This function is for \code{SELECT} queries only.  Some backends may
-support data manipulation statements through this function for compatibility
-reasons.  However callers are strongly advised to use
-\code{\link{dbExecute}} for data manipulation statements.
+This method is for \code{SELECT} queries only.  Some backends may
+support data manipulation statements through this method for compatibility
+reasons.  However, callers are strongly advised to use
+\code{\link[=dbExecute]{dbExecute()}} for data manipulation statements.
 }
 \section{Implementation notes}{
 
 Subclasses should override this method only if they provide some sort of
-performance optimisation.
+performance optimization.
 }
+
+\section{Specification}{
+
+
+Fetching multi-row queries with one
+or more columns be default returns the entire result.
+A value of \link{Inf} for the \code{n} argument is supported
+and also returns the full result.
+If more rows than available are fetched, the result is returned in full
+without warning.
+If zero rows are fetched, the columns of the data frame are still fully
+typed.
+Fetching fewer rows than available is permitted,
+no warning is issued.
+
+}
+
 \examples{
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
@@ -39,7 +73,7 @@ dbGetQuery(con, "SELECT * FROM mtcars")
 dbDisconnect(con)
 }
 \seealso{
-For updates: \code{\link{dbSendStatement}} and \code{\link{dbExecute}}.
+For updates: \code{\link[=dbSendStatement]{dbSendStatement()}} and \code{\link[=dbExecute]{dbExecute()}}.
 
 Other DBIConnection generics: \code{\link{DBIConnection-class}},
   \code{\link{dbDataType}}, \code{\link{dbDisconnect}},
@@ -48,6 +82,6 @@ Other DBIConnection generics: \code{\link{DBIConnection-class}},
   \code{\link{dbIsValid}}, \code{\link{dbListFields}},
   \code{\link{dbListResults}}, \code{\link{dbListTables}},
   \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
-  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}}
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}},
+  \code{\link{dbWriteTable}}
 }
-

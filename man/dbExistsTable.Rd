@@ -7,19 +7,51 @@
 dbExistsTable(conn, name, ...)
 }
 \arguments{
-\item{conn}{A \code{\linkS4class{DBIConnection}} object, as produced by
-\code{\link{dbConnect}}.}
+\item{conn}{A \linkS4class{DBIConnection} object, as returned by
+\code{\link[=dbConnect]{dbConnect()}}.}
 
 \item{name}{A character string specifying a DBMS table name.}
 
 \item{...}{Other parameters passed on to methods.}
 }
 \value{
-a logical vector of length 1.
+\code{dbExistsTable()} returns a logical scalar, \code{TRUE} if the table or view
+specified by the \code{name} argument exists, \code{FALSE} otherwise.
+This includes temporary tables if supported by the database.
+
+An error is raised
+if \code{name} cannot be processed with \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}}
+or if this results in a non-scalar.
 }
 \description{
-Does a table exist?
+Returns if a table given by name exists in the database.
 }
+\section{Additional arguments}{
+
+
+TBD: \code{temporary = NA}
+
+This must be provided as named argument.
+See the "Specification" section for details on their usage.
+
+}
+
+\section{Specification}{
+
+
+The \code{name} argument is processed as follows,
+to support databases that allow non-syntactic names for their objects:
+\itemize{
+\item If an unquoted table name as string: \code{dbExistsTable()} will do the
+quoting,
+perhaps by calling \code{dbQuoteIdentifier(conn, x = name)}
+\item If the result of a call to \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}}: no more quoting is done
+}
+
+For all tables listed by \code{\link[=dbListTables]{dbListTables()}}, \code{dbExistsTable()} returns \code{TRUE}.
+
+}
+
 \examples{
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
@@ -37,6 +69,6 @@ Other DBIConnection generics: \code{\link{DBIConnection-class}},
   \code{\link{dbIsValid}}, \code{\link{dbListFields}},
   \code{\link{dbListResults}}, \code{\link{dbListTables}},
   \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
-  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}}
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}},
+  \code{\link{dbWriteTable}}
 }
-

@@ -7,18 +7,28 @@
 dbDisconnect(conn, ...)
 }
 \arguments{
-\item{conn}{A \code{\linkS4class{DBIConnection}} object, as produced by
-\code{\link{dbConnect}}.}
+\item{conn}{A \linkS4class{DBIConnection} object, as returned by
+\code{\link[=dbConnect]{dbConnect()}}.}
 
 \item{...}{Other parameters passed on to methods.}
 }
 \value{
-a logical vector of length 1, indicating success or failure.
+\code{dbDisconnect()} returns \code{TRUE}, invisibly.
 }
 \description{
 This closes the connection, discards all pending work, and frees
 resources (e.g., memory, sockets).
 }
+\section{Specification}{
+
+
+A warning is issued on garbage collection when a connection has been
+released without calling \code{dbDisconnect()}.
+A warning is issued immediately when calling \code{dbDisconnect()} on an
+already disconnected connection.
+
+}
+
 \examples{
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 dbDisconnect(con)
@@ -32,6 +42,5 @@ Other DBIConnection generics: \code{\link{DBIConnection-class}},
   \code{\link{dbListFields}}, \code{\link{dbListResults}},
   \code{\link{dbListTables}}, \code{\link{dbReadTable}},
   \code{\link{dbRemoveTable}}, \code{\link{dbSendQuery}},
-  \code{\link{dbSendStatement}}
+  \code{\link{dbSendStatement}}, \code{\link{dbWriteTable}}
 }
-
