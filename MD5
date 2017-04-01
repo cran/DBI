@@ -1,8 +1,8 @@
-d9804a79af34ceb5a70d317ad20a2479 *DESCRIPTION
+71fa75364857594d7efac226caa7d5f5 *DESCRIPTION
 6a00e3dad05303053dc3c1c5aa2ab5e5 *NAMESPACE
-1830030897ded272d02b834d67c89bb7 *NEWS.md
+d92b5f5a01a2c1d64c47e17b19d23d47 *NEWS.md
 b59c3fcacbb6cc23346a5c50e4dae8ea *R/ANSI.R
-cffb4279d873baa8eb65b2530664b50e *R/DBConnection.R
+7d26a199b7a6d9458031792d5d6b24e1 *R/DBConnection.R
 51afc93dc90e7b56af03d9884a4570e5 *R/DBDriver.R
 457c8422b7fcb9172f307c3b9794116a *R/DBI-package.R
 72c1ca45c29ac2907b7c40064d06f2b9 *R/DBObject.R
@@ -27,10 +27,10 @@ f65e1d2d58e032ebc2c5a30c71183730 *inst/doc/DBI-proposal.Rmd
 fddf17d54a5409a67756ba04ef86d77e *inst/doc/DBI-proposal.html
 b1b80e1e252186276d12b45cffbdfb8c *inst/doc/backend.R
 32f6b8f5fe00e0af63b8b5d3ac8a7b8a *inst/doc/backend.Rmd
-3bd321743c377ce8f3799d9a26427a55 *inst/doc/backend.html
+4d01729c775f246c7eab632c6b44591c *inst/doc/backend.html
 873a57b456faec81c3403e05d5c525db *inst/doc/spec.R
 6979f3a457872954b3c1fd19f5347c36 *inst/doc/spec.Rmd
-0971e71b660365a6b938329a75795311 *inst/doc/spec.html
+a49941b8bd6641425ace46ab283069b9 *inst/doc/spec.html
 4354c7d19733ce8222bb9c06ef0db20d *man/ANSI.Rd
 6467d2cf2457c1913c7a4e3bca0153d4 *man/DBI-package.Rd
 13acb78f11958ac166e7db8b77e12ae2 *man/DBIConnection-class.Rd
