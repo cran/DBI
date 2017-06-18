@@ -4,14 +4,14 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
 
 <meta name="author" content="Kirill Müller" />
 
-<meta name="date" content="2017-04-01" />
+<meta name="date" content="2017-06-18" />
 
 <title>DBI specification</title>
 
@@ -227,7 +227,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">DBI specification</h1>
 <h4 class="author"><em>Kirill Müller</em></h4>
-<h4 class="date"><em>2017-04-01</em></h4>
+<h4 class="date"><em>2017-06-18</em></h4>
 <div class="abstract">
 <p class="abstract">Abstract</p>
 <p>The DBI package defines the generic DataBase Interface for R. The connection to individual DBMS is provided by other packages that import DBI (so-called <em>DBI backends</em>). This document formalizes the behavior expected by the methods declared in DBI and implemented by the individual backends. To ensure maximum portability and exchangeability, and to reduce the effort for implementing a new DBI backend, the DBItest package defines a comprehensive set of test cases that test conformance to the DBI specification. This document is derived from comments in the test definitions of the DBItest package. Any extensions or updates to the tests will be reflected in this document.</p>
@@ -247,7 +247,7 @@ DBI defines an interface for communication between R and relational database man
 Definition
 </h3>
 <p>
-A DBI backend is an R package, which should import the <span class="pkg">DBI</span> and <span class="pkg">methods</span> packages. For better or worse, the names of many existing backends start with ‘R’, e.g., <span class="pkg">RSQLite</span>, <span class="pkg">RMySQL</span>, <span class="pkg">RSQLServer</span>; it is up to the backend author to adopt this convention or not.
+A DBI backend is an R package which imports the <span class="pkg">DBI</span> and <span class="pkg">methods</span> packages. For better or worse, the names of many existing backends start with ‘R’, e.g., <span class="pkg">RSQLite</span>, <span class="pkg">RMySQL</span>, <span class="pkg">RSQLServer</span>; it is up to the backend author to adopt this convention or not.
 </p>
 <h3>
 DBI classes and methods
@@ -353,7 +353,7 @@ Specification
 The backend can override the <code>dbDataType()</code> generic for its driver class.
 </p>
 <p>
-This generic expects an arbitrary object as second argument. To query the values returned by the default implementation, run <code>example(dbDataType, package = &quot;DBI&quot;)</code>. If the backend needs to override this generic, it must accept all basic R data types as its second argument, namely logical, integer, numeric, character, dates (see Dates), date-time (see DateTimeClasses), and difftime. It also must accept lists of raw vectors and map them to the BLOB (binary large object) data type, unless the <code>omit_blob_tests</code> tweak is set to <code>TRUE</code>. As-is objects (i.e., wrapped by <code>I()</code>) must be supported and return the same results as their unwrapped counterparts. The SQL data type for factor and ordered is the same as for character. The behavior for other object types is not specified.
+This generic expects an arbitrary object as second argument. To query the values returned by the default implementation, run <code>example(dbDataType, package = &quot;DBI&quot;)</code>. If the backend needs to override this generic, it must accept all basic R data types as its second argument, namely logical, integer, numeric, character, dates (see Dates), date-time (see DateTimeClasses), and difftime. If the database supports blobs, this method also must accept lists of raw vectors, and blob::blob objects. As-is objects (i.e., wrapped by <code>I()</code>) must be supported and return the same results as their unwrapped counterparts. The SQL data type for factor and ordered is the same as for character. The behavior for other object types is not specified.
 </p>
 <p>
 All data types returned by <code>dbDataType()</code> are usable in an SQL statement of the form <code>&quot;CREATE TABLE test (a ...)&quot;</code>.
@@ -540,7 +540,7 @@ Value
 Specification
 </h3>
 <p>
-A warning is issued on garbage collection when a connection has been released without calling <code>dbDisconnect()</code>. A warning is issued immediately when calling <code>dbDisconnect()</code> on an already disconnected connection.
+A warning is issued on garbage collection when a connection has been released without calling <code>dbDisconnect()</code>. A warning is issued immediately when calling <code>dbDisconnect()</code> on an already disconnected or invalid connection.
 </p>
 <h3>
 Examples
@@ -711,6 +711,9 @@ Specification
 Fetching multi-row queries with one or more columns be default returns the entire result. Multi-row queries can also be fetched progressively by passing a whole number (integer or numeric) as the <code>n</code> argument. A value of Inf for the <code>n</code> argument is supported and also returns the full result. If more rows than available are fetched, the result is returned in full without warning. If fewer rows than requested are returned, further fetches will return a data frame with zero rows. If zero rows are fetched, the columns of the data frame are still fully typed. Fetching fewer rows than available is permitted, no warning is issued when clearing the result set.
 </p>
 <p>
+A column named <code>row_names</code> is treated like any other column.
+</p>
+<p>
 The column types of the returned data frame depend on the data returned:
 </p>
 <ul>
@@ -776,12 +779,22 @@ POSIXct for timestamps (also applies to the return value of the SQL function <co
 </li>
 </ul>
 <p>
-R has no built-in type with lossless support for the full range of 64-bit or larger integers. Here, the following rules apply:
+R has no built-in type with lossless support for the full range of 64-bit or larger integers. If 64-bit integers are returned from a query, the following rules apply:
 </p>
 <ul>
 <li>
 <p>
-Values are returned as numeric
+Values are returned in a container with support for the full range of valid 64-bit values (such as the <code>integer64</code> class of the <span class="pkg">bit64</span> package)
+</p>
+</li>
+<li>
+<p>
+Coercion to numeric always returns a number that is as close as possible to the true value
+</p>
+</li>
+<li>
+<p>
+Loss of precision when converting to numeric gives a warning
 </p>
 </li>
 <li>
@@ -973,7 +986,10 @@ The placeholder format is currently not specified by <span class="pkg">DBI</span
 Value
 </h3>
 <p>
-<code>dbBind()</code> returns the result set, invisibly, for queries issued by <code>dbSendQuery()</code> and also for data manipulation statements issued by <code>dbSendStatement()</code>. Calling <code>dbBind()</code> for a query without parameters raises an error. Binding too many or not enough values, or parameters with wrong names or unequal length, also raises an error. Calling <code>dbBind()</code> on a result set already cleared by <code>dbClearResult()</code> also raises an error.
+<code>dbBind()</code> returns the result set, invisibly, for queries issued by <code>dbSendQuery()</code> and also for data manipulation statements issued by <code>dbSendStatement()</code>. Calling <code>dbBind()</code> for a query without parameters raises an error. Binding too many or not enough values, or parameters with wrong names or unequal length, also raises an error. If the placeholders in the query are named, all parameter values must have names (which must not be empty or <code>NA</code>), and vice versa, otherwise an error is raised. The behavior for mixing placeholders of different types (in particular mixing positional and named placeholders) is not specified.
+</p>
+<p>
+Calling <code>dbBind()</code> on a result set already cleared by <code>dbClearResult()</code> also raises an error.
 </p>
 <h3>
 Specification
@@ -984,8 +1000,35 @@ Specification
 <ol>
 <li>
 <p>
-Call <code>dbSendQuery()</code> or <code>dbSendStatement()</code> with a query or statement that contains placeholders, store the returned DBIResult object in a variable. Mixing placeholders (in particular, named and unnamed ones) is not recommended. It is good practice to register a call to <code>dbClearResult()</code> via <code>on.exit()</code> right after calling <code>dbSendQuery()</code> or <code>dbSendStatement()</code> (see the last enumeration item).
+Call <code>dbSendQuery()</code> or <code>dbSendStatement()</code> with a query or statement that contains placeholders, store the returned DBIResult object in a variable. Mixing placeholders (in particular, named and unnamed ones) is not recommended. It is good practice to register a call to <code>dbClearResult()</code> via <code>on.exit()</code> right after calling <code>dbSendQuery()</code> or <code>dbSendStatement()</code> (see the last enumeration item). Until <code>dbBind()</code> has been called, the returned result set object has the following behavior:
 </p>
+<ul>
+<li>
+<p>
+<code>dbFetch()</code> raises an error (for <code>dbSendQuery()</code>)
+</p>
+</li>
+<li>
+<p>
+<code>dbGetRowCount()</code> returns zero (for <code>dbSendQuery()</code>)
+</p>
+</li>
+<li>
+<p>
+<code>dbGetRowsAffected()</code> returns an integer <code>NA</code> (for <code>dbSendStatement()</code>)
+</p>
+</li>
+<li>
+<p>
+<code>dbIsValid()</code> returns <code>TRUE</code>
+</p>
+</li>
+<li>
+<p>
+<code>dbHasCompleted()</code> returns <code>FALSE</code>
+</p>
+</li>
+</ul>
 </li>
 <li>
 <p>
@@ -1054,6 +1097,11 @@ character
 </li>
 <li>
 <p>
+factor (bound as character, with warning)
+</p>
+</li>
+<li>
+<p>
 Date
 </p>
 </li>
@@ -1070,6 +1118,11 @@ POSIXlt timestamps
 <li>
 <p>
 lists of raw for blobs (with <code>NULL</code> entries for SQL NULL values)
+</p>
+</li>
+<li>
+<p>
+objects of type blob::blob
 </p>
 </li>
 </ul>
@@ -1174,6 +1227,9 @@ Specification
 </h3>
 <p>
 Fetching multi-row queries with one or more columns be default returns the entire result. A value of Inf for the <code>n</code> argument is supported and also returns the full result. If more rows than available are fetched, the result is returned in full without warning. If zero rows are fetched, the columns of the data frame are still fully typed. Fetching fewer rows than available is permitted, no warning is issued.
+</p>
+<p>
+A column named <code>row_names</code> is treated like any other column.
 </p>
 <h3>
 Examples
@@ -1415,7 +1471,7 @@ When passing the returned object again to <code>dbQuoteString()</code> as <code>
 Specification
 </h3>
 <p>
-The returned expression can be used in a <code>SELECT ...</code> query, and for any scalar character <code>x</code> the value of <code>dbGetQuery(paste0(&quot;SELECT &quot;, dbQuoteString(x)))[[1]]</code> must be identical to <code>x</code>, even if <code>x</code> contains spaces, quotes (single or double), backticks, or newlines (in any combination) or is itself the result of a <code>dbQuoteString()</code> call coerced back to character (even repeatedly). If <code>x</code> is <code>NA</code>, the result must merely satisfy <code>is.na()</code>. The strings <code>&quot;NA&quot;</code> or <code>&quot;NULL&quot;</code> are not treated specially.
+The returned expression can be used in a <code>SELECT ...</code> query, and for any scalar character <code>x</code> the value of <code>dbGetQuery(paste0(&quot;SELECT &quot;, dbQuoteString(x)))[[1]]</code> must be identical to <code>x</code>, even if <code>x</code> contains spaces, tabs, quotes (single or double), backticks, or newlines (in any combination) or is itself the result of a <code>dbQuoteString()</code> call coerced back to character (even repeatedly). If <code>x</code> is <code>NA</code>, the result must merely satisfy <code>is.na()</code>. The strings <code>&quot;NA&quot;</code> or <code>&quot;NULL&quot;</code> are not treated specially.
 </p>
 <p>
 <code>NA</code> should be translated to an unquoted SQL <code>NULL</code>, so that the query <code>SELECT * FROM (SELECT 1) a WHERE ... IS NULL</code> returns one row.
@@ -1504,7 +1560,10 @@ When passing the returned object again to <code>dbQuoteIdentifier()</code> as <c
 Specification
 </h3>
 <p>
-Calling <code>dbGetQuery()</code> for a query of the format <code>SELECT 1 AS ...</code> returns a data frame with the identifier, unquoted, as column name. Quoted identifiers can be used as table and column names in SQL queries, in particular in queries like <code>SELECT 1 AS ...</code> and <code>SELECT * FROM (SELECT 1) ...</code>. This is also true for column names that are empty strings or contain special characters such as a space, a dot, a comma, or quotes used to mark strings or identifiers, if the database supports this. In any case, checking the validity of the identifier should be performed only when executing a query, and not by <code>dbQuoteIdentifier()</code>.
+Calling <code>dbGetQuery()</code> for a query of the format <code>SELECT 1 AS ...</code> returns a data frame with the identifier, unquoted, as column name. Quoted identifiers can be used as table and column names in SQL queries, in particular in queries like <code>SELECT 1 AS ...</code> and <code>SELECT * FROM (SELECT 1) ...</code>. The method must use a quoting mechanism that is unambiguously different from the quoting mechanism used for strings, so that a query like <code>SELECT ... FROM (SELECT 1 AS ...)</code> throws an error if the column names do not match.
+</p>
+<p>
+The method can quote column names that contain special characters such as a space, a dot, a comma, or quotes used to mark strings or identifiers, if the database supports this. In any case, checking the validity of the identifier should be performed only when executing a query, and not by <code>dbQuoteIdentifier()</code>.
 </p>
 <h3>
 Examples
@@ -1618,7 +1677,7 @@ If the result of a call to <code>dbQuoteIdentifier()</code>: no more quoting is 
 Value
 </h3>
 <p>
-<code>dbReadTable()</code> returns a data frame that contains the complete data from the remote table, effectively the result of calling <code>dbGetQuery()</code> with <code>SELECT * FROM &lt;name&gt;</code>. An error is returned if the table does not exist. An empty table is returned as a data frame with zero rows.
+<code>dbReadTable()</code> returns a data frame that contains the complete data from the remote table, effectively the result of calling <code>dbGetQuery()</code> with <code>SELECT * FROM &lt;name&gt;</code>. An error is raised if the table does not exist. An empty table is returned as a data frame with zero rows.
 </p>
 <p>
 The presence of rownames depends on the <code>row.names</code> argument, see <code>sqlColumnToRownames()</code> for details:
@@ -1626,7 +1685,7 @@ The presence of rownames depends on the <code>row.names</code> argument, see <co
 <ul>
 <li>
 <p>
-If <code>FALSE</code>, the returned data frame doesn't have row names.
+If <code>FALSE</code> or <code>NULL</code>, the returned data frame doesn't have row names.
 </p>
 </li>
 <li>
@@ -1646,10 +1705,13 @@ If a string, this specifies the name of the column in the remote table that cont
 </li>
 </ul>
 <p>
+The default is <code>row.names = FALSE</code>.
+</p>
+<p>
 If the database supports identifiers with special characters, the columns in the returned data frame are converted to valid R identifiers if the <code>check.names</code> argument is <code>TRUE</code>, otherwise non-syntactic column names can be returned unquoted.
 </p>
 <p>
-An error is raised if <code>name</code> cannot be processed with <code>dbQuoteIdentifier()</code> or if this results in a non-scalar. Unsupported values for <code>row.names</code> and <code>check.names</code> (non-scalars, unsupported data types, <code>NA</code> for <code>check.names</code>) also raise an error.
+An error is raised when calling this method for a closed or invalid connection. An error is raised if <code>name</code> cannot be processed with <code>dbQuoteIdentifier()</code> or if this results in a non-scalar. Unsupported values for <code>row.names</code> and <code>check.names</code> (non-scalars, unsupported data types, <code>NA</code> for <code>check.names</code>) also raise an error.
 </p>
 <h3>
 Examples
@@ -1816,12 +1878,12 @@ logical
 </li>
 <li>
 <p>
-64-bit values (using <code>&quot;bigint&quot;</code> as field type)
+64-bit values (using <code>&quot;bigint&quot;</code> as field type); the result can be converted to a numeric, which may lose precision,
 </p>
 </li>
 <li>
 <p>
-character (in both UTF-8 and native encodings)
+character (in both UTF-8 and native encodings), supporting empty strings
 </p>
 </li>
 <li>
@@ -1836,6 +1898,11 @@ list of raw (if supported by the database)
 </li>
 <li>
 <p>
+objects of type blob::blob (if supported by the database)
+</p>
+</li>
+<li>
+<p>
 date (if supported by the database; returned as <code>Date</code>)
 </p>
 </li>
@@ -1846,17 +1913,23 @@ time (if supported by the database; returned as objects that inherit from <code>
 </li>
 <li>
 <p>
-timestamp (if supported by the database; returned as <code>POSIXlt</code> with time zone support)
+timestamp (if supported by the database; returned as <code>POSIXct</code> with time zone support)
 </p>
 </li>
 </ul>
+<p>
+Mixing column types in the same table is supported.
+</p>
+<p>
+The <code>field.types</code> argument must be a named character vector with at most one entry for each column. It indicates the SQL data type to be used for a new column.
+</p>
 <p>
 The interpretation of rownames depends on the <code>row.names</code> argument, see <code>sqlRownamesToColumn()</code> for details:
 </p>
 <ul>
 <li>
 <p>
-If <code>FALSE</code>, row names are ignored.
+If <code>FALSE</code> or <code>NULL</code>, row names are ignored.
 </p>
 </li>
 <li>
@@ -1879,10 +1952,10 @@ If a string, this specifies the name of the column in the remote table that cont
 Value
 </h3>
 <p>
-<code>dbWriteTable()</code> returns <code>TRUE</code>, invisibly. If the table exists (and both <code>append</code> and <code>overwrite</code> arguments are unset), an error is raised; the remote table remains unchanged.
+<code>dbWriteTable()</code> returns <code>TRUE</code>, invisibly. If the table exists, and both <code>append</code> and <code>overwrite</code> arguments are unset, or <code>append = TRUE</code> and the data frame with the new data has different column names, an error is raised; the remote table remains unchanged.
 </p>
 <p>
-An error is also raised if <code>name</code> cannot be processed with <code>dbQuoteIdentifier()</code> or if this results in a non-scalar. Invalid values for the additional arguments <code>row.names</code>, <code>overwrite</code>, <code>append</code>, <code>field.types</code>, and <code>temporary</code> (non-scalars, unsupported data types, <code>NA</code>, incompatible values) also raise an error.
+An error is raised when calling this method for a closed or invalid connection. An error is also raised if <code>name</code> cannot be processed with <code>dbQuoteIdentifier()</code> or if this results in a non-scalar. Invalid values for the additional arguments <code>row.names</code>, <code>overwrite</code>, <code>append</code>, <code>field.types</code>, and <code>temporary</code> (non-scalars, unsupported data types, <code>NA</code>, incompatible values, duplicate or missing names, incompatible columns) also raise an error.
 </p>
 <h3>
 Examples
@@ -1962,7 +2035,7 @@ Value
 <code>dbListTables()</code> returns a character vector that enumerates all tables and views in the database. Tables added with <code>dbWriteTable()</code> are part of the list, including temporary tables if supported by the database. As soon a table is removed from the database, it is also removed from the list of database tables.
 </p>
 <p>
-The returned names are suitable for quoting with <code>dbQuoteIdentifier()</code>.
+The returned names are suitable for quoting with <code>dbQuoteIdentifier()</code>. An error is raised when calling this method for a closed or invalid connection.
 </p>
 <h3>
 Examples
@@ -2065,7 +2138,7 @@ Value
 <code>dbExistsTable()</code> returns a logical scalar, <code>TRUE</code> if the table or view specified by the <code>name</code> argument exists, <code>FALSE</code> otherwise. This includes temporary tables if supported by the database.
 </p>
 <p>
-An error is raised if <code>name</code> cannot be processed with <code>dbQuoteIdentifier()</code> or if this results in a non-scalar.
+An error is raised when calling this method for a closed or invalid connection. An error is also raised if <code>name</code> cannot be processed with <code>dbQuoteIdentifier()</code> or if this results in a non-scalar.
 </p>
 <h3>
 Examples
@@ -2138,7 +2211,7 @@ Value
 <code>dbRemoveTable()</code> returns <code>TRUE</code>, invisibly. If the table does not exist, an error is raised. An attempt to remove a view with this function may result in an error.
 </p>
 <p>
-An error is raised if <code>name</code> cannot be processed with <code>dbQuoteIdentifier()</code> or if this results in a non-scalar.
+An error is raised when calling this method for a closed or invalid connection. An error is also raised if <code>name</code> cannot be processed with <code>dbQuoteIdentifier()</code> or if this results in a non-scalar.
 </p>
 <h3>
 Specification
@@ -2559,7 +2632,7 @@ Not all database engines implement transaction management, in which case these m
 Value
 </h3>
 <p>
-<code>dbBegin()</code>, <code>dbCommit()</code> and <code>dbRollback()</code> return <code>TRUE</code>, invisibly. The implementations are expected to raise an error in case of failure, but this is not tested. In any way, all generics throw an error with a closed connection. In addition, a call to <code>dbCommit()</code> or <code>dbRollback()</code> without a prior call to <code>dbBegin()</code> raises an error. Nested transactions are not supported by DBI, an attempt to call <code>dbBegin()</code> twice yields an error.
+<code>dbBegin()</code>, <code>dbCommit()</code> and <code>dbRollback()</code> return <code>TRUE</code>, invisibly. The implementations are expected to raise an error in case of failure, but this is not tested. In any way, all generics throw an error with a closed or invalid connection. In addition, a call to <code>dbCommit()</code> or <code>dbRollback()</code> without a prior call to <code>dbBegin()</code> raises an error. Nested transactions are not supported by DBI, an attempt to call <code>dbBegin()</code> twice yields an error.
 </p>
 <h3>
 Specification
@@ -2571,7 +2644,7 @@ Actual support for transactions may vary between backends. A transaction is init
 A transaction can also be aborted with <code>dbRollback()</code>. All data written in such a transaction must be removed after the transaction is rolled back. For example, a table that is missing when the transaction is started but is created during the transaction must not exist anymore after the rollback.
 </p>
 <p>
-Disconnection from a connection with an open transaction gives a warning and effectively rolls back the transaction. All data written in such a transaction must be removed after the transaction is rolled back.
+Disconnection from a connection with an open transaction effectively rolls back the transaction. All data written in such a transaction must be removed after the transaction is rolled back.
 </p>
 <p>
 The behavior is not specified if other arguments are passed to these functions. In particular, <span class="pkg">RSQLite</span> issues named transactions with support for nesting if the <code>name</code> argument is set.
@@ -2678,7 +2751,7 @@ DBI implements <code>dbWithTransaction()</code>, backends should need to overrid
 Value
 </h3>
 <p>
-<code>dbWithTransaction()</code> returns the value of the executed code. Failure to initiate the transaction (e.g., if the connection is closed of if <code>dbBegin()</code> has been called already) gives an error.
+<code>dbWithTransaction()</code> returns the value of the executed code. Failure to initiate the transaction (e.g., if the connection is closed or invalid of if <code>dbBegin()</code> has been called already) gives an error.
 </p>
 <h3>
 Specification
@@ -2758,7 +2831,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

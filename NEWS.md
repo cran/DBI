@@ -1,3 +1,10 @@
+# DBI 0.7 (2017-06-17)
+
+- Import updated specs from `DBItest`.
+- The default implementation of `dbGetQuery()` now accepts an `n` argument and forwards it to `dbFetch()`. No warning about pending rows is issued anymore (#76).
+- Require R >= 3.0.0 (for `slots` argument of `setClass()`) (#169, @mvkorpel).
+
+
 # DBI 0.6-1 (2017-04-01)
 
 - Fix `dbReadTable()` for backends that do not provide their own implementation (#171).
