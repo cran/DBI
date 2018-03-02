@@ -27,6 +27,8 @@ or if this results in a non-scalar.
 }
 \description{
 Returns if a table given by name exists in the database.
+
+\Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbExistsTable")}
 }
 \section{Additional arguments}{
 
@@ -69,8 +71,9 @@ Other DBIConnection generics: \code{\link{DBIConnection-class}},
   \code{\link{dbExecute}}, \code{\link{dbGetException}},
   \code{\link{dbGetInfo}}, \code{\link{dbGetQuery}},
   \code{\link{dbIsValid}}, \code{\link{dbListFields}},
-  \code{\link{dbListResults}}, \code{\link{dbListTables}},
-  \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
-  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}},
-  \code{\link{dbWriteTable}}
+  \code{\link{dbListObjects}}, \code{\link{dbListResults}},
+  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
+  \code{\link{dbRemoveTable}}, \code{\link{dbSendQuery}},
+  \code{\link{dbSendStatement}}, \code{\link{dbWriteTable}}
 }
+\concept{DBIConnection generics}

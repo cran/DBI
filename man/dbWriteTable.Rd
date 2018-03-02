@@ -43,6 +43,8 @@ also raise an error.
 \description{
 Writes, overwrites or appends a data frame to a database table, optionally
 converting row names to a column and specifying SQL data types for fields.
+
+\Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbWriteTable")}
 }
 \section{Additional arguments}{
 
@@ -98,8 +100,7 @@ and be read identically with \code{\link[=dbReadTable]{dbReadTable()}}:
 \itemize{
 \item integer
 \item numeric
-(also with \code{Inf} and \code{NaN} values,
-the latter are translated to \code{NA})
+(the behavior for \code{Inf} and \code{NaN} is not specified)
 \item logical
 \item \code{NA} as NULL
 \item 64-bit values (using \code{"bigint"} as field type);
@@ -121,7 +122,8 @@ returned as objects that inherit from \code{difftime})
 \item timestamp
 (if supported by the database;
 returned as \code{POSIXct}
-with time zone support)
+respecting the time zone but not necessarily preserving the
+input time zone)
 }
 
 Mixing column types in the same table is supported.
@@ -168,8 +170,9 @@ Other DBIConnection generics: \code{\link{DBIConnection-class}},
   \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
   \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
   \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
-  \code{\link{dbListFields}}, \code{\link{dbListResults}},
-  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
-  \code{\link{dbRemoveTable}}, \code{\link{dbSendQuery}},
-  \code{\link{dbSendStatement}}
+  \code{\link{dbListFields}}, \code{\link{dbListObjects}},
+  \code{\link{dbListResults}}, \code{\link{dbListTables}},
+  \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}}
 }
+\concept{DBIConnection generics}

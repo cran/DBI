@@ -21,6 +21,8 @@ Attempting to query the statement for a result set cleared with
 \description{
 Returns the statement that was passed to \code{\link[=dbSendQuery]{dbSendQuery()}}
 or \code{\link[=dbSendStatement]{dbSendStatement()}}.
+
+\Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbGetStatement")}
 }
 \examples{
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
@@ -40,5 +42,8 @@ Other DBIResult generics: \code{\link{DBIResult-class}},
   \code{\link{dbGetRowsAffected}},
   \code{\link{dbHasCompleted}}, \code{\link{dbIsValid}},
   \code{\link{dbQuoteIdentifier}},
-  \code{\link{dbQuoteString}}
+  \code{\link{dbQuoteLiteral}},
+  \code{\link{dbQuoteString}},
+  \code{\link{dbUnquoteIdentifier}}
 }
+\concept{DBIResult generics}

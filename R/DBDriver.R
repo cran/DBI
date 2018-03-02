@@ -55,10 +55,11 @@ setClass("DBIDriver", contains = c("DBIObject", "VIRTUAL"))
 #' @export
 setGeneric("dbDriver",
   def = function(drvName, ...) standardGeneric("dbDriver"),
-  valueClass = "DBIDriver")
+  valueClass = "DBIDriver"
+)
 
 #' @rdname hidden_aliases
-setMethod("dbDriver", "character",
+setMethod("dbDriver", signature("character"),
   definition = function(drvName, ...) {
     findDriver(drvName)(...)
   }
@@ -67,12 +68,13 @@ setMethod("dbDriver", "character",
 #' @rdname hidden_aliases
 #' @param object Object to display
 #' @export
-setMethod("show", "DBIDriver", function(object) {
+setMethod("show", signature("DBIDriver"), function(object) {
   tryCatch(
     # to protect drivers that fail to implement the required methods (e.g.,
     # RPostgreSQL)
     show_driver(object),
-    error = function(e) NULL)
+    error = function(e) NULL
+  )
   invisible(NULL)
 })
 
@@ -99,11 +101,13 @@ findDriver <- function(drvName) {
   }
 
   # Can't find it:
-  stop("Couldn't find driver ", drvName, ". Looked in:\n",
+  stop(
+    "Couldn't find driver ", drvName, ". Looked in:\n",
     "* global namespace\n",
     "* in package called ", drvName, "\n",
     "* in package called ", pkgName,
-    call. = FALSE)
+    call. = FALSE
+  )
 }
 
 get2 <- function(x, env) {
@@ -134,6 +138,9 @@ setGeneric("dbUnloadDriver",
 #' The authentication mechanism is left unspecified, so check the
 #' documentation of individual drivers for details.
 #'
+#' @template methods
+#' @templateVar method_name dbConnect
+#'
 #' @inherit DBItest::spec_driver_connect return
 #' @inheritSection DBItest::spec_driver_connect Specification
 #'
@@ -163,9 +170,8 @@ setGeneric("dbConnect",
 
 #' List currently open connections
 #'
-#' Drivers that implement only a single connections MUST return a list
-#' containing a single element. If no connection are open, methods MUST
-#' return an empty list.
+#' DEPRECATED, drivers are no longer required to implement this method.
+#' Keep track of the connections you opened if you require a list.
 #'
 #' @param drv A object inheriting from [DBIDriver-class]
 #' @param ... Other arguments passed on to methods.
@@ -195,6 +201,9 @@ setGeneric("dbListConnections",
 #'
 #' Notice that many DBMS do not follow IEEE arithmetic, so there are potential
 #' problems with under/overflows and loss of precision.
+#'
+#' @template methods
+#' @templateVar method_name dbDataType
 #'
 #' @inherit DBItest::spec_driver_data_type return
 #' @inheritSection DBItest::spec_driver_data_type Specification
@@ -242,6 +251,6 @@ setGeneric("dbDataType",
 
 #' @rdname hidden_aliases
 #' @export
-setMethod("dbDataType", "DBIObject", function(dbObj, obj, ...) {
+setMethod("dbDataType", signature("DBIObject"), function(dbObj, obj, ...) {
   dbiDataType(obj)
 })

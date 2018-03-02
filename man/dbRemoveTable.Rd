@@ -28,6 +28,8 @@ or if this results in a non-scalar.
 \description{
 Remove a remote table (e.g., created by \code{\link[=dbWriteTable]{dbWriteTable()}})
 from the database.
+
+\Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbRemoveTable")}
 }
 \section{Specification}{
 
@@ -66,8 +68,9 @@ Other DBIConnection generics: \code{\link{DBIConnection-class}},
   \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
   \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
   \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
-  \code{\link{dbListFields}}, \code{\link{dbListResults}},
-  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
-  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}},
-  \code{\link{dbWriteTable}}
+  \code{\link{dbListFields}}, \code{\link{dbListObjects}},
+  \code{\link{dbListResults}}, \code{\link{dbListTables}},
+  \code{\link{dbReadTable}}, \code{\link{dbSendQuery}},
+  \code{\link{dbSendStatement}}, \code{\link{dbWriteTable}}
 }
+\concept{DBIConnection generics}

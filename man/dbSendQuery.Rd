@@ -32,6 +32,8 @@ records --- for that you need to use the \code{\link[=dbFetch]{dbFetch()}} metho
 then you must call \code{\link[=dbClearResult]{dbClearResult()}} when you finish fetching the
 records you need. For interactive use, you should almost always prefer
 \code{\link[=dbGetQuery]{dbGetQuery()}}.
+
+\Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbSendQuery")}
 }
 \details{
 This method is for \code{SELECT} queries only.  Some backends may
@@ -81,8 +83,9 @@ Other DBIConnection generics: \code{\link{DBIConnection-class}},
   \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
   \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
   \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
-  \code{\link{dbListFields}}, \code{\link{dbListResults}},
-  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
-  \code{\link{dbRemoveTable}},
+  \code{\link{dbListFields}}, \code{\link{dbListObjects}},
+  \code{\link{dbListResults}}, \code{\link{dbListTables}},
+  \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
   \code{\link{dbSendStatement}}, \code{\link{dbWriteTable}}
 }
+\concept{DBIConnection generics}

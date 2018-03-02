@@ -18,12 +18,15 @@ dbDisconnect(conn, ...)
 \description{
 This closes the connection, discards all pending work, and frees
 resources (e.g., memory, sockets).
+
+\Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbDisconnect")}
 }
 \section{Specification}{
 
 
 A warning is issued on garbage collection when a connection has been
-released without calling \code{dbDisconnect()}.
+released without calling \code{dbDisconnect()},
+but this cannot be tested automatically.
 A warning is issued immediately when calling \code{dbDisconnect()} on an
 already disconnected
 or invalid connection.
@@ -40,8 +43,10 @@ Other DBIConnection generics: \code{\link{DBIConnection-class}},
   \code{\link{dbExistsTable}},
   \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
   \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
-  \code{\link{dbListFields}}, \code{\link{dbListResults}},
-  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
-  \code{\link{dbRemoveTable}}, \code{\link{dbSendQuery}},
-  \code{\link{dbSendStatement}}, \code{\link{dbWriteTable}}
+  \code{\link{dbListFields}}, \code{\link{dbListObjects}},
+  \code{\link{dbListResults}}, \code{\link{dbListTables}},
+  \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}},
+  \code{\link{dbWriteTable}}
 }
+\concept{DBIConnection generics}

@@ -1,3 +1,6 @@
+#' @include table.R
+NULL
+
 #' DBIConnection class
 #'
 #' This virtual class encapsulates the connection to a DBMS, and it provides
@@ -34,7 +37,8 @@ setMethod("show", "DBIConnection", function(object) {
   # RPostgreSQL)
   tryCatch(
     show_connection(object),
-    error = function(e) NULL)
+    error = function(e) NULL
+  )
   invisible(NULL)
 })
 
@@ -49,6 +53,9 @@ show_connection <- function(object) {
 #'
 #' This closes the connection, discards all pending work, and frees
 #' resources (e.g., memory, sockets).
+#'
+#' @template methods
+#' @templateVar method_name dbDisconnect
 #'
 #' @inherit DBItest::spec_connection_disconnect return
 #' @inheritSection DBItest::spec_connection_disconnect Specification
@@ -83,6 +90,10 @@ setGeneric("dbDisconnect",
 #' and transfer them piecemeal to R, others may transfer all the data to the
 #' client -- but not necessarily to the memory that R manages. See individual
 #' drivers' `dbSendQuery()` documentation for details.
+#'
+#' @template methods
+#' @templateVar method_name dbSendQuery
+#'
 #' @inherit DBItest::spec_result_send_query return
 #' @inheritSection DBItest::spec_result_send_query Specification
 #'
@@ -119,6 +130,9 @@ setGeneric("dbSendQuery",
 #' [dbSendStatement()] comes with a default implementation that simply
 #' forwards to [dbSendQuery()], to support backends that only
 #' implement the latter.
+#'
+#' @template methods
+#' @templateVar method_name dbSendStatement
 #'
 #' @inherit DBItest::spec_result_send_statement return
 #' @inheritSection DBItest::spec_result_send_statement Specification
@@ -168,6 +182,9 @@ setMethod(
 #' reasons.  However, callers are strongly advised to use
 #' [dbExecute()] for data manipulation statements.
 #'
+#' @template methods
+#' @templateVar method_name dbGetQuery
+#'
 #' @inherit DBItest::spec_result_get_query return
 #' @inheritSection DBItest::spec_result_get_query Specification
 #'
@@ -213,6 +230,9 @@ setMethod("dbGetQuery", signature("DBIConnection", "character"),
 #' [dbSendStatement()], then [dbGetRowsAffected()], ensuring that
 #' the result is always free-d by [dbClearResult()].
 #'
+#' @template methods
+#' @templateVar method_name dbExecute
+#'
 #' @section Implementation notes:
 #' Subclasses should override this method only if they provide some sort of
 #' performance optimization.
@@ -251,6 +271,9 @@ setMethod(
 
 #' Get DBMS exceptions
 #'
+#' DEPRECATED. Backends should use R's condition system to signal errors and
+#' warnings.
+#'
 #' @inheritParams dbGetQuery
 #' @family DBIConnection generics
 #' @return a list with elements `errorNum` (an integer error number) and
@@ -263,7 +286,9 @@ setGeneric("dbGetException",
 
 #' A list of all pending results
 #'
-#' List of [DBIResult-class] objects currently active on the connection.
+#' DEPRECATED. DBI currenty supports only one open result set per connection,
+#' you need to keep track of the result sets you open if you need this
+#' functionality.
 #'
 #' @inheritParams dbGetQuery
 #' @family DBIConnection generics
@@ -294,11 +319,33 @@ setGeneric("dbListFields",
   valueClass = "character"
 )
 
+#' @rdname hidden_aliases
+#' @export
+setMethod("dbListFields", signature("DBIConnection", "character"),
+  function(conn, name, ...) {
+    rs <- dbSendQuery(
+      conn,
+      paste(
+        "SELECT * FROM ",
+        dbQuoteIdentifier(conn, name),
+        "LIMIT 0"
+      )
+    )
+    on.exit(dbClearResult(rs))
+
+    names(dbFetch(rs, n = 0, row.names = FALSE))
+  }
+)
+
 #' List remote tables
 #'
 #' Returns the unquoted names of remote tables accessible through this
 #' connection.
-#' This should, where possible, include temporary tables, and views.
+#' This should include views and temporary objects, but not all database backends
+#' (in particular \pkg{RMariaDB} and \pkg{RMySQL}) support this.
+#'
+#' @template methods
+#' @templateVar method_name dbListTables
 #'
 #' @inherit DBItest::spec_sql_list_tables return
 #' @inheritSection DBItest::spec_sql_list_tables Additional arguments
@@ -319,11 +366,66 @@ setGeneric("dbListTables",
   valueClass = "character"
 )
 
+#' List remote objects
+#'
+#' Returns the names of remote objects accessible through this connection
+#' as a data frame.
+#' This should include temporary objects, but not all database backends
+#' (in particular \pkg{RMariaDB} and \pkg{RMySQL}) support this.
+#' Compared to [dbListTables()], this method also enumerates tables and views
+#' in schemas, and returns fully qualified identifiers to access these objects.
+#' This allows exploration of all database objects available to the current
+#' user, including those that can only be accessed by giving the full
+#' namespace.
+#'
+#' @template methods
+#' @templateVar method_name dbListObjects
+#'
+#' @inherit DBItest::spec_sql_list_objects return
+#' @inheritSection DBItest::spec_sql_list_objects Additional arguments
+#'
+#' @inheritParams dbGetQuery
+#' @param prefix A fully qualified path in the database's namespace, or `NULL`.
+#'   will be passed to [dbUnquoteIdentifier()].
+#'   If given the method will return all objects accessible through this prefix.
+#' @family DBIConnection generics
+#' @export
+#' @examples
+#' con <- dbConnect(RSQLite::SQLite(), ":memory:")
+#'
+#' dbListObjects(con)
+#' dbWriteTable(con, "mtcars", mtcars)
+#' dbListObjects(con)
+#'
+#' dbDisconnect(con)
+setGeneric("dbListObjects",
+  def = function(conn, prefix = NULL, ...) standardGeneric("dbListObjects"),
+  valueClass = "data.frame"
+)
+
+#' @rdname hidden_aliases
+#' @export
+setMethod("dbListObjects", signature("DBIConnection", "ANY"),
+  function(conn, prefix = NULL, ...) {
+    names <- dbListTables(conn)
+    tables <- lapply(names, function(x) Id(table = x))
+    ret <- data.frame(
+      table = I(unname(tables)),
+      stringsAsFactors = FALSE
+    )
+    ret$is_prefix <- rep_len(FALSE, nrow(ret))
+    ret
+  }
+)
+
 #' Copy data frames from database tables
 #'
 #' Reads a database table to a data frame, optionally converting
 #' a column to row names and converting the column names to valid
 #' R identifiers.
+#'
+#' @template methods
+#' @templateVar method_name dbReadTable
 #'
 #' @inherit DBItest::spec_sql_read_table return
 #' @inheritSection DBItest::spec_sql_read_table Additional arguments
@@ -348,14 +450,16 @@ setGeneric("dbReadTable",
 
 #' @rdname hidden_aliases
 #' @export
-setMethod("dbReadTable", c("DBIConnection", "character"),
-  function(conn, name, ..., row.names = NA, check.names = TRUE) {
+setMethod("dbReadTable", signature("DBIConnection", "character"),
+  function(conn, name, ..., row.names = FALSE, check.names = TRUE) {
     sql_name <- dbQuoteIdentifier(conn, x = name, ...)
     if (length(sql_name) != 1L) {
       stop("Invalid name: ", format(name), call. = FALSE)
     }
-    stopifnot(length(row.names) == 1L)
-    stopifnot(is.null(row.names) || is.logical(row.names) || is.character(row.names))
+    if (!is.null(row.names)) {
+      stopifnot(length(row.names) == 1L)
+      stopifnot(is.logical(row.names) || is.character(row.names))
+    }
     stopifnot(length(check.names) == 1L)
     stopifnot(is.logical(check.names))
     stopifnot(!is.na(check.names))
@@ -369,10 +473,21 @@ setMethod("dbReadTable", c("DBIConnection", "character"),
   }
 )
 
+#' @rdname hidden_aliases
+#' @export
+setMethod("dbReadTable", signature("DBIConnection", "Id"),
+  function(conn, name, ...) {
+    dbReadTable(conn, dbQuoteIdentifier(conn, name), ...)
+  }
+)
+
 #' Copy data frames to database tables
 #'
 #' Writes, overwrites or appends a data frame to a database table, optionally
 #' converting row names to a column and specifying SQL data types for fields.
+#'
+#' @template methods
+#' @templateVar method_name dbWriteTable
 #'
 #' @inherit DBItest::spec_sql_write_table return
 #' @inheritSection DBItest::spec_sql_write_table Additional arguments
@@ -404,9 +519,20 @@ setGeneric("dbWriteTable",
   def = function(conn, name, value, ...) standardGeneric("dbWriteTable")
 )
 
+#' @rdname hidden_aliases
+#' @export
+setMethod("dbWriteTable", signature("DBIConnection", "Id"),
+  function(conn, name, ...) {
+    dbWriteTable(conn, dbQuoteIdentifier(conn, name), ...)
+  }
+)
+
 #' Does a table exist?
 #'
 #' Returns if a table given by name exists in the database.
+#'
+#' @template methods
+#' @templateVar method_name dbExistsTable
 #'
 #' @inherit DBItest::spec_sql_exists_table return
 #' @inheritSection DBItest::spec_sql_exists_table Additional arguments
@@ -429,10 +555,21 @@ setGeneric("dbExistsTable",
   valueClass = "logical"
 )
 
+#' @rdname hidden_aliases
+#' @export
+setMethod("dbExistsTable", signature("DBIConnection", "Id"),
+  function(conn, name, ...) {
+    dbExistsTable(conn, dbQuoteIdentifier(conn, name), ...)
+  }
+)
+
 #' Remove a table from the database
 #'
 #' Remove a remote table (e.g., created by [dbWriteTable()])
 #' from the database.
+#'
+#' @template methods
+#' @templateVar method_name dbRemoveTable
 #'
 #' @inherit DBItest::spec_sql_remove_table return
 #' @inheritSection DBItest::spec_sql_remove_table Specification
@@ -453,4 +590,12 @@ setGeneric("dbExistsTable",
 #' dbDisconnect(con)
 setGeneric("dbRemoveTable",
   def = function(conn, name, ...) standardGeneric("dbRemoveTable")
+)
+
+#' @rdname hidden_aliases
+#' @export
+setMethod("dbRemoveTable", signature("DBIConnection", "Id"),
+  function(conn, name, ...) {
+    dbRemoveTable(conn, dbQuoteIdentifier(conn, name), ...)
+  }
 )

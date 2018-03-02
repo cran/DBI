@@ -26,6 +26,8 @@ may invoke this function repeatedly assigning its output to different
 objects.
 The authentication mechanism is left unspecified, so check the
 documentation of individual drivers for details.
+
+\Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbConnect")}
 }
 \section{Specification}{
 
@@ -66,3 +68,4 @@ Other DBIDriver generics: \code{\link{DBIDriver-class}},
   \code{\link{dbGetInfo}}, \code{\link{dbIsValid}},
   \code{\link{dbListConnections}}
 }
+\concept{DBIDriver generics}

@@ -24,18 +24,19 @@ setClass("DBIResult", contains = c("DBIObject", "VIRTUAL"))
 #' @rdname hidden_aliases
 #' @param object Object to display
 #' @export
-setMethod("show", "DBIResult", function(object) {
+setMethod("show", signature("DBIResult"), function(object) {
   # to protect drivers that fail to implement the required methods (e.g.,
   # RPostgreSQL)
   tryCatch(
     show_result(object),
-    error = function(e) NULL)
+    error = function(e) NULL
+  )
   invisible(NULL)
 })
 
 show_result <- function(object) {
   cat("<", is(object)[1], ">\n", sep = "")
-  if(!dbIsValid(object)){
+  if (!dbIsValid(object)) {
     cat("EXPIRED\n")
   } else {
     cat("  SQL  ", dbGetStatement(object), "\n", sep = "")
@@ -55,6 +56,9 @@ show_result <- function(object) {
 #' new code you are strongly encouraged to use `dbFetch()`. The default
 #' implementation for `dbFetch()` calls `fetch()` so that it is compatible with
 #' existing code. Modern backends should implement for `dbFetch()` only.
+#'
+#' @template methods
+#' @templateVar method_name dbFetch
 #'
 #' @inherit DBItest::spec_result_fetch return
 #' @inheritSection DBItest::spec_result_fetch Specification
@@ -97,7 +101,7 @@ setGeneric("dbFetch",
 
 #' @rdname hidden_aliases
 #' @export
-setMethod("dbFetch", "DBIResult", function(res, n = -1, ...) {
+setMethod("dbFetch", signature("DBIResult"), function(res, n = -1, ...) {
   fetch(res, n = n, ...)
 })
 
@@ -113,6 +117,9 @@ setGeneric("fetch",
 #' Frees all resources (local and remote) associated with a result set.  In some
 #' cases (e.g., very large result sets) this can be a critical step to avoid
 #' exhausting resources (memory, file descriptors, etc.)
+#'
+#' @template methods
+#' @templateVar method_name dbClearResult
 #'
 #' @inherit DBItest::spec_result_clear_result return
 #' @inheritSection DBItest::spec_result_clear_result Specification
@@ -167,6 +174,9 @@ setGeneric("dbColumnInfo",
 #' Returns the statement that was passed to [dbSendQuery()]
 #' or [dbSendStatement()].
 #'
+#' @template methods
+#' @templateVar method_name dbGetStatement
+#'
 #' @inherit DBItest::spec_meta_get_statement return
 #'
 #' @inheritParams dbClearResult
@@ -192,6 +202,9 @@ setGeneric("dbGetStatement",
 #' This method returns if the operation has completed.
 #' A `SELECT` query is completed if all rows have been fetched.
 #' A data manipulation statement is always completed.
+#'
+#' @template methods
+#' @templateVar method_name dbHasCompleted
 #'
 #' @inherit DBItest::spec_meta_has_completed return
 #' @inheritSection DBItest::spec_meta_has_completed Specification
@@ -224,6 +237,9 @@ setGeneric("dbHasCompleted",
 #' This method returns the number of rows that were added, deleted, or updated
 #' by a data manipulation statement.
 #'
+#' @template methods
+#' @templateVar method_name dbGetRowsAffected
+#'
 #' @inherit DBItest::spec_meta_get_rows_affected return
 #'
 #' @inheritParams dbClearResult
@@ -249,6 +265,9 @@ setGeneric("dbGetRowsAffected",
 #'
 #' Returns the total number of rows actually fetched with calls to [dbFetch()]
 #' for this result set.
+#'
+#' @template methods
+#' @templateVar method_name dbGetRowCount
 #'
 #' @inherit DBItest::spec_meta_get_row_count return
 #'
@@ -284,7 +303,7 @@ setGeneric("dbGetRowCount",
 #' [dbGetRowsAffected()], and [dbHasCompleted()].
 NULL
 #' @rdname hidden_aliases
-setMethod("dbGetInfo", "DBIResult", function(dbObj, ...) {
+setMethod("dbGetInfo", signature("DBIResult"), function(dbObj, ...) {
   list(
     statement = dbGetStatement(dbObj),
     row.count = dbGetRowCount(dbObj),
@@ -326,6 +345,9 @@ setMethod("dbGetInfo", "DBIResult", function(dbObj, ...) {
 #' - `?` (positional matching in order of appearance) in \pkg{RMySQL} and \pkg{RSQLite}
 #' - `$1` (positional matching by index) in \pkg{RPostgres} and \pkg{RSQLite}
 #' - `:name` and `$name` (named matching) in \pkg{RSQLite}
+#'
+#' @template methods
+#' @templateVar method_name dbBind
 #'
 #' @inherit DBItest::spec_meta_bind return
 #' @inheritSection DBItest::spec_meta_bind Specification

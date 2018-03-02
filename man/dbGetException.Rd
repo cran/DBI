@@ -18,7 +18,8 @@ a list with elements \code{errorNum} (an integer error number) and
 connection \code{conn}.
 }
 \description{
-Get DBMS exceptions
+DEPRECATED. Backends should use R's condition system to signal errors and
+warnings.
 }
 \seealso{
 Other DBIConnection generics: \code{\link{DBIConnection-class}},
@@ -26,8 +27,9 @@ Other DBIConnection generics: \code{\link{DBIConnection-class}},
   \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
   \code{\link{dbGetInfo}}, \code{\link{dbGetQuery}},
   \code{\link{dbIsValid}}, \code{\link{dbListFields}},
-  \code{\link{dbListResults}}, \code{\link{dbListTables}},
-  \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
-  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}},
-  \code{\link{dbWriteTable}}
+  \code{\link{dbListObjects}}, \code{\link{dbListResults}},
+  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
+  \code{\link{dbRemoveTable}}, \code{\link{dbSendQuery}},
+  \code{\link{dbSendStatement}}, \code{\link{dbWriteTable}}
 }
+\concept{DBIConnection generics}

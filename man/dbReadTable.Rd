@@ -58,6 +58,8 @@ also raise an error.
 Reads a database table to a data frame, optionally converting
 a column to row names and converting the column names to valid
 R identifiers.
+
+\Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbReadTable")}
 }
 \section{Additional arguments}{
 
@@ -103,8 +105,9 @@ Other DBIConnection generics: \code{\link{DBIConnection-class}},
   \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
   \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
   \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
-  \code{\link{dbListFields}}, \code{\link{dbListResults}},
-  \code{\link{dbListTables}}, \code{\link{dbRemoveTable}},
-  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}},
-  \code{\link{dbWriteTable}}
+  \code{\link{dbListFields}}, \code{\link{dbListObjects}},
+  \code{\link{dbListResults}}, \code{\link{dbListTables}},
+  \code{\link{dbRemoveTable}}, \code{\link{dbSendQuery}},
+  \code{\link{dbSendStatement}}, \code{\link{dbWriteTable}}
 }
+\concept{DBIConnection generics}

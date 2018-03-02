@@ -31,6 +31,8 @@ R object according to the SQL 92 specification, which may serve as a starting
 point for driver implementations. DBI also provides an implementation
 for data.frame which will return a character vector giving the type for each
 column in the dataframe.
+
+\Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbDataType")}
 }
 \details{
 The data types supported by databases are different than the data types in R,
@@ -121,8 +123,11 @@ Other DBIConnection generics: \code{\link{DBIConnection-class}},
   \code{\link{dbExistsTable}},
   \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
   \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
-  \code{\link{dbListFields}}, \code{\link{dbListResults}},
-  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
-  \code{\link{dbRemoveTable}}, \code{\link{dbSendQuery}},
-  \code{\link{dbSendStatement}}, \code{\link{dbWriteTable}}
+  \code{\link{dbListFields}}, \code{\link{dbListObjects}},
+  \code{\link{dbListResults}}, \code{\link{dbListTables}},
+  \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}},
+  \code{\link{dbWriteTable}}
 }
+\concept{DBIConnection generics}
+\concept{DBIDriver generics}

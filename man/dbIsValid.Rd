@@ -19,6 +19,8 @@ or a \linkS4class{DBIResult}}
 \code{FALSE} otherwise.
 A \linkS4class{DBIConnection} object is initially valid,
 and becomes invalid after disconnecting with \code{\link[=dbDisconnect]{dbDisconnect()}}.
+For an invalid connection object (e.g., for some drivers if the object
+is saved to a file and then restored), the method also returns \code{FALSE}.
 A \linkS4class{DBIResult} object is valid after a call to \code{\link[=dbSendQuery]{dbSendQuery()}},
 and stays valid even after all rows have been fetched;
 only clearing it with \code{\link[=dbClearResult]{dbClearResult()}} invalidates it.
@@ -32,6 +34,8 @@ connectivity problems, server failure, etc.), \code{dbIsValid()} should return
 \description{
 This generic tests whether a database object is still valid (i.e. it hasn't
 been disconnected or cleared).
+
+\Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbIsValid")}
 }
 \examples{
 dbIsValid(RSQLite::SQLite())
@@ -59,10 +63,10 @@ Other DBIConnection generics: \code{\link{DBIConnection-class}},
   \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
   \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
   \code{\link{dbGetQuery}}, \code{\link{dbListFields}},
-  \code{\link{dbListResults}}, \code{\link{dbListTables}},
-  \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
-  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}},
-  \code{\link{dbWriteTable}}
+  \code{\link{dbListObjects}}, \code{\link{dbListResults}},
+  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
+  \code{\link{dbRemoveTable}}, \code{\link{dbSendQuery}},
+  \code{\link{dbSendStatement}}, \code{\link{dbWriteTable}}
 
 Other DBIResult generics: \code{\link{DBIResult-class}},
   \code{\link{dbBind}}, \code{\link{dbClearResult}},
@@ -72,5 +76,10 @@ Other DBIResult generics: \code{\link{DBIResult-class}},
   \code{\link{dbGetStatement}},
   \code{\link{dbHasCompleted}},
   \code{\link{dbQuoteIdentifier}},
-  \code{\link{dbQuoteString}}
+  \code{\link{dbQuoteLiteral}},
+  \code{\link{dbQuoteString}},
+  \code{\link{dbUnquoteIdentifier}}
 }
+\concept{DBIConnection generics}
+\concept{DBIDriver generics}
+\concept{DBIResult generics}

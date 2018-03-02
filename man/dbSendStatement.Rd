@@ -34,6 +34,8 @@ the number of affected rows, call \code{\link[=dbGetRowsAffected]{dbGetRowsAffec
 returned result object.  You must also call \code{\link[=dbClearResult]{dbClearResult()}} after
 that. For interactive use, you should almost always prefer
 \code{\link[=dbExecute]{dbExecute()}}.
+
+\Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbSendStatement")}
 }
 \details{
 \code{\link[=dbSendStatement]{dbSendStatement()}} comes with a default implementation that simply
@@ -77,8 +79,9 @@ Other DBIConnection generics: \code{\link{DBIConnection-class}},
   \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
   \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
   \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
-  \code{\link{dbListFields}}, \code{\link{dbListResults}},
-  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
-  \code{\link{dbRemoveTable}}, \code{\link{dbSendQuery}},
-  \code{\link{dbWriteTable}}
+  \code{\link{dbListFields}}, \code{\link{dbListObjects}},
+  \code{\link{dbListResults}}, \code{\link{dbListTables}},
+  \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
+  \code{\link{dbSendQuery}}, \code{\link{dbWriteTable}}
 }
+\concept{DBIConnection generics}

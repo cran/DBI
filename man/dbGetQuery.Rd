@@ -35,6 +35,8 @@ Returns the result of a query as a data frame.
 (which should work with most backends) that calls
 \code{\link[=dbSendQuery]{dbSendQuery()}}, then \code{\link[=dbFetch]{dbFetch()}}, ensuring that
 the result is always free-d by \code{\link[=dbClearResult]{dbClearResult()}}.
+
+\Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbGetQuery")}
 }
 \details{
 This method is for \code{SELECT} queries only.  Some backends may
@@ -82,8 +84,9 @@ Other DBIConnection generics: \code{\link{DBIConnection-class}},
   \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
   \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
   \code{\link{dbIsValid}}, \code{\link{dbListFields}},
-  \code{\link{dbListResults}}, \code{\link{dbListTables}},
-  \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
-  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}},
-  \code{\link{dbWriteTable}}
+  \code{\link{dbListObjects}}, \code{\link{dbListResults}},
+  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
+  \code{\link{dbRemoveTable}}, \code{\link{dbSendQuery}},
+  \code{\link{dbSendStatement}}, \code{\link{dbWriteTable}}
 }
+\concept{DBIConnection generics}

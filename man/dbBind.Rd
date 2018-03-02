@@ -46,6 +46,8 @@ statements that contain placeholders for values. The \code{dbBind()} function
 binds these placeholders
 to actual values, and is intended to be called on the result set
 before calling \code{\link[=dbFetch]{dbFetch()}} or \code{\link[=dbGetRowsAffected]{dbGetRowsAffected()}}.
+
+\Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbBind")}
 }
 \details{
 \pkg{DBI} supports parametrized (or prepared) queries and statements
@@ -135,12 +137,11 @@ for both queries
 and data manipulation statements,
 even if no results are fetched between calls to \code{dbBind()}.
 
-At least the following data types are accepted:
+At least the following data types are accepted on input (including \link{NA}):
 \itemize{
 \item \link{integer}
 \item \link{numeric}
-\item \link{logical} for Boolean values (some backends may return an integer)
-\item \link{NA}
+\item \link{logical} for Boolean values
 \item \link{character}
 \item \link{factor} (bound as character,
 with warning)
@@ -185,5 +186,8 @@ Other DBIResult generics: \code{\link{DBIResult-class}},
   \code{\link{dbGetStatement}},
   \code{\link{dbHasCompleted}}, \code{\link{dbIsValid}},
   \code{\link{dbQuoteIdentifier}},
-  \code{\link{dbQuoteString}}
+  \code{\link{dbQuoteLiteral}},
+  \code{\link{dbQuoteString}},
+  \code{\link{dbUnquoteIdentifier}}
 }
+\concept{DBIResult generics}

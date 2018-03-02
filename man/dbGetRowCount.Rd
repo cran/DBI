@@ -34,6 +34,8 @@ Attempting to get the row count for a result set cleared with
 \description{
 Returns the total number of rows actually fetched with calls to \code{\link[=dbFetch]{dbFetch()}}
 for this result set.
+
+\Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbGetRowCount")}
 }
 \examples{
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
@@ -59,5 +61,8 @@ Other DBIResult generics: \code{\link{DBIResult-class}},
   \code{\link{dbGetStatement}},
   \code{\link{dbHasCompleted}}, \code{\link{dbIsValid}},
   \code{\link{dbQuoteIdentifier}},
-  \code{\link{dbQuoteString}}
+  \code{\link{dbQuoteLiteral}},
+  \code{\link{dbQuoteString}},
+  \code{\link{dbUnquoteIdentifier}}
 }
+\concept{DBIResult generics}

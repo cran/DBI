@@ -26,6 +26,8 @@ Attempting to get the rows affected for a result set cleared with
 \description{
 This method returns the number of rows that were added, deleted, or updated
 by a data manipulation statement.
+
+\Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbGetRowsAffected")}
 }
 \examples{
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
@@ -46,5 +48,8 @@ Other DBIResult generics: \code{\link{DBIResult-class}},
   \code{\link{dbGetStatement}},
   \code{\link{dbHasCompleted}}, \code{\link{dbIsValid}},
   \code{\link{dbQuoteIdentifier}},
-  \code{\link{dbQuoteString}}
+  \code{\link{dbQuoteLiteral}},
+  \code{\link{dbQuoteString}},
+  \code{\link{dbUnquoteIdentifier}}
 }
+\concept{DBIResult generics}
