@@ -52,6 +52,9 @@ The literals \code{"NA"} or \code{"NULL"} are not treated specially.
 so that the query \code{SELECT * FROM (SELECT 1) a WHERE ... IS NULL}
 returns one row.
 
+Passing a list
+for the \code{x} argument raises an error.
+
 }
 
 \examples{
@@ -83,8 +86,8 @@ Other DBIResult generics: \code{\link{DBIResult-class}},
   \code{\link{dbGetInfo}}, \code{\link{dbGetRowCount}},
   \code{\link{dbGetRowsAffected}},
   \code{\link{dbGetStatement}},
-  \code{\link{dbHasCompleted}}, \code{\link{dbIsValid}},
-  \code{\link{dbQuoteIdentifier}},
+  \code{\link{dbHasCompleted}}, \code{\link{dbIsReadOnly}},
+  \code{\link{dbIsValid}}, \code{\link{dbQuoteIdentifier}},
   \code{\link{dbQuoteString}},
   \code{\link{dbUnquoteIdentifier}}
 }

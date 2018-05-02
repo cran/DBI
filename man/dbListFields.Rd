@@ -15,11 +15,39 @@ dbListFields(conn, name, ...)
 \item{...}{Other parameters passed on to methods.}
 }
 \value{
-a character vector
+\code{dbListFields()}
+returns a character vector
+that enumerates all fields
+in the table in the correct order.
+This also works for temporary tables if supported by the database.
+The returned names are suitable for quoting with \code{dbQuoteIdentifier()}.
+If the table does not exist, an error is raised.
+Invalid types for the \code{name} argument
+(e.g., \code{character} of length not equal to one,
+or numeric)
+lead to an error.
+An error is also raised when calling this method for a closed
+or invalid connection.
 }
 \description{
 List field names of a remote table
 }
+\section{Specification}{
+
+
+
+The \code{name} argument can be
+\itemize{
+\item a string
+\item the return value of \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}}
+\item a value from the \code{table} column from the return value of
+\code{\link[=dbListObjects]{dbListObjects()}} where \code{is_prefix} is \code{FALSE}
+}
+
+A column named \code{row_names} is treated like any other column.
+
+}
+
 \examples{
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
@@ -32,13 +60,15 @@ dbDisconnect(con)
 \code{\link[=dbColumnInfo]{dbColumnInfo()}} to get the type of the fields.
 
 Other DBIConnection generics: \code{\link{DBIConnection-class}},
+  \code{\link{dbAppendTable}}, \code{\link{dbCreateTable}},
   \code{\link{dbDataType}}, \code{\link{dbDisconnect}},
   \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
   \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
-  \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
-  \code{\link{dbListObjects}}, \code{\link{dbListResults}},
-  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
-  \code{\link{dbRemoveTable}}, \code{\link{dbSendQuery}},
-  \code{\link{dbSendStatement}}, \code{\link{dbWriteTable}}
+  \code{\link{dbGetQuery}}, \code{\link{dbIsReadOnly}},
+  \code{\link{dbIsValid}}, \code{\link{dbListObjects}},
+  \code{\link{dbListResults}}, \code{\link{dbListTables}},
+  \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}},
+  \code{\link{dbWriteTable}}
 }
 \concept{DBIConnection generics}

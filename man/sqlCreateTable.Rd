@@ -2,7 +2,7 @@
 % Please edit documentation in R/table-create.R
 \name{sqlCreateTable}
 \alias{sqlCreateTable}
-\title{Create a simple table}
+\title{Compose query to create a simple table}
 \usage{
 sqlCreateTable(con, table, fields, row.names = NA, temporary = FALSE, ...)
 }
@@ -37,17 +37,14 @@ For backward compatibility, \code{NULL} is equivalent to \code{FALSE}.}
 \item{...}{Other arguments used by individual methods.}
 }
 \description{
-Exposes interface to simple \code{CREATE TABLE} commands. The default
+Exposes an interface to simple \code{CREATE TABLE} commands. The default
 method is ANSI SQL 99 compliant.
 This method is mostly useful for backend implementers.
 }
-\section{DBI-backends}{
-
-If you implement one method (i.e. for strings or data frames), you need
-to implement both, otherwise the S4 dispatch rules will be ambiguous
-and will generate an error on every call.
+\details{
+The \code{row.names} argument must be passed explicitly in order to avoid
+a compatibility warning.  The default will be changed in a later release.
 }
-
 \examples{
 sqlCreateTable(ANSI(), "my-table", c(a = "integer", b = "text"))
 sqlCreateTable(ANSI(), "my-table", iris)

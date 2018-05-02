@@ -11,7 +11,7 @@ dbListObjects(conn, prefix = NULL, ...)
 \code{\link[=dbConnect]{dbConnect()}}.}
 
 \item{prefix}{A fully qualified path in the database's namespace, or \code{NULL}.
-will be passed to \code{\link[=dbUnquoteIdentifier]{dbUnquoteIdentifier()}}.
+This argument will be processed with \code{\link[=dbUnquoteIdentifier]{dbUnquoteIdentifier()}}.
 If given the method will return all objects accessible through this prefix.}
 
 \item{...}{Other parameters passed on to methods.}
@@ -52,13 +52,27 @@ namespace.
 
 \Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbListObjects")}
 }
-\section{Additional arguments}{
+\section{Specification}{
 
 
-TBD: \code{temporary = NA}
+The \code{table} object can be quoted with \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}}.
+The result of quoting can be passed to \code{\link[=dbUnquoteIdentifier]{dbUnquoteIdentifier()}}.
+The unquoted results are equal to the original \code{table} object.
+(For backends it may be convenient to use the \link{Id} class, but this is
+not required.)
 
-This must be provided as named argument.
-See the "Specification" section for details on their usage.
+The \code{prefix} column indicates if the \code{table} value refers to a table
+or a prefix.
+For a call with the default \code{prefix = NULL}, the \code{table}
+values that have \code{is_prefix == FALSE} correspond to the tables
+returned from \code{\link[=dbListTables]{dbListTables()}},
+
+Values in \code{table} column that have \code{is_prefix == TRUE} can be
+passed as the \code{prefix} argument to another call to \code{dbListObjects()}.
+For the data frame returned from a \code{dbListObject()} call with the
+\code{prefix} argument set, all \code{table} values where \code{is_prefix} is
+\code{FALSE} can be used in a call to \code{\link[=dbExistsTable]{dbExistsTable()}} which returns
+\code{TRUE}.
 
 }
 
@@ -73,13 +87,15 @@ dbDisconnect(con)
 }
 \seealso{
 Other DBIConnection generics: \code{\link{DBIConnection-class}},
+  \code{\link{dbAppendTable}}, \code{\link{dbCreateTable}},
   \code{\link{dbDataType}}, \code{\link{dbDisconnect}},
   \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
   \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
-  \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
-  \code{\link{dbListFields}}, \code{\link{dbListResults}},
-  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
-  \code{\link{dbRemoveTable}}, \code{\link{dbSendQuery}},
-  \code{\link{dbSendStatement}}, \code{\link{dbWriteTable}}
+  \code{\link{dbGetQuery}}, \code{\link{dbIsReadOnly}},
+  \code{\link{dbIsValid}}, \code{\link{dbListFields}},
+  \code{\link{dbListResults}}, \code{\link{dbListTables}},
+  \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}},
+  \code{\link{dbWriteTable}}
 }
 \concept{DBIConnection generics}

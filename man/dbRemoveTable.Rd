@@ -31,6 +31,29 @@ from the database.
 
 \Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbRemoveTable")}
 }
+\section{Additional arguments}{
+
+
+The following arguments are not part of the \code{dbRemoveTable()} generic
+(to improve compatibility across backends)
+but are part of the DBI specification:
+\itemize{
+\item \code{temporary} (default: \code{FALSE})
+\item \code{fail_if_missing} (default: \code{TRUE})
+}
+
+These arguments must be provided as named arguments.
+
+If \code{temporary} is \code{TRUE}, the call to \code{dbRemoveTable()}
+will consider only temporary tables.
+Not all backends support this argument.
+In particular, permanent tables of the same name are left untouched.
+
+If \code{fail_if_missing} is \code{FALSE}, the call to \code{dbRemoveTable()}
+succeeds if the table does not exist.
+
+}
+
 \section{Specification}{
 
 
@@ -64,13 +87,15 @@ dbDisconnect(con)
 }
 \seealso{
 Other DBIConnection generics: \code{\link{DBIConnection-class}},
+  \code{\link{dbAppendTable}}, \code{\link{dbCreateTable}},
   \code{\link{dbDataType}}, \code{\link{dbDisconnect}},
   \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
   \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
-  \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
-  \code{\link{dbListFields}}, \code{\link{dbListObjects}},
-  \code{\link{dbListResults}}, \code{\link{dbListTables}},
-  \code{\link{dbReadTable}}, \code{\link{dbSendQuery}},
-  \code{\link{dbSendStatement}}, \code{\link{dbWriteTable}}
+  \code{\link{dbGetQuery}}, \code{\link{dbIsReadOnly}},
+  \code{\link{dbIsValid}}, \code{\link{dbListFields}},
+  \code{\link{dbListObjects}}, \code{\link{dbListResults}},
+  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}},
+  \code{\link{dbWriteTable}}
 }
 \concept{DBIConnection generics}

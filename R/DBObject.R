@@ -1,3 +1,6 @@
+#' @include hidden.R
+NULL
+
 #' DBIObject class
 #'
 #' Base class for all other DBI classes (e.g., drivers, connections). This
@@ -110,6 +113,26 @@ setGeneric("dbIsValid",
   def = function(dbObj, ...) standardGeneric("dbIsValid"),
   valueClass = "logical"
 )
+
+#' Is this DBMS object read only?
+#'
+#' This generic tests whether a database object is read only.
+#'
+#' @inheritParams dbGetInfo
+#' @family DBIDriver generics
+#' @family DBIConnection generics
+#' @family DBIResult generics
+#' @export
+#' @examples
+#' dbIsReadOnly(ANSI())
+setGeneric("dbIsReadOnly",
+  def = function(dbObj, ...) standardGeneric("dbIsReadOnly"),
+  valueClass = "logical")
+
+#' @rdname hidden_aliases
+setMethod("dbIsReadOnly", "DBIObject", function(dbObj, ...) {
+  FALSE
+})
 
 setGeneric("summary")
 setMethod("summary", "DBIObject", function(object, ...) {

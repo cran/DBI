@@ -1,3 +1,4 @@
+#' @include hidden.R
 #' @include DBConnection.R
 NULL
 
@@ -151,8 +152,7 @@ setMethod("dbQuoteIdentifier", signature("DBIConnection", "Id"), quote_identifie
 #'
 #' @param conn A subclass of [DBIConnection-class], representing
 #'   an active connection to an DBMS.
-#' @param x An [SQL] or [Id] object or character vector, or a list of such
-#'   objects, to unquote.
+#' @param x An [SQL] or [Id] object or character vector to unquote.
 #' @param ... Other arguments passed on to methods.
 #'
 #' @template methods
@@ -172,22 +172,22 @@ setMethod("dbQuoteIdentifier", signature("DBIConnection", "Id"), quote_identifie
 #' )
 #'
 #' # The returned object is always a list,
-#' # also for Id objects or lists thereof
+#' # also for Id objects
 #' dbUnquoteIdentifier(
 #'   ANSI(),
 #'   Id(schema = "Schema", table = "Table")
 #' )
 #'
-#' dbUnquoteIdentifier(
+#' # Quoting is the inverse operation to unquoting the elements
+#' # of the returned list
+#' dbQuoteIdentifier(
 #'   ANSI(),
-#'   list(Id(schema = "Schema", table = "Table"), Id(table = "UnqualifiedTable"))
+#'   dbUnquoteIdentifier(ANSI(), SQL("UnqualifiedTable"))[[1]]
 #' )
 #'
-#' # Lists of SQL objects can also be processed,
-#' # but each component must be length 1
-#' dbUnquoteIdentifier(
+#' dbQuoteIdentifier(
 #'   ANSI(),
-#'   list(SQL('"Schema"."Table"'), SQL('"UnqualifiedTable"'))
+#'   dbUnquoteIdentifier(ANSI(), Id(schema = "Schema", table = "Table"))[[1]]
 #' )
 setGeneric("dbUnquoteIdentifier",
   def = function(conn, x, ...) standardGeneric("dbUnquoteIdentifier")
@@ -196,34 +196,34 @@ setGeneric("dbUnquoteIdentifier",
 #' @rdname hidden_aliases
 #' @export
 setMethod("dbUnquoteIdentifier", signature("DBIConnection"), function(conn, x, ...) {
-  if (is.list(x)) {
-    return(vapply(x, dbUnquoteIdentifier, conn = conn, list(1)))
-  }
   if (is(x, "SQL")) {
-    split <-  strsplit(as.character(x), '^"|"$|"[.]"')
-    components <- lapply(split, `[`, -1L)
-    lengths <- vapply(components, length, integer(1))
-    if (!all(lengths %in% 1:2)) {
-      stop("Can only unquote up to two components.", call. = FALSE)
+    rx <- '^(?:(?:|"((?:[^"]|"")+)"[.])(?:|"((?:[^"]|"")*)")|([^". ]+))$'
+    bad <- grep(rx, x, invert = TRUE)
+    if (length(bad) > 0) {
+      stop("Can't unquote ", x[bad[[1]]], call. = FALSE)
     }
-    named_components <- lapply(components, function(x) {
-      if (length(x) == 1) names(x) <- "table"
-      else names(x) <- c("schema", "table")
-      as.list(x)
-    })
-    tables <- lapply(named_components, do.call, what = Id)
-    quoted <- lapply(tables, dbQuoteIdentifier, conn = conn)
-    bad <- quoted != x
-    if (any(bad)) {
-      stop("Can't unquote ", x[bad][[1L]], call. = FALSE)
-    }
-    return(tables)
+    schema <- gsub(rx, "\\1", x)
+    schema <- gsub('""', '"', schema)
+    table <- gsub(rx, "\\2", x)
+    table <- gsub('""', '"', table)
+    naked_table <- gsub(rx, "\\3", x)
+
+    ret <- Map(schema, table, naked_table, f = as_table)
+    names(ret) <- names(x)
+    return(ret)
   }
   if (is(x, "Id")) {
     return(list(x))
   }
-  stop("x must be SQL or Table, or a list of such objects", call. = FALSE)
+  stop("x must be SQL or Id", call. = FALSE)
 })
+
+as_table <- function(schema, table, naked_table = NULL) {
+  args <- c(schema = schema, table = table, table = naked_table)
+  # Also omits NA args
+  args <- args[!is.na(args) & args != ""]
+  do.call(Id, as.list(args))
+}
 
 #' Quote literal strings
 #'

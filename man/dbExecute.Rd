@@ -34,10 +34,38 @@ the result is always free-d by \code{\link[=dbClearResult]{dbClearResult()}}.
 
 \Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbExecute")}
 }
+\details{
+You can also use \code{dbExecute()} to call a stored procedure
+that performs data manipulation or other actions that do not return a result set.
+To execute a stored procedure that returns a result set use \code{\link[=dbGetQuery]{dbGetQuery()}} instead.
+}
 \section{Implementation notes}{
 
 Subclasses should override this method only if they provide some sort of
 performance optimization.
+}
+
+\section{Additional arguments}{
+
+
+The following argument is not part of the \code{dbExecute()} generic
+(to improve compatibility across backends)
+but is part of the DBI specification:
+\itemize{
+\item \code{params} (default: \code{NULL})
+}
+
+It must be provided as named arguments.
+See the "Specification" sections for details on its usage.
+
+}
+
+\section{Specification}{
+
+
+
+The \code{param} argument allows passing query parameters, see \code{\link[=dbBind]{dbBind()}} for details.
+
 }
 
 \examples{
@@ -45,9 +73,19 @@ con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
 dbWriteTable(con, "cars", head(cars, 3))
 dbReadTable(con, "cars")   # there are 3 rows
-dbExecute(con,
-  "INSERT INTO cars (speed, dist) VALUES (1, 1), (2, 2), (3, 3);")
+dbExecute(
+  con,
+  "INSERT INTO cars (speed, dist) VALUES (1, 1), (2, 2), (3, 3)"
+)
 dbReadTable(con, "cars")   # there are now 6 rows
+
+# Pass values using the param argument:
+dbExecute(
+  con,
+  "INSERT INTO cars (speed, dist) VALUES (?, ?)",
+  param = list(4:7, 5:8)
+)
+dbReadTable(con, "cars")   # there are now 10 rows
 
 dbDisconnect(con)
 }
@@ -55,14 +93,15 @@ dbDisconnect(con)
 For queries: \code{\link[=dbSendQuery]{dbSendQuery()}} and \code{\link[=dbGetQuery]{dbGetQuery()}}.
 
 Other DBIConnection generics: \code{\link{DBIConnection-class}},
+  \code{\link{dbAppendTable}}, \code{\link{dbCreateTable}},
   \code{\link{dbDataType}}, \code{\link{dbDisconnect}},
   \code{\link{dbExistsTable}},
   \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
-  \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
-  \code{\link{dbListFields}}, \code{\link{dbListObjects}},
-  \code{\link{dbListResults}}, \code{\link{dbListTables}},
-  \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
-  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}},
-  \code{\link{dbWriteTable}}
+  \code{\link{dbGetQuery}}, \code{\link{dbIsReadOnly}},
+  \code{\link{dbIsValid}}, \code{\link{dbListFields}},
+  \code{\link{dbListObjects}}, \code{\link{dbListResults}},
+  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
+  \code{\link{dbRemoveTable}}, \code{\link{dbSendQuery}},
+  \code{\link{dbSendStatement}}, \code{\link{dbWriteTable}}
 }
 \concept{DBIConnection generics}

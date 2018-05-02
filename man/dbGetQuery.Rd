@@ -39,7 +39,14 @@ the result is always free-d by \code{\link[=dbClearResult]{dbClearResult()}}.
 \Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbGetQuery")}
 }
 \details{
-This method is for \code{SELECT} queries only.  Some backends may
+This method is for \code{SELECT} queries only
+(incl. other SQL statements that return a \code{SELECT}-alike result,
+e. g. execution of a stored procedure).
+
+To execute a stored procedure that does not return a result set,
+use \code{\link[=dbExecute]{dbExecute()}}.
+
+Some backends may
 support data manipulation statements through this method for compatibility
 reasons.  However, callers are strongly advised to use
 \code{\link[=dbExecute]{dbExecute()}} for data manipulation statements.
@@ -50,19 +57,38 @@ Subclasses should override this method only if they provide some sort of
 performance optimization.
 }
 
+\section{Additional arguments}{
+
+
+The following arguments are not part of the \code{dbGetQuery()} generic
+(to improve compatibility across backends)
+but are part of the DBI specification:
+\itemize{
+\item \code{n} (default: -1)
+\item \code{params} (default: \code{NULL})
+}
+
+They must be provided as named arguments.
+See the "Specification" and "Value" sections for details on their usage.
+
+}
+
 \section{Specification}{
 
 
-Fetching multi-row queries with one
-or more columns be default returns the entire result.
+The \code{n} argument specifies the number of rows to be fetched.
+If omitted, fetching multi-row queries with one
+or more columns returns the entire result.
 A value of \link{Inf} for the \code{n} argument is supported
 and also returns the full result.
-If more rows than available are fetched, the result is returned in full
-without warning.
-If zero rows are fetched, the columns of the data frame are still fully
+If more rows than available are fetched (by passing a too large value for
+\code{n}), the result is returned in full without warning.
+If zero rows are requested, the columns of the data frame are still fully
 typed.
 Fetching fewer rows than available is permitted,
 no warning is issued.
+
+The \code{param} argument allows passing query parameters, see \code{\link[=dbBind]{dbBind()}} for details.
 
 A column named \code{row_names} is treated like any other column.
 
@@ -73,6 +99,13 @@ con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
 dbWriteTable(con, "mtcars", mtcars)
 dbGetQuery(con, "SELECT * FROM mtcars")
+dbGetQuery(con, "SELECT * FROM mtcars", n = 6)
+
+# Pass values using the param argument:
+# (This query runs eight times, once for each different
+# parameter. The resulting rows are combined into a single
+# data frame.)
+dbGetQuery(con, "SELECT COUNT(*) FROM mtcars WHERE cyl = ?", param = list(1:8))
 
 dbDisconnect(con)
 }
@@ -80,13 +113,15 @@ dbDisconnect(con)
 For updates: \code{\link[=dbSendStatement]{dbSendStatement()}} and \code{\link[=dbExecute]{dbExecute()}}.
 
 Other DBIConnection generics: \code{\link{DBIConnection-class}},
+  \code{\link{dbAppendTable}}, \code{\link{dbCreateTable}},
   \code{\link{dbDataType}}, \code{\link{dbDisconnect}},
   \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
   \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
-  \code{\link{dbIsValid}}, \code{\link{dbListFields}},
-  \code{\link{dbListObjects}}, \code{\link{dbListResults}},
-  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
-  \code{\link{dbRemoveTable}}, \code{\link{dbSendQuery}},
-  \code{\link{dbSendStatement}}, \code{\link{dbWriteTable}}
+  \code{\link{dbIsReadOnly}}, \code{\link{dbIsValid}},
+  \code{\link{dbListFields}}, \code{\link{dbListObjects}},
+  \code{\link{dbListResults}}, \code{\link{dbListTables}},
+  \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
+  \code{\link{dbSendQuery}}, \code{\link{dbSendStatement}},
+  \code{\link{dbWriteTable}}
 }
 \concept{DBIConnection generics}

@@ -48,6 +48,21 @@ and transfer them piecemeal to R, others may transfer all the data to the
 client -- but not necessarily to the memory that R manages. See individual
 drivers' \code{dbSendQuery()} documentation for details.
 }
+\section{Additional arguments}{
+
+
+The following argument is not part of the \code{dbSendQuery()} generic
+(to improve compatibility across backends)
+but is part of the DBI specification:
+\itemize{
+\item \code{params} (default: \code{NULL})
+}
+
+It must be provided as named arguments.
+See the "Specification" sections for details on its usage.
+
+}
+
 \section{Specification}{
 
 
@@ -63,13 +78,32 @@ and raises a warning.
 The newly opened result set is valid
 and must be cleared with \code{dbClearResult()}.
 
+The \code{param} argument allows passing query parameters, see \code{\link[=dbBind]{dbBind()}} for details.
+
 }
 
 \examples{
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
 dbWriteTable(con, "mtcars", mtcars)
-rs <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = 4;")
+rs <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = 4")
+dbFetch(rs)
+dbClearResult(rs)
+
+# Pass one set of values with the param argument:
+rs <- dbSendQuery(
+  con,
+  "SELECT * FROM mtcars WHERE cyl = ?",
+  param = list(4L)
+)
+dbFetch(rs)
+dbClearResult(rs)
+
+# Pass multiple sets of values with dbBind():
+rs <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = ?")
+dbBind(rs, list(6L))
+dbFetch(rs)
+dbBind(rs, list(8L))
 dbFetch(rs)
 dbClearResult(rs)
 
@@ -79,13 +113,15 @@ dbDisconnect(con)
 For updates: \code{\link[=dbSendStatement]{dbSendStatement()}} and \code{\link[=dbExecute]{dbExecute()}}.
 
 Other DBIConnection generics: \code{\link{DBIConnection-class}},
+  \code{\link{dbAppendTable}}, \code{\link{dbCreateTable}},
   \code{\link{dbDataType}}, \code{\link{dbDisconnect}},
   \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
   \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
-  \code{\link{dbGetQuery}}, \code{\link{dbIsValid}},
-  \code{\link{dbListFields}}, \code{\link{dbListObjects}},
-  \code{\link{dbListResults}}, \code{\link{dbListTables}},
-  \code{\link{dbReadTable}}, \code{\link{dbRemoveTable}},
+  \code{\link{dbGetQuery}}, \code{\link{dbIsReadOnly}},
+  \code{\link{dbIsValid}}, \code{\link{dbListFields}},
+  \code{\link{dbListObjects}}, \code{\link{dbListResults}},
+  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
+  \code{\link{dbRemoveTable}},
   \code{\link{dbSendStatement}}, \code{\link{dbWriteTable}}
 }
 \concept{DBIConnection generics}

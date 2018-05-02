@@ -1,4 +1,5 @@
 #' @include table.R
+#' @include hidden.R
 NULL
 
 #' DBIConnection class
@@ -95,6 +96,7 @@ setGeneric("dbDisconnect",
 #' @templateVar method_name dbSendQuery
 #'
 #' @inherit DBItest::spec_result_send_query return
+#' @inheritSection DBItest::spec_result_send_query Additional arguments
 #' @inheritSection DBItest::spec_result_send_query Specification
 #'
 #' @inheritParams dbGetQuery
@@ -106,7 +108,24 @@ setGeneric("dbDisconnect",
 #' con <- dbConnect(RSQLite::SQLite(), ":memory:")
 #'
 #' dbWriteTable(con, "mtcars", mtcars)
-#' rs <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = 4;")
+#' rs <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = 4")
+#' dbFetch(rs)
+#' dbClearResult(rs)
+#'
+#' # Pass one set of values with the param argument:
+#' rs <- dbSendQuery(
+#'   con,
+#'   "SELECT * FROM mtcars WHERE cyl = ?",
+#'   param = list(4L)
+#' )
+#' dbFetch(rs)
+#' dbClearResult(rs)
+#'
+#' # Pass multiple sets of values with dbBind():
+#' rs <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = ?")
+#' dbBind(rs, list(6L))
+#' dbFetch(rs)
+#' dbBind(rs, list(8L))
 #' dbFetch(rs)
 #' dbClearResult(rs)
 #'
@@ -135,6 +154,7 @@ setGeneric("dbSendQuery",
 #' @templateVar method_name dbSendStatement
 #'
 #' @inherit DBItest::spec_result_send_statement return
+#' @inheritSection DBItest::spec_result_send_statement Additional arguments
 #' @inheritSection DBItest::spec_result_send_statement Specification
 #'
 #' @inheritParams dbGetQuery
@@ -146,12 +166,33 @@ setGeneric("dbSendQuery",
 #' con <- dbConnect(RSQLite::SQLite(), ":memory:")
 #'
 #' dbWriteTable(con, "cars", head(cars, 3))
-#' rs <- dbSendStatement(con,
-#'   "INSERT INTO cars (speed, dist) VALUES (1, 1), (2, 2), (3, 3);")
+#'
+#' rs <- dbSendStatement(
+#'   con,
+#'   "INSERT INTO cars (speed, dist) VALUES (1, 1), (2, 2), (3, 3)"
+#' )
 #' dbHasCompleted(rs)
 #' dbGetRowsAffected(rs)
 #' dbClearResult(rs)
 #' dbReadTable(con, "cars")   # there are now 6 rows
+#'
+#' # Pass one set of values directly using the param argument:
+#' rs <- dbSendStatement(
+#'   con,
+#'   "INSERT INTO cars (speed, dist) VALUES (?, ?)",
+#'   param = list(4L, 5L)
+#' )
+#' dbClearResult(rs)
+#'
+#' # Pass multiple sets of values using dbBind():
+#' rs <- dbSendStatement(
+#'   con,
+#'   "INSERT INTO cars (speed, dist) VALUES (?, ?)"
+#' )
+#' dbBind(rs, list(5:6, 6:7))
+#' dbBind(rs, list(7L, 8L))
+#' dbClearResult(rs)
+#' dbReadTable(con, "cars")   # there are now 10 rows
 #'
 #' dbDisconnect(con)
 #' @export
@@ -177,7 +218,14 @@ setMethod(
 #' [dbSendQuery()], then [dbFetch()], ensuring that
 #' the result is always free-d by [dbClearResult()].
 #'
-#' This method is for `SELECT` queries only.  Some backends may
+#' This method is for `SELECT` queries only
+#' (incl. other SQL statements that return a `SELECT`-alike result,
+#'  e. g. execution of a stored procedure).
+#'
+#' To execute a stored procedure that does not return a result set,
+#' use [dbExecute()].
+#'
+#' Some backends may
 #' support data manipulation statements through this method for compatibility
 #' reasons.  However, callers are strongly advised to use
 #' [dbExecute()] for data manipulation statements.
@@ -186,6 +234,7 @@ setMethod(
 #' @templateVar method_name dbGetQuery
 #'
 #' @inherit DBItest::spec_result_get_query return
+#' @inheritSection DBItest::spec_result_get_query Additional arguments
 #' @inheritSection DBItest::spec_result_get_query Specification
 #'
 #' @section Implementation notes:
@@ -204,6 +253,13 @@ setMethod(
 #'
 #' dbWriteTable(con, "mtcars", mtcars)
 #' dbGetQuery(con, "SELECT * FROM mtcars")
+#' dbGetQuery(con, "SELECT * FROM mtcars", n = 6)
+#'
+#' # Pass values using the param argument:
+#' # (This query runs eight times, once for each different
+#' # parameter. The resulting rows are combined into a single
+#' # data frame.)
+#' dbGetQuery(con, "SELECT COUNT(*) FROM mtcars WHERE cyl = ?", param = list(1:8))
 #'
 #' dbDisconnect(con)
 setGeneric("dbGetQuery",
@@ -230,6 +286,10 @@ setMethod("dbGetQuery", signature("DBIConnection", "character"),
 #' [dbSendStatement()], then [dbGetRowsAffected()], ensuring that
 #' the result is always free-d by [dbClearResult()].
 #'
+#' You can also use `dbExecute()` to call a stored procedure
+#' that performs data manipulation or other actions that do not return a result set.
+#' To execute a stored procedure that returns a result set use [dbGetQuery()] instead.
+#'
 #' @template methods
 #' @templateVar method_name dbExecute
 #'
@@ -238,6 +298,8 @@ setMethod("dbGetQuery", signature("DBIConnection", "character"),
 #' performance optimization.
 #'
 #' @inherit DBItest::spec_result_execute return
+#' @inheritSection DBItest::spec_result_execute Additional arguments
+#' @inheritSection DBItest::spec_result_execute Specification
 #'
 #' @inheritParams dbGetQuery
 #' @param statement a character string containing SQL.
@@ -249,9 +311,19 @@ setMethod("dbGetQuery", signature("DBIConnection", "character"),
 #'
 #' dbWriteTable(con, "cars", head(cars, 3))
 #' dbReadTable(con, "cars")   # there are 3 rows
-#' dbExecute(con,
-#'   "INSERT INTO cars (speed, dist) VALUES (1, 1), (2, 2), (3, 3);")
+#' dbExecute(
+#'   con,
+#'   "INSERT INTO cars (speed, dist) VALUES (1, 1), (2, 2), (3, 3)"
+#' )
 #' dbReadTable(con, "cars")   # there are now 6 rows
+#'
+#' # Pass values using the param argument:
+#' dbExecute(
+#'   con,
+#'   "INSERT INTO cars (speed, dist) VALUES (?, ?)",
+#'   param = list(4:7, 5:8)
+#' )
+#' dbReadTable(con, "cars")   # there are now 10 rows
 #'
 #' dbDisconnect(con)
 setGeneric("dbExecute",
@@ -303,7 +375,10 @@ setGeneric("dbListResults",
 #'
 #' @inheritParams dbGetQuery
 #' @param name a character string with the name of the remote table.
-#' @return a character vector
+#'
+#' @inherit DBItest::spec_sql_list_fields return
+#' @inheritSection DBItest::spec_sql_list_fields Specification
+#'
 #' @family DBIConnection generics
 #' @seealso [dbColumnInfo()] to get the type of the fields.
 #' @export
@@ -323,19 +398,31 @@ setGeneric("dbListFields",
 #' @export
 setMethod("dbListFields", signature("DBIConnection", "character"),
   function(conn, name, ...) {
-    rs <- dbSendQuery(
-      conn,
-      paste(
-        "SELECT * FROM ",
-        dbQuoteIdentifier(conn, name),
-        "LIMIT 0"
-      )
-    )
-    on.exit(dbClearResult(rs))
-
-    names(dbFetch(rs, n = 0, row.names = FALSE))
+    list_fields(conn, name)
   }
 )
+
+#' @rdname hidden_aliases
+#' @export
+setMethod("dbListFields", signature("DBIConnection", "Id"),
+  function(conn, name, ...) {
+    list_fields(conn, name)
+  }
+)
+
+list_fields <- function(conn, name) {
+  rs <- dbSendQuery(
+    conn,
+    paste(
+      "SELECT * FROM ",
+      dbQuoteIdentifier(conn, name),
+      "LIMIT 0"
+    )
+  )
+  on.exit(dbClearResult(rs))
+
+  names(dbFetch(rs, n = 0, row.names = FALSE))
+}
 
 #' List remote tables
 #'
@@ -348,7 +435,6 @@ setMethod("dbListFields", signature("DBIConnection", "character"),
 #' @templateVar method_name dbListTables
 #'
 #' @inherit DBItest::spec_sql_list_tables return
-#' @inheritSection DBItest::spec_sql_list_tables Additional arguments
 #'
 #' @inheritParams dbGetQuery
 #' @family DBIConnection generics
@@ -383,10 +469,11 @@ setGeneric("dbListTables",
 #'
 #' @inherit DBItest::spec_sql_list_objects return
 #' @inheritSection DBItest::spec_sql_list_objects Additional arguments
+#' @inheritSection DBItest::spec_sql_list_objects Specification
 #'
 #' @inheritParams dbGetQuery
 #' @param prefix A fully qualified path in the database's namespace, or `NULL`.
-#'   will be passed to [dbUnquoteIdentifier()].
+#'   This argument will be processed with [dbUnquoteIdentifier()].
 #'   If given the method will return all objects accessible through this prefix.
 #' @family DBIConnection generics
 #' @export
@@ -521,9 +608,9 @@ setGeneric("dbWriteTable",
 
 #' @rdname hidden_aliases
 #' @export
-setMethod("dbWriteTable", signature("DBIConnection", "Id"),
-  function(conn, name, ...) {
-    dbWriteTable(conn, dbQuoteIdentifier(conn, name), ...)
+setMethod("dbWriteTable", signature("DBIConnection", "Id", "ANY"),
+  function(conn, name, value, ...) {
+    dbWriteTable(conn, dbQuoteIdentifier(conn, name), value, ...)
   }
 )
 
@@ -535,7 +622,6 @@ setMethod("dbWriteTable", signature("DBIConnection", "Id"),
 #' @templateVar method_name dbExistsTable
 #'
 #' @inherit DBItest::spec_sql_exists_table return
-#' @inheritSection DBItest::spec_sql_exists_table Additional arguments
 #' @inheritSection DBItest::spec_sql_exists_table Specification
 #'
 #' @inheritParams dbGetQuery
@@ -572,6 +658,7 @@ setMethod("dbExistsTable", signature("DBIConnection", "Id"),
 #' @templateVar method_name dbRemoveTable
 #'
 #' @inherit DBItest::spec_sql_remove_table return
+#' @inheritSection DBItest::spec_sql_remove_table Additional arguments
 #' @inheritSection DBItest::spec_sql_remove_table Specification
 #'
 #' @inheritParams dbGetQuery
