@@ -75,8 +75,7 @@ setMethod("show", "SQL", function(object) {
 #' generate valid SQL and protect against SQL injection attacks. The inverse
 #' operation is [dbUnquoteIdentifier()].
 #'
-#' @param conn A subclass of [DBIConnection-class], representing
-#'   an active connection to an DBMS.
+#' @inheritParams dbGetQuery
 #' @param x A character vector, [SQL] or [Id] object to quote as identifier.
 #' @param ... Other arguments passed on to methods.
 #'
@@ -150,9 +149,8 @@ setMethod("dbQuoteIdentifier", signature("DBIConnection", "Id"), quote_identifie
 #' Call this method to convert a [SQL] object created by [dbQuoteIdentifier()]
 #' back to a list of [Id] objects.
 #'
-#' @param conn A subclass of [DBIConnection-class], representing
-#'   an active connection to an DBMS.
-#' @param x An [SQL] or [Id] object or character vector to unquote.
+#' @inheritParams dbGetQuery
+#' @param x An [SQL] or [Id] object.
 #' @param ... Other arguments passed on to methods.
 #'
 #' @template methods
@@ -168,14 +166,14 @@ setMethod("dbQuoteIdentifier", signature("DBIConnection", "Id"), quote_identifie
 #' # possibly complex quoted identifier
 #' dbUnquoteIdentifier(
 #'   ANSI(),
-#'   SQL(c('"Schema"."Table"', '"UnqualifiedTable"'))
+#'   SQL(c('"Catalog"."Schema"."Table"', '"Schema"."Table"', '"UnqualifiedTable"'))
 #' )
 #'
 #' # The returned object is always a list,
 #' # also for Id objects
 #' dbUnquoteIdentifier(
 #'   ANSI(),
-#'   Id(schema = "Schema", table = "Table")
+#'   Id(catalog = "Catalog", schema = "Schema", table = "Table")
 #' )
 #'
 #' # Quoting is the inverse operation to unquoting the elements
@@ -197,18 +195,28 @@ setGeneric("dbUnquoteIdentifier",
 #' @export
 setMethod("dbUnquoteIdentifier", signature("DBIConnection"), function(conn, x, ...) {
   if (is(x, "SQL")) {
-    rx <- '^(?:(?:|"((?:[^"]|"")+)"[.])(?:|"((?:[^"]|"")*)")|([^". ]+))$'
+    id_rx <- '(?:"((?:[^"]|"")+)"|([^". ]+))'
+
+    rx <- paste0(
+      "^",
+      "(?:|(?:|", id_rx, "[.])",
+      id_rx, "[.])",
+      "(?:|", id_rx, ")",
+      "$"
+    )
+
     bad <- grep(rx, x, invert = TRUE)
     if (length(bad) > 0) {
       stop("Can't unquote ", x[bad[[1]]], call. = FALSE)
     }
-    schema <- gsub(rx, "\\1", x)
+    catalog <- gsub(rx, "\\1\\2", x)
+    catalog <- gsub('""', '"', catalog)
+    schema <- gsub(rx, "\\3\\4", x)
     schema <- gsub('""', '"', schema)
-    table <- gsub(rx, "\\2", x)
+    table <- gsub(rx, "\\5\\6", x)
     table <- gsub('""', '"', table)
-    naked_table <- gsub(rx, "\\3", x)
 
-    ret <- Map(schema, table, naked_table, f = as_table)
+    ret <- Map(catalog, schema, table, f = as_table)
     names(ret) <- names(x)
     return(ret)
   }
@@ -218,8 +226,8 @@ setMethod("dbUnquoteIdentifier", signature("DBIConnection"), function(conn, x, .
   stop("x must be SQL or Id", call. = FALSE)
 })
 
-as_table <- function(schema, table, naked_table = NULL) {
-  args <- c(schema = schema, table = table, table = naked_table)
+as_table <- function(catalog, schema, table) {
+  args <- c(catalog = catalog, schema = schema, table = table)
   # Also omits NA args
   args <- args[!is.na(args) & args != ""]
   do.call(Id, as.list(args))
@@ -231,8 +239,7 @@ as_table <- function(schema, table, naked_table = NULL) {
 #' use in a query as a string literal, to make sure that you
 #' generate valid SQL and protect against SQL injection attacks.
 #'
-#' @param conn A subclass of [DBIConnection-class], representing
-#'   an active connection to an DBMS.
+#' @inheritParams dbGetQuery
 #' @param x A character vector to quote as string.
 #' @param ... Other arguments passed on to methods.
 #'

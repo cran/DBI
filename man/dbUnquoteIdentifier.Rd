@@ -7,10 +7,10 @@
 dbUnquoteIdentifier(conn, x, ...)
 }
 \arguments{
-\item{conn}{A subclass of \linkS4class{DBIConnection}, representing
-an active connection to an DBMS.}
+\item{conn}{A \linkS4class{DBIConnection} object, as returned by
+\code{\link[=dbConnect]{dbConnect()}}.}
 
-\item{x}{An \link{SQL} or \link{Id} object or character vector to unquote.}
+\item{x}{An \link{SQL} or \link{Id} object.}
 
 \item{...}{Other arguments passed on to methods.}
 }
@@ -49,7 +49,11 @@ or identifiers,
 if the database supports this.
 
 Unquoting simple strings (consisting of only letters) wrapped with \code{\link[=SQL]{SQL()}}
-and then quoting gives the same result as just quoting.
+and then quoting via \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}} gives the same result as just
+quoting the string.
+Similarly, unquoting expressions of the form \code{SQL("schema.table")}
+and then quoting gives the same result as quoting the identifier
+constructed by \code{Id(schema = "schema", table = "table")}.
 
 }
 
@@ -58,14 +62,14 @@ and then quoting gives the same result as just quoting.
 # possibly complex quoted identifier
 dbUnquoteIdentifier(
   ANSI(),
-  SQL(c('"Schema"."Table"', '"UnqualifiedTable"'))
+  SQL(c('"Catalog"."Schema"."Table"', '"Schema"."Table"', '"UnqualifiedTable"'))
 )
 
 # The returned object is always a list,
 # also for Id objects
 dbUnquoteIdentifier(
   ANSI(),
-  Id(schema = "Schema", table = "Table")
+  Id(catalog = "Catalog", schema = "Schema", table = "Table")
 )
 
 # Quoting is the inverse operation to unquoting the elements
@@ -81,14 +85,21 @@ dbQuoteIdentifier(
 )
 }
 \seealso{
-Other DBIResult generics: \code{\link{DBIResult-class}},
-  \code{\link{dbBind}}, \code{\link{dbClearResult}},
-  \code{\link{dbColumnInfo}}, \code{\link{dbFetch}},
-  \code{\link{dbGetInfo}}, \code{\link{dbGetRowCount}},
-  \code{\link{dbGetRowsAffected}},
-  \code{\link{dbGetStatement}},
-  \code{\link{dbHasCompleted}}, \code{\link{dbIsReadOnly}},
-  \code{\link{dbIsValid}}, \code{\link{dbQuoteIdentifier}},
-  \code{\link{dbQuoteLiteral}}, \code{\link{dbQuoteString}}
+Other DBIResult generics: 
+\code{\link{DBIResult-class}},
+\code{\link{dbBind}()},
+\code{\link{dbClearResult}()},
+\code{\link{dbColumnInfo}()},
+\code{\link{dbFetch}()},
+\code{\link{dbGetInfo}()},
+\code{\link{dbGetRowCount}()},
+\code{\link{dbGetRowsAffected}()},
+\code{\link{dbGetStatement}()},
+\code{\link{dbHasCompleted}()},
+\code{\link{dbIsReadOnly}()},
+\code{\link{dbIsValid}()},
+\code{\link{dbQuoteIdentifier}()},
+\code{\link{dbQuoteLiteral}()},
+\code{\link{dbQuoteString}()}
 }
 \concept{DBIResult generics}

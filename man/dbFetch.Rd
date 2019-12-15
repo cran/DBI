@@ -87,7 +87,7 @@ with \link{NULL} entries for SQL NULL values
 \item coercible using \code{\link[=as.Date]{as.Date()}} for dates,
 with NA for SQL \code{NULL} values
 (also applies to the return value of the SQL function \code{current_date})
-\item coercible using \code{\link[hms:as.hms]{hms::as.hms()}} for times,
+\item coercible using \code{\link[hms:as_hms]{hms::as_hms()}} for times,
 with NA for SQL \code{NULL} values
 (also applies to the return value of the SQL function \code{current_time})
 \item coercible using \code{\link[=as.POSIXct]{as.POSIXct()}} for timestamps,
@@ -144,16 +144,21 @@ dbDisconnect(con)
 Close the result set with \code{\link[=dbClearResult]{dbClearResult()}} as soon as you
 finish retrieving the records you want.
 
-Other DBIResult generics: \code{\link{DBIResult-class}},
-  \code{\link{dbBind}}, \code{\link{dbClearResult}},
-  \code{\link{dbColumnInfo}}, \code{\link{dbGetInfo}},
-  \code{\link{dbGetRowCount}},
-  \code{\link{dbGetRowsAffected}},
-  \code{\link{dbGetStatement}},
-  \code{\link{dbHasCompleted}}, \code{\link{dbIsReadOnly}},
-  \code{\link{dbIsValid}}, \code{\link{dbQuoteIdentifier}},
-  \code{\link{dbQuoteLiteral}},
-  \code{\link{dbQuoteString}},
-  \code{\link{dbUnquoteIdentifier}}
+Other DBIResult generics: 
+\code{\link{DBIResult-class}},
+\code{\link{dbBind}()},
+\code{\link{dbClearResult}()},
+\code{\link{dbColumnInfo}()},
+\code{\link{dbGetInfo}()},
+\code{\link{dbGetRowCount}()},
+\code{\link{dbGetRowsAffected}()},
+\code{\link{dbGetStatement}()},
+\code{\link{dbHasCompleted}()},
+\code{\link{dbIsReadOnly}()},
+\code{\link{dbIsValid}()},
+\code{\link{dbQuoteIdentifier}()},
+\code{\link{dbQuoteLiteral}()},
+\code{\link{dbQuoteString}()},
+\code{\link{dbUnquoteIdentifier}()}
 }
 \concept{DBIResult generics}

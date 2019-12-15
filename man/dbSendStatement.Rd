@@ -23,13 +23,15 @@ Once you have finished using a result, make sure to clear it
 with \code{\link[=dbClearResult]{dbClearResult()}}.
 An error is raised when issuing a statement over a closed
 or invalid connection,
-if the syntax of the statement is invalid,
 or if the statement is not a non-\code{NA} string.
+An error is also raised if the syntax of the query is invalid
+and all query parameters are given (by passing the \code{params} argument)
+or the \code{immediate} argument is set to \code{TRUE}.
 }
 \description{
 The \code{dbSendStatement()} method only submits and synchronously executes the
 SQL data manipulation statement (e.g., \code{UPDATE}, \code{DELETE},
-\code{INSERT INTO}, \code{DROP TABLE}, ...) to the database engine.  To query
+\verb{INSERT INTO}, \verb{DROP TABLE}, ...) to the database engine.  To query
 the number of affected rows, call \code{\link[=dbGetRowsAffected]{dbGetRowsAffected()}} on the
 returned result object.  You must also call \code{\link[=dbClearResult]{dbClearResult()}} after
 that. For interactive use, you should almost always prefer
@@ -45,15 +47,16 @@ implement the latter.
 \section{Additional arguments}{
 
 
-The following argument is not part of the \code{dbSendStatement()} generic
+The following arguments are not part of the \code{dbSendStatement()} generic
 (to improve compatibility across backends)
-but is part of the DBI specification:
+but are part of the DBI specification:
 \itemize{
 \item \code{params} (default: \code{NULL})
+\item \code{immediate} (default: \code{NULL})
 }
 
-It must be provided as named arguments.
-See the "Specification" sections for details on its usage.
+They must be provided as named arguments.
+See the "Specification" sections for details on their usage.
 
 }
 
@@ -77,6 +80,50 @@ The \code{param} argument allows passing query parameters, see \code{\link[=dbBi
 
 }
 
+\section{Specification for the \code{immediate} argument}{
+
+
+
+The \code{immediate} argument supports distinguishing between "direct"
+and "prepared" APIs offered by many database drivers.
+Passing \code{immediate = TRUE} leads to immediate execution of the
+query or statement, via the "direct" API (if supported by the driver).
+The default \code{NULL} means that the backend should choose whatever API
+makes the most sense for the database, and (if relevant) tries the
+other API if the first attempt fails. A successful second attempt
+should result in a message that suggests passing the correct
+\code{immediate} argument.
+Examples for possible behaviors:
+\enumerate{
+\item DBI backend defaults to \code{immediate = TRUE} internally
+\enumerate{
+\item A query without parameters is passed: query is executed
+\item A query with parameters is passed:
+\enumerate{
+\item \code{params} not given: rejected immediately by the database
+because of a syntax error in the query, the backend tries
+\code{immediate = FALSE} (and gives a message)
+\item \code{params} given: query is executed using \code{immediate = FALSE}
+}
+}
+\item DBI backend defaults to \code{immediate = FALSE} internally
+\enumerate{
+\item A query without parameters is passed:
+\enumerate{
+\item simple query: query is executed
+\item "special" query (such as setting a config options): fails,
+the backend tries \code{immediate = TRUE} (and gives a message)
+}
+\item A query with parameters is passed:
+\enumerate{
+\item \code{params} not given: waiting for parameters via \code{\link[=dbBind]{dbBind()}}
+\item \code{params} given: query is executed
+}
+}
+}
+
+}
+
 \examples{
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
@@ -95,7 +142,7 @@ dbReadTable(con, "cars")   # there are now 6 rows
 rs <- dbSendStatement(
   con,
   "INSERT INTO cars (speed, dist) VALUES (?, ?)",
-  param = list(4L, 5L)
+  params = list(4L, 5L)
 )
 dbClearResult(rs)
 
@@ -114,16 +161,26 @@ dbDisconnect(con)
 \seealso{
 For queries: \code{\link[=dbSendQuery]{dbSendQuery()}} and \code{\link[=dbGetQuery]{dbGetQuery()}}.
 
-Other DBIConnection generics: \code{\link{DBIConnection-class}},
-  \code{\link{dbAppendTable}}, \code{\link{dbCreateTable}},
-  \code{\link{dbDataType}}, \code{\link{dbDisconnect}},
-  \code{\link{dbExecute}}, \code{\link{dbExistsTable}},
-  \code{\link{dbGetException}}, \code{\link{dbGetInfo}},
-  \code{\link{dbGetQuery}}, \code{\link{dbIsReadOnly}},
-  \code{\link{dbIsValid}}, \code{\link{dbListFields}},
-  \code{\link{dbListObjects}}, \code{\link{dbListResults}},
-  \code{\link{dbListTables}}, \code{\link{dbReadTable}},
-  \code{\link{dbRemoveTable}}, \code{\link{dbSendQuery}},
-  \code{\link{dbWriteTable}}
+Other DBIConnection generics: 
+\code{\link{DBIConnection-class}},
+\code{\link{dbAppendTable}()},
+\code{\link{dbCreateTable}()},
+\code{\link{dbDataType}()},
+\code{\link{dbDisconnect}()},
+\code{\link{dbExecute}()},
+\code{\link{dbExistsTable}()},
+\code{\link{dbGetException}()},
+\code{\link{dbGetInfo}()},
+\code{\link{dbGetQuery}()},
+\code{\link{dbIsReadOnly}()},
+\code{\link{dbIsValid}()},
+\code{\link{dbListFields}()},
+\code{\link{dbListObjects}()},
+\code{\link{dbListResults}()},
+\code{\link{dbListTables}()},
+\code{\link{dbReadTable}()},
+\code{\link{dbRemoveTable}()},
+\code{\link{dbSendQuery}()},
+\code{\link{dbWriteTable}()}
 }
 \concept{DBIConnection generics}
