@@ -63,7 +63,7 @@ head(df, 3)
 params <- list("G")
 safe_id <- dbQuoteIdentifier(con, "rating")
 
-query <- paste("SELECT * FROM film WHERE ", safe_id, " = ?")
+query <- paste0("SELECT * FROM film WHERE ", safe_id, " = ?")
 query
 
 res <- dbSendQuery(con, query, params = params)
@@ -71,8 +71,8 @@ dbFetch(res, n = 3)
 dbClearResult(res)
 
 ## ----multi-param--------------------------------------------------------------
-q_params <- list('G', 90)
-query <- paste("SELECT title, rating, length FROM film WHERE rating = ? and length >= ?")
+q_params <- list("G", 90)
+query <- "SELECT title, rating, length FROM film WHERE rating = ? AND length >= ?"
 
 res <- dbSendQuery(con, query, params = q_params)
 dbFetch(res, n = 3)
@@ -89,6 +89,14 @@ dbClearResult(res)
 ## ----bind_quotestring---------------------------------------------------------
 res <- dbSendQuery(con, "SELECT * FROM film WHERE rating = ?")
 dbBind(res, list(c("G", "PG")))
+dbFetch(res, n = 3)
+dbClearResult(res)
+
+## ----bind-multi-param---------------------------------------------------------
+q_params <- list(c("G", "PG"), c(90, 120))
+query <- "SELECT title, rating, length FROM film WHERE rating = ? AND length >= ?"
+
+res <- dbSendQuery(con, query, params = q_params)
 dbFetch(res, n = 3)
 dbClearResult(res)
 
@@ -124,19 +132,25 @@ dbWriteTable(con, "cash", data.frame(amount = 100))
 dbWriteTable(con, "account", data.frame(amount = 2000))
 
 withdraw <- function(amount) {
-  # All operations are carried out as logical unit:
+  # All operations must be carried out as logical unit:
   dbExecute(con, "UPDATE cash SET amount = amount + ?", list(amount))
   dbExecute(con, "UPDATE account SET amount = amount - ?", list(amount))
 }
 
 withdraw_transacted <- function(amount) {
+  # Ensure atomicity
   dbBegin(con)
+
+  # Perform operation
   withdraw(amount)
+
+  # Persist results
   dbCommit(con)
 }
 
-withdraw(300)
+withdraw_transacted(300)
 
+## -----------------------------------------------------------------------------
 dbReadTable(con, "cash")
 dbReadTable(con, "account")
 
