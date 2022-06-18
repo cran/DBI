@@ -5,7 +5,12 @@
 #' each column in the data.frame describes an aspect of the result set
 #' field (field name, type, etc.)
 #'
+#' @inheritSection dbBind The data retrieval flow
+#'
 #' @inheritParams dbClearResult
+#'
+#' @template methods
+#' @templateVar method_name dbColumnInfo
 #'
 #' @inherit DBItest::spec_meta_column_info return
 #' @inheritSection DBItest::spec_meta_column_info Failure modes
