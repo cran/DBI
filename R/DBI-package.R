@@ -8,7 +8,7 @@
 #' @inheritSection DBItest::spec_compliance_methods DBI classes and methods
 #' @inheritSection DBItest::spec_driver_constructor Construction of the DBIDriver object
 #'
-#' @examples
+#' @examplesIf requireNamespace("RSQLite", quietly = TRUE)
 #' RSQLite::SQLite()
 #' @seealso
 #'   Important generics: [dbConnect()], [dbGetQuery()],
@@ -17,3 +17,14 @@
 #'   Formal specification (currently work in progress and incomplete):
 #'   `vignette("spec", package = "DBI")`
 "_PACKAGE"
+
+has_arrow <- function() {
+  requireNamespace("nanoarrow", quietly = TRUE)
+}
+
+require_arrow <- function() {
+  if (has_arrow()) {
+    return(invisible(TRUE))
+  }
+  stop("The nanoarrow package is required for this functionality.")
+}

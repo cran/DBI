@@ -14,8 +14,8 @@
 #' Process the values with [sqlRownamesToColumn()] before calling this method.
 #'
 #' @inheritParams dbReadTable
-#' @param value A data frame of values. The column names must be consistent
-#'   with those in the target table in the database.
+#' @param value For `dbAppendTable()`, a [data.frame] (or coercible to data.frame).
+#'   For `dbAppendTableArrow()`, an object coercible to an Arrow RecordBatchReader.
 #' @param row.names Must be `NULL`.
 #' @inheritParams sqlAppendTableTemplate
 #'
@@ -28,7 +28,7 @@
 #'
 #' @family DBIConnection generics
 #' @export
-#' @examples
+#' @examplesIf requireNamespace("RSQLite", quietly = TRUE)
 #' con <- dbConnect(RSQLite::SQLite(), ":memory:")
 #' dbCreateTable(con, "iris", iris)
 #' dbAppendTable(con, "iris", iris)

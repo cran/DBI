@@ -1,7 +1,12 @@
 ## ----echo = FALSE-------------------------------------------------------------
+knitr::opts_chunk$set(
+  echo = FALSE,
+  eval = requireNamespace("magrittr", quietly = TRUE) && requireNamespace("xml2", quietly = TRUE)
+)
+
+## ----echo = FALSE-------------------------------------------------------------
 library(magrittr)
 library(xml2)
-knitr::opts_chunk$set(echo = FALSE)
 r <- rprojroot::is_r_package$make_fix_file()
 
 ## ----error=TRUE---------------------------------------------------------------
@@ -15,7 +20,7 @@ html_topic <- function(name) {
   conn <- textConnection(NULL, "w")
   on.exit(close(conn))
 
-  #tools::Rd2HTML(rd, conn, Links = Links)
+  # tools::Rd2HTML(rd, conn, Links = Links)
   tools::Rd2HTML(rd, conn)
 
   textConnectionValue(conn)
@@ -156,10 +161,10 @@ html <- c(
 temp_html <- tempfile(fileext = ".html")
 temp_md <- tempfile(fileext = ".md")
 
-#temp_html <- "out.html"
-#temp_md <- "out.md"
+# temp_html <- "out.html"
+# temp_md <- "out.md"
 
-#html <- '<html><body><pre class="r">\na\nb\n</pre></body></html>'
+# html <- '<html><body><pre class="r">\na\nb\n</pre></body></html>'
 
 writeLines(html, temp_html)
 rmarkdown::pandoc_convert(temp_html, "gfm", verbose = FALSE, output = temp_md)

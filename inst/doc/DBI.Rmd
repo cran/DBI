@@ -4,14 +4,18 @@ author: "James Wondrasek, Katharina Brunner, Kirill Müller"
 date: "27 February 2020"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{"Introduction to DBI"}
+  %\VignetteIndexEntry{Introduction to DBI}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE,warning=FALSE, message=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(error = Sys.getenv("IN_PKGDOWN") != "true" || (getRversion() < "3.5"))
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  error = Sys.getenv("IN_PKGDOWN") != "true" || (getRversion() < "3.5"),
+  # FIXME: Bring back when relational.fit clone is up
+  eval = FALSE
+)
 ```
 
 ## Who this tutorial is for
@@ -135,7 +139,7 @@ This is covered in more detail in `vignette("DBI-advanced", package = "DBI")`.
 
 ```{r}
 df <- dbGetQuery(con, "SELECT film_id, title, description FROM film WHERE release_year = 2006 AND rating = 'G'")
-head(df,3)
+head(df, 3)
 ```
 
 

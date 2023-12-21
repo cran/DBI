@@ -17,8 +17,10 @@
 #' @param res An object inheriting from [DBIResult-class].
 #' @param ... Other arguments passed on to methods.
 #' @family DBIResult generics
+#' @family data retrieval generics
+#' @family command execution generics
 #' @export
-#' @examples
+#' @examplesIf requireNamespace("RSQLite", quietly = TRUE)
 #' con <- dbConnect(RSQLite::SQLite(), ":memory:")
 #'
 #' rs <- dbSendQuery(con, "SELECT 1")

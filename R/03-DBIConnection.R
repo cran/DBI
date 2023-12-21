@@ -1,6 +1,3 @@
-#' @include Id.R
-NULL
-
 #' DBIConnection class
 #'
 #' This virtual class encapsulates the connection to a DBMS, and it provides
@@ -15,7 +12,7 @@ NULL
 #' @name DBIConnection-class
 #' @family DBI classes
 #' @family DBIConnection generics
-#' @examples
+#' @examplesIf requireNamespace("RSQLite", quietly = TRUE)
 #' con <- dbConnect(RSQLite::SQLite(), ":memory:")
 #' con
 #' dbDisconnect(con)

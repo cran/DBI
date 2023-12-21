@@ -30,18 +30,18 @@ A data manipulation statement is always completed.
 
 
 This section gives a complete overview over the flow
-for the execution of queries that return tabular data.
+for the execution of queries that return tabular data as data frames.
 
-Most of this flow, except calling \code{\link[=dbBind]{dbBind()}},
+Most of this flow, except repeated calling of \code{\link[=dbBind]{dbBind()}} or \code{\link[=dbBindArrow]{dbBindArrow()}},
 is implemented by \code{\link[=dbGetQuery]{dbGetQuery()}}, which should be sufficient
 unless you want to access the results in a paged way
-or you have a parameterized query.
+or you have a parameterized query that you want to reuse.
 This flow requires an active connection established by \code{\link[=dbConnect]{dbConnect()}}.
 See also \code{vignette("dbi-advanced")} for a walkthrough.
 \enumerate{
 \item Use \code{\link[=dbSendQuery]{dbSendQuery()}} to create a result set object of class
 \linkS4class{DBIResult}.
-\item Optionally, bind query parameters with \code{\link[=dbBind]{dbBind()}}.
+\item Optionally, bind query parameters with \code{\link[=dbBind]{dbBind()}} or \code{\link[=dbBindArrow]{dbBindArrow()}}.
 This is required only if the query contains placeholders
 such as \verb{?} or \verb{$1}, depending on the database backend.
 \item Optionally, use \code{\link[=dbColumnInfo]{dbColumnInfo()}} to retrieve the structure of the result set
@@ -55,9 +55,10 @@ Only forward paging is supported, you need to cache previous pages
 if you need to navigate backwards.
 \item Use \code{\link[=dbHasCompleted]{dbHasCompleted()}} to tell when you're done.
 This method returns \code{TRUE} if no more rows are available for fetching.
+\item Repeat the last four steps as necessary.
 \item Use \code{\link[=dbClearResult]{dbClearResult()}} to clean up the result set object.
 This step is mandatory even if no rows have been fetched
-or if an error has occured during the processing.
+or if an error has occurred during the processing.
 It is good practice to use \code{\link[=on.exit]{on.exit()}} or \code{\link[withr:defer]{withr::defer()}}
 to ensure that this step is always executed.
 }
@@ -89,6 +90,7 @@ row.
 }
 
 \examples{
+\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
 dbWriteTable(con, "mtcars", mtcars)
@@ -102,6 +104,7 @@ dbHasCompleted(rs)
 
 dbClearResult(rs)
 dbDisconnect(con)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other DBIResult generics: 
@@ -120,5 +123,13 @@ Other DBIResult generics:
 \code{\link{dbQuoteLiteral}()},
 \code{\link{dbQuoteString}()},
 \code{\link{dbUnquoteIdentifier}()}
+
+Other data retrieval generics: 
+\code{\link{dbBind}()},
+\code{\link{dbClearResult}()},
+\code{\link{dbFetch}()},
+\code{\link{dbGetQuery}()},
+\code{\link{dbSendQuery}()}
 }
 \concept{DBIResult generics}
+\concept{data retrieval generics}

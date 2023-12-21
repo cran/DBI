@@ -5,11 +5,11 @@
 #'
 #' @details
 #' This function is useful if you want to create and load a table at the same time.
-#' Use [dbAppendTable()] for appending data to a table,
-#' and [dbCreateTable()], [dbExistsTable()] and [dbRemoveTable()]
-#' for more control over the individual operations.
+#' Use [dbAppendTable()] or [dbAppendTableArrow()] for appending data to an existing
+#' table, [dbCreateTable()] or [dbCreateTableArrow()] for creating a table,
+#' and [dbExistsTable()] and [dbRemoveTable()] for overwriting tables.
 #'
-#' DBI only standardizes writing data frames.
+#' DBI only standardizes writing data frames and `ArrowTabular` objects.
 #' Some backends might implement methods that can consume CSV files
 #' or other data formats.
 #' For details, see the documentation for the individual methods.
@@ -24,10 +24,11 @@
 #'
 #' @inheritParams dbGetQuery
 #' @inheritParams dbReadTable
-#' @param value a [data.frame] (or coercible to data.frame).
+#' @param value For `dbWriteTable()`, a [data.frame] (or coercible to data.frame).
+#'   For `dbWriteTableArrow()`, an object coercible to an Arrow RecordBatchReader.
 #' @family DBIConnection generics
 #' @export
-#' @examples
+#' @examplesIf requireNamespace("RSQLite", quietly = TRUE)
 #' con <- dbConnect(RSQLite::SQLite(), ":memory:")
 #'
 #' dbWriteTable(con, "mtcars", mtcars[1:5, ])
@@ -42,7 +43,6 @@
 #' # No row names
 #' dbWriteTable(con, "mtcars", mtcars[1:10, ], overwrite = TRUE, row.names = FALSE)
 #' dbReadTable(con, "mtcars")
-#' @export
 setGeneric("dbWriteTable",
   def = function(conn, name, value, ...) standardGeneric("dbWriteTable")
 )

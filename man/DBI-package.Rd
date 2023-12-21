@@ -58,7 +58,9 @@ DBI recommends to define a constructor with an empty argument list.
 }
 
 \examples{
+\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 RSQLite::SQLite()
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Important generics: \code{\link[=dbConnect]{dbConnect()}}, \code{\link[=dbGetQuery]{dbGetQuery()}},
@@ -68,7 +70,7 @@ Formal specification (currently work in progress and incomplete):
 \code{vignette("spec", package = "DBI")}
 }
 \author{
-\strong{Maintainer}: Kirill Müller \email{krlmlr+r@mailbox.org} (\href{https://orcid.org/0000-0002-1416-3412}{ORCID})
+\strong{Maintainer}: Kirill Müller \email{kirill@cynkra.com} (\href{https://orcid.org/0000-0002-1416-3412}{ORCID})
 
 Authors:
 \itemize{

@@ -4,15 +4,19 @@ author: "James Wondrasek, Kirill Müller"
 date: "17/03/2020"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{"Advanced DBI Usage"}
+  %\VignetteIndexEntry{Advanced DBI Usage}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
 library(knitr)
-opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(error = Sys.getenv("IN_PKGDOWN") != "true" || (getRversion() < "3.5"))
+opts_chunk$set(
+  echo = TRUE,
+  error = Sys.getenv("IN_PKGDOWN") != "true" || (getRversion() < "3.5"),
+  # FIXME: Bring back when relational.fit clone is up
+  eval = FALSE
+)
 
 knit_print.data.frame <- function(x, ...) {
   print(head(x, 3))
@@ -101,7 +105,7 @@ As there may be DBMS-specific rules for escaping these identifiers, DBI provides
 safe_id <- dbQuoteIdentifier(con, "rating")
 safe_param <- dbQuoteLiteral(con, "G")
 
-query <- paste0("SELECT title, ", safe_id, " FROM film WHERE ", safe_id, " = ", safe_param )
+query <- paste0("SELECT title, ", safe_id, " FROM film WHERE ", safe_id, " = ", safe_param)
 query
 
 res <- dbSendQuery(con, query)
@@ -240,9 +244,14 @@ dbGetRowsAffected(rs)
 dbClearResult(rs)
 
 dbReadTable(con, "cars")
+```
 
+Do not forget to disconnect from the database at the end.
+
+```{r}
 dbDisconnect(con)
 ```
+
 
 ## SQL transactions with DBI
 

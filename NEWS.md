@@ -1,4 +1,49 @@
-<!-- NEWS.md is maintained by https://cynkra.github.io/fledge, do not edit -->
+<!-- NEWS.md is maintained by https://fledge.cynkra.com, contributors should not edit this file -->
+
+# DBI 1.2.0 (2023-12-20)
+
+## Breaking changes
+
+- `dbUnquoteIdentifier()` creates `Id()` objects without component names  and allows non-`NA` character input (#421, #422).
+
+
+## Features
+
+- New generics `dbSendQueryArrow()`, `dbFetchArrow()`, `dbGetQueryArrow()`, `dbReadTableArrow()`, `dbWriteTableArrow()`  (@nbenn, #390),  `dbCreateTableArrow()`, `dbAppendTableArrow()` (#396),
+`dbBindArrow()` (#415) and `dbFetchArrowChunk()` (#424), with default implementations via nanoarrow (#414).
+
+- `Id()` now accepts unnamed components (#417). If names are provided, the components are arranged in SQL order (@eauleaf, #427).
+
+- New `dbIsValid()` method for `"DBIResultArrowDefault"` objects implemented by DBI (#425).
+
+- Implement `dbiDataType()` for objects of class `"blob"`.
+
+## Documentation
+
+- Update pkgdown template (@maelle, #428, #438, #437).
+
+- Clarify repeated parameter binding (#430).
+
+- Deal with sundown of `https://relational.fit.cvut.cz` (#423).
+
+- Correct vignette titles (#419).
+
+- Harmonize table documentation (#400).
+
+- Tweak typo, add families for data retrieval and command execution.
+
+## Testing
+
+- Enable BLOB tests for arrow \>= 10.0.0 (#395).
+
+- Run DBItest for SQLite as part of the checks here (#431).
+
+- Fix checks without suggested packages (#420).
+
+- Fix Windows tests on GHA (#406).
+
+- `testthat::use_testthat(3)` (#416).
+
 
 # DBI 1.1.3 (2022-06-18)
 

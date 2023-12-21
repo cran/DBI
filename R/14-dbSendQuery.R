@@ -34,8 +34,9 @@
 #' @param statement a character string containing SQL.
 #'
 #' @family DBIConnection generics
+#' @family data retrieval generics
 #' @seealso For updates: [dbSendStatement()] and [dbExecute()].
-#' @examples
+#' @examplesIf requireNamespace("RSQLite", quietly = TRUE)
 #' con <- dbConnect(RSQLite::SQLite(), ":memory:")
 #'
 #' dbWriteTable(con, "mtcars", mtcars)
