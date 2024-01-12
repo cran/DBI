@@ -684,10 +684,8 @@ connection.</p>
 </div>
 <div id="execute-a-query-on-a-given-database-connection" class="section level2 container">
 <h2>Execute a query on a given database connection</h2>
-<p>This section describes the behavior of the following methods:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">dbSendQuery</span>(conn, statement, ...)</span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="fu">dbSendQueryArrow</span>(conn, statement, ...)</span></code></pre></div>
+<p>This section describes the behavior of the following method:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">dbSendQuery</span>(conn, statement, ...)</span></code></pre></div>
 <div id="description-3" class="section level3">
 <h3>Description</h3>
 <p>The <code>dbSendQuery()</code> method only submits and synchronously
@@ -696,7 +694,9 @@ extract any records — for that you need to use the
 <code>dbFetch()</code> method, and then you must call
 <code>dbClearResult()</code> when you finish fetching the records you
 need. For interactive use, you should almost always prefer
-<code>dbGetQuery()</code>.</p>
+<code>dbGetQuery()</code>. Use <code>dbSendQueryArrow()</code> or
+<code>dbGetQueryArrow()</code> instead to retrieve the results as an
+Arrow object.</p>
 <div id="methods-in-other-packages-3" class="section level4">
 <h4>Methods in other packages</h4>
 <p>This documentation page describes the generics. Refer to the
@@ -887,18 +887,7 @@ the <code>immediate</code> argument is set to <code>TRUE</code>.</p>
 <span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a><span class="fu">dbFetch</span>(rs)</span>
 <span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a><span class="fu">dbClearResult</span>(rs)</span>
 <span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a></span>
-<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span>
-<span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a></span>
-<span id="cb9-27"><a href="#cb9-27" tabindex="-1"></a></span>
-<span id="cb9-28"><a href="#cb9-28" tabindex="-1"></a><span class="co"># Retrieve data as arrow table</span></span>
-<span id="cb9-29"><a href="#cb9-29" tabindex="-1"></a>con <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="st">&quot;:memory:&quot;</span>)</span>
-<span id="cb9-30"><a href="#cb9-30" tabindex="-1"></a></span>
-<span id="cb9-31"><a href="#cb9-31" tabindex="-1"></a><span class="fu">dbWriteTable</span>(con, <span class="st">&quot;mtcars&quot;</span>, mtcars)</span>
-<span id="cb9-32"><a href="#cb9-32" tabindex="-1"></a>rs <span class="ot">&lt;-</span> <span class="fu">dbSendQueryArrow</span>(con, <span class="st">&quot;SELECT * FROM mtcars WHERE cyl = 4&quot;</span>)</span>
-<span id="cb9-33"><a href="#cb9-33" tabindex="-1"></a><span class="fu">dbFetch</span>(rs)</span>
-<span id="cb9-34"><a href="#cb9-34" tabindex="-1"></a><span class="fu">dbClearResult</span>(rs)</span>
-<span id="cb9-35"><a href="#cb9-35" tabindex="-1"></a></span>
-<span id="cb9-36"><a href="#cb9-36" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
 <div id="fetch-records-from-a-previously-executed-query" class="section level2 container">
@@ -906,11 +895,7 @@ the <code>immediate</code> argument is set to <code>TRUE</code>.</p>
 <p>This section describes the behavior of the following methods:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">dbFetch</span>(res, <span class="at">n =</span> <span class="sc">-</span><span class="dv">1</span>, ...)</span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="fu">dbFetchArrow</span>(res, ...)</span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="fu">dbFetchArrowChunk</span>(res, ...)</span>
-<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="fu">fetch</span>(res, <span class="at">n =</span> <span class="sc">-</span><span class="dv">1</span>, ...)</span></code></pre></div>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="fu">fetch</span>(res, <span class="at">n =</span> <span class="sc">-</span><span class="dv">1</span>, ...)</span></code></pre></div>
 <div id="description-4" class="section level3">
 <h3>Description</h3>
 <p>Fetch the next <code>n</code> elements (rows) from the result set and
@@ -1242,9 +1227,11 @@ values, and are intended to be called on the result set before calling
 <code>dbFetch()</code> or <code>dbFetchArrow()</code>. The values are
 passed to <code>dbBind()</code> as lists or data frames, and to
 <code>dbBindArrow()</code> as a stream created by
-<code>nanoarrow::as_nanoarrow_array_stream()</code>. This works in all
-combinations. <code>dbSendQuery()</code> is compatible with
-<code>dbBindArrow()</code>, and <code>dbSendQueryArrow()</code> is
+<code>nanoarrow::as_nanoarrow_array_stream()</code>.</p>
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="Experimental" /></a></p>
+<p><code>dbBindArrow()</code> is experimental, as are the other
+<code>⁠*Arrow⁠</code> functions. <code>dbSendQuery()</code> is compatible
+with <code>dbBindArrow()</code>, and <code>dbSendQueryArrow()</code> is
 compatible with <code>dbBind()</code>.</p>
 <div id="methods-in-other-packages-6" class="section level4">
 <h4>Methods in other packages</h4>
@@ -1432,31 +1419,34 @@ variable. Mixing placeholders (in particular, named and unnamed ones) is
 not recommended. It is good practice to register a call to
 <code>dbClearResult()</code> via <code>on.exit()</code> right after
 calling <code>dbSendQuery()</code> or <code>dbSendStatement()</code>
-(see the last enumeration item). Until <code>dbBind()</code> has been
-called, the returned result set object has the following behavior:</p>
+(see the last enumeration item). Until <code>dbBind()</code> or
+<code>dbBindArrow()</code> have been called, the returned result set
+object has the following behavior:</p>
 <ul>
 <li><p><code>dbFetch()</code> raises an error (for
-<code>dbSendQuery()</code>)</p></li>
+<code>dbSendQuery()</code> and <code>dbSendQueryArrow()</code>)</p></li>
 <li><p><code>dbGetRowCount()</code> returns zero (for
-<code>dbSendQuery()</code>)</p></li>
+<code>dbSendQuery()</code> and <code>dbSendQueryArrow()</code>)</p></li>
 <li><p><code>dbGetRowsAffected()</code> returns an integer
 <code>NA</code> (for <code>dbSendStatement()</code>)</p></li>
 <li><p><code>dbIsValid()</code> returns <code>TRUE</code></p></li>
 <li><p><code>dbHasCompleted()</code> returns <code>FALSE</code></p></li>
 </ul></li>
-<li><p>Construct a list with parameters that specify actual values for
-the placeholders. The list must be named or unnamed, depending on the
-kind of placeholders used. Named values are matched to named parameters,
-unnamed values are matched by position in the list of parameters. All
-elements in this list must have the same lengths and contain values
-supported by the backend; a data.frame is internally stored as such a
-list. The parameter list is passed to a call to <code>dbBind()</code> on
-the <code>DBIResult</code> object.</p></li>
+<li><p>Call <code>dbBind()</code> or <code>dbBindArrow()</code>:</p>
+<ul>
+<li><p>For <code>dbBind()</code>, the <code>params</code> argument must
+be a list where all elements have the same lengths and contain values
+supported by the backend. A data.frame is internally stored as such a
+list.</p></li>
+<li><p>For <code>dbBindArrow()</code>, the <code>params</code> argument
+must be a nanoarrow array stream, with one column per query
+parameter.</p></li>
+</ul></li>
 <li><p>Retrieve the data or the number of affected rows from the
 <code>DBIResult</code> object.</p>
 <ul>
-<li><p>For queries issued by <code>dbSendQuery()</code>, call
-<code>dbFetch()</code>.</p></li>
+<li><p>For queries issued by <code>dbSendQuery()</code> or
+<code>dbSendQueryArrow()</code>, call <code>dbFetch()</code>.</p></li>
 <li><p>For statements issued by <code>dbSendStatements()</code>, call
 <code>dbGetRowsAffected()</code>. (Execution begins immediately after
 the <code>dbBind()</code> call, the statement is processed entirely
@@ -1556,21 +1546,20 @@ NULL values)</p></li>
 <span id="cb15-55"><a href="#cb15-55" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="send-query-retrieve-results-and-then-clear-result-set" class="section level2 container">
-<h2>Send query, retrieve results and then clear result set</h2>
-<p>This section describes the behavior of the following methods:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">dbGetQuery</span>(conn, statement, ...)</span>
-<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="fu">dbGetQueryArrow</span>(conn, statement, ...)</span></code></pre></div>
+<div id="retrieve-results-from-a-query" class="section level2 container">
+<h2>Retrieve results from a query</h2>
+<p>This section describes the behavior of the following method:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">dbGetQuery</span>(conn, statement, ...)</span></code></pre></div>
 <div id="description-7" class="section level3">
 <h3>Description</h3>
 <p>Returns the result of a query as a data frame.
 <code>dbGetQuery()</code> comes with a default implementation (which
 should work with most backends) that calls <code>dbSendQuery()</code>,
-then <code>dbFetch()</code>, ensuring that the result is always free-d
-by <code>dbClearResult()</code>. For retrieving chunked/paged results or
+then <code>dbFetch()</code>, ensuring that the result is always freed by
+<code>dbClearResult()</code>. For retrieving chunked/paged results or
 for passing query parameters, see <code>dbSendQuery()</code>, in
-particular the “The data retrieval flow” section.</p>
+particular the “The data retrieval flow” section. For retrieving results
+as an Arrow object, see <code>dbGetQueryArrow()</code>.</p>
 </div>
 <div id="arguments-7" class="section level3">
 <h3>Arguments</h3>
@@ -1668,7 +1657,7 @@ message)</p></li>
 <div id="details-4" class="section level3">
 <h3>Details</h3>
 <p>This method is for <code>SELECT</code> queries only (incl. other SQL
-statements that return a <code>SELECT</code>-alike result, e. g.
+statements that return a <code>SELECT</code>-alike result, e.g.,
 execution of a stored procedure or data manipulation queries like
 <code>⁠INSERT INTO ... RETURNING ...⁠</code>). To execute a stored
 procedure that does not return a result set, use
@@ -1679,7 +1668,7 @@ to use <code>dbExecute()</code> for data manipulation statements.</p>
 </div>
 <div id="value-7" class="section level3">
 <h3>Value</h3>
-<p><code>dbGetQuery()</code> always returns a data.frame with as many
+<p><code>dbGetQuery()</code> always returns a data.frame, with as many
 rows as records were fetched and as many columns as fields in the result
 set, even if the result is a single value or has one or zero rows.</p>
 </div>
@@ -1715,16 +1704,7 @@ raised, but a subsequent call to <code>dbGetQuery()</code> with proper
 <span id="cb17-14"><a href="#cb17-14" tabindex="-1"></a>  <span class="at">params =</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>)</span>
 <span id="cb17-15"><a href="#cb17-15" tabindex="-1"></a>)</span>
 <span id="cb17-16"><a href="#cb17-16" tabindex="-1"></a></span>
-<span id="cb17-17"><a href="#cb17-17" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span>
-<span id="cb17-18"><a href="#cb17-18" tabindex="-1"></a></span>
-<span id="cb17-19"><a href="#cb17-19" tabindex="-1"></a></span>
-<span id="cb17-20"><a href="#cb17-20" tabindex="-1"></a><span class="co"># Retrieve data as arrow table</span></span>
-<span id="cb17-21"><a href="#cb17-21" tabindex="-1"></a>con <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="st">&quot;:memory:&quot;</span>)</span>
-<span id="cb17-22"><a href="#cb17-22" tabindex="-1"></a></span>
-<span id="cb17-23"><a href="#cb17-23" tabindex="-1"></a><span class="fu">dbWriteTable</span>(con, <span class="st">&quot;mtcars&quot;</span>, mtcars)</span>
-<span id="cb17-24"><a href="#cb17-24" tabindex="-1"></a><span class="fu">dbGetQueryArrow</span>(con, <span class="st">&quot;SELECT * FROM mtcars&quot;</span>)</span>
-<span id="cb17-25"><a href="#cb17-25" tabindex="-1"></a></span>
-<span id="cb17-26"><a href="#cb17-26" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
+<span id="cb17-17"><a href="#cb17-17" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
 <div id="execute-a-data-manipulation-statement-on-a-given-database-connection" class="section level2 container">
@@ -1917,9 +1897,8 @@ the <code>immediate</code> argument is set to <code>TRUE</code>.</p>
 <span id="cb19-32"><a href="#cb19-32" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="execute-an-update-statement-query-number-of-rows-affected-and-then-close-result-set" class="section level2 container">
-<h2>Execute an update statement, query number of rows affected, and then
-close result set</h2>
+<div id="change-database-state" class="section level2 container">
+<h2>Change database state</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">dbExecute</span>(conn, statement, ...)</span></code></pre></div>
 <div id="description-9" class="section level3">
@@ -1928,7 +1907,7 @@ close result set</h2>
 <code>dbExecute()</code> comes with a default implementation (which
 should work with most backends) that calls
 <code>dbSendStatement()</code>, then <code>dbGetRowsAffected()</code>,
-ensuring that the result is always free-d by
+ensuring that the result is always freed by
 <code>dbClearResult()</code>. For passing query parameters, see
 <code>dbBind()</code>, in particular the “The command execution flow”
 section.</p>
@@ -2243,17 +2222,16 @@ query, and not by <code>dbQuoteIdentifier()</code>.</p>
 <span id="cb25-16"><a href="#cb25-16" tabindex="-1"></a><span class="fu">dbQuoteIdentifier</span>(<span class="fu">ANSI</span>(), <span class="fu">dbQuoteIdentifier</span>(<span class="fu">ANSI</span>(), name))</span></code></pre></div>
 </div>
 </div>
-<div id="copy-data-frames-from-database-tables" class="section level2 container">
-<h2>Copy data frames from database tables</h2>
-<p>This section describes the behavior of the following methods:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">dbReadTable</span>(conn, name, ...)</span>
-<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a></span>
-<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a><span class="fu">dbReadTableArrow</span>(conn, name, ...)</span></code></pre></div>
+<div id="read-database-tables-as-data-frames" class="section level2 container">
+<h2>Read database tables as data frames</h2>
+<p>This section describes the behavior of the following method:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">dbReadTable</span>(conn, name, ...)</span></code></pre></div>
 <div id="description-12" class="section level3">
 <h3>Description</h3>
 <p>Reads a database table to a data frame, optionally converting a
 column to row names and converting the column names to valid R
-identifiers.</p>
+identifiers. Use <code>dbReadTableArrow()</code> instead to obtain an
+Arrow object.</p>
 <div id="methods-in-other-packages-8" class="section level4">
 <h4>Methods in other packages</h4>
 <p>This documentation page describes the generics. Refer to the
@@ -2350,6 +2328,11 @@ will do the quoting, perhaps by calling
 more quoting is done</p></li>
 </ul>
 </div>
+<div id="details-7" class="section level3">
+<h3>Details</h3>
+<p>This function returns a data frame. Use
+<code>dbReadTableArrow()</code> to obtain an Arrow object.</p>
+</div>
 <div id="value-12" class="section level3">
 <h3>Value</h3>
 <p><code>dbReadTable()</code> returns a data frame that contains the
@@ -2400,24 +2383,13 @@ non-scalar. Unsupported values for <code>row.names</code> and
 <span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a><span class="fu">dbWriteTable</span>(con, <span class="st">&quot;mtcars&quot;</span>, mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, ])</span>
 <span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a><span class="fu">dbReadTable</span>(con, <span class="st">&quot;mtcars&quot;</span>)</span>
 <span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a></span>
-<span id="cb27-6"><a href="#cb27-6" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span>
-<span id="cb27-7"><a href="#cb27-7" tabindex="-1"></a></span>
-<span id="cb27-8"><a href="#cb27-8" tabindex="-1"></a></span>
-<span id="cb27-9"><a href="#cb27-9" tabindex="-1"></a><span class="co"># Read data as Arrow table</span></span>
-<span id="cb27-10"><a href="#cb27-10" tabindex="-1"></a>con <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="st">&quot;:memory:&quot;</span>)</span>
-<span id="cb27-11"><a href="#cb27-11" tabindex="-1"></a></span>
-<span id="cb27-12"><a href="#cb27-12" tabindex="-1"></a><span class="fu">dbWriteTable</span>(con, <span class="st">&quot;mtcars&quot;</span>, mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, ])</span>
-<span id="cb27-13"><a href="#cb27-13" tabindex="-1"></a><span class="fu">dbReadTableArrow</span>(con, <span class="st">&quot;mtcars&quot;</span>)</span>
-<span id="cb27-14"><a href="#cb27-14" tabindex="-1"></a></span>
-<span id="cb27-15"><a href="#cb27-15" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
+<span id="cb27-6"><a href="#cb27-6" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
 <div id="copy-data-frames-to-database-tables" class="section level2 container">
 <h2>Copy data frames to database tables</h2>
-<p>This section describes the behavior of the following methods:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="fu">dbWriteTable</span>(conn, name, value, ...)</span>
-<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a><span class="fu">dbWriteTableArrow</span>(conn, name, value, ...)</span></code></pre></div>
+<p>This section describes the behavior of the following method:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="fu">dbWriteTable</span>(conn, name, value, ...)</span></code></pre></div>
 <div id="description-13" class="section level3">
 <h3>Description</h3>
 <p>Writes, overwrites or appends a data frame to a database table,
@@ -2489,9 +2461,7 @@ name given verbatim, e.g. <code>SQL(‘“my_schema”.”table_name”’)</cod
 </td>
 <td>
 <p>
-For <code>dbWriteTable()</code>, a data.frame (or coercible to
-data.frame). For <code>dbWriteTableArrow()</code>, an object coercible
-to an Arrow RecordBatchReader.
+A data.frame (or coercible to data.frame).
 </p>
 </td>
 </tr>
@@ -2610,17 +2580,19 @@ natural row names.</p></li>
 </ul>
 <p>The default is <code>row.names = FALSE</code>.</p>
 </div>
-<div id="details-7" class="section level3">
+<div id="details-8" class="section level3">
 <h3>Details</h3>
+<p>This function expects a data frame. Use
+<code>dbWriteTableArrow()</code> to write an Arrow object.</p>
 <p>This function is useful if you want to create and load a table at the
 same time. Use <code>dbAppendTable()</code> or
 <code>dbAppendTableArrow()</code> for appending data to an existing
 table, <code>dbCreateTable()</code> or <code>dbCreateTableArrow()</code>
 for creating a table, and <code>dbExistsTable()</code> and
 <code>dbRemoveTable()</code> for overwriting tables.</p>
-<p>DBI only standardizes writing data frames and
-<code>ArrowTabular</code> objects. Some backends might implement methods
-that can consume CSV files or other data formats. For details, see the
+<p>DBI only standardizes writing data frames with
+<code>dbWriteTable()</code>. Some backends might implement methods that
+can consume CSV files or other data formats. For details, see the
 documentation for the individual methods.</p>
 </div>
 <div id="value-13" class="section level3">
@@ -3651,7 +3623,7 @@ that are implemented in various backend packages.</p>
 </tbody>
 </table>
 </div>
-<div id="details-8" class="section level3">
+<div id="details-9" class="section level3">
 <h3>Details</h3>
 <p>Not all database engines implement transaction management, in which
 case these methods should not be implemented for the specific
@@ -3768,7 +3740,7 @@ can be called only inside <code>dbWithTransaction()</code>.</p>
 </tbody>
 </table>
 </div>
-<div id="details-9" class="section level3">
+<div id="details-10" class="section level3">
 <h3>Details</h3>
 <p>DBI implements <code>dbWithTransaction()</code>, backends should need
 to override this generic only if they implement specialized

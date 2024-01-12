@@ -29,8 +29,8 @@ This data frame contains one row for each object (schema, table
 and view)
 accessible from the prefix (if passed) or from the global namespace
 (if prefix is omitted).
-Tables added with \code{\link[=dbWriteTable]{dbWriteTable()}}
-are part of the data frame.
+Tables added with \code{\link[=dbWriteTable]{dbWriteTable()}} are
+part of the data frame.
 As soon a table is removed from the database,
 it is also removed from the data frame of database objects.
 
@@ -70,12 +70,6 @@ returned from \code{\link[=dbListTables]{dbListTables()}},
 
 The \code{table} object can be quoted with \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}}.
 The result of quoting can be passed to \code{\link[=dbUnquoteIdentifier]{dbUnquoteIdentifier()}}.
-(We have to assume that the resulting identifier is a table, because one
-cannot always tell from a quoted identifier alone whether it is a table
-or a schema for example. As a consequence, the quote-unquote roundtrip
-only works for tables (possibly schema-qualified), but not for other
-database objects like schemata or columns.)
-The unquoted results are equal to the original \code{table} object.
 (For backends it may be convenient to use the \link{Id} class, but this is
 not required.)
 
@@ -103,7 +97,9 @@ dbDisconnect(con)
 Other DBIConnection generics: 
 \code{\link{DBIConnection-class}},
 \code{\link{dbAppendTable}()},
+\code{\link{dbAppendTableArrow}()},
 \code{\link{dbCreateTable}()},
+\code{\link{dbCreateTableArrow}()},
 \code{\link{dbDataType}()},
 \code{\link{dbDisconnect}()},
 \code{\link{dbExecute}()},
@@ -111,15 +107,21 @@ Other DBIConnection generics:
 \code{\link{dbGetException}()},
 \code{\link{dbGetInfo}()},
 \code{\link{dbGetQuery}()},
+\code{\link{dbGetQueryArrow}()},
 \code{\link{dbIsReadOnly}()},
 \code{\link{dbIsValid}()},
 \code{\link{dbListFields}()},
 \code{\link{dbListResults}()},
 \code{\link{dbListTables}()},
+\code{\link{dbQuoteIdentifier}()},
 \code{\link{dbReadTable}()},
+\code{\link{dbReadTableArrow}()},
 \code{\link{dbRemoveTable}()},
 \code{\link{dbSendQuery}()},
+\code{\link{dbSendQueryArrow}()},
 \code{\link{dbSendStatement}()},
-\code{\link{dbWriteTable}()}
+\code{\link{dbUnquoteIdentifier}()},
+\code{\link{dbWriteTable}()},
+\code{\link{dbWriteTableArrow}()}
 }
 \concept{DBIConnection generics}

@@ -1,5 +1,38 @@
 <!-- NEWS.md is maintained by https://fledge.cynkra.com, contributors should not edit this file -->
 
+# DBI 1.2.1 (2024-01-12)
+
+## Bug fixes
+
+- Fix `dbWriteTableArrow()` according to spec (#457).
+
+- Fix type inference in default method for `dbCreateTableArrow()` (#450).
+
+## Features
+
+- `dbAppendTableArrow()` returns number of rows (#454).
+
+- Add `temporary` argument to `dbCreateTableArrow()` (#453).
+
+- Avoid coercing `params` in default implementation for `dbSendQueryArrow()` (#447).
+
+- Use `nanoarrow::infer_nanoarrow_schema()` in the default method for `dbCreateTable()` (#445).
+
+## Chore
+
+- Add badge to `DBIResultArrow` class (#452).
+
+- Change maintainer e-mail.
+
+## Documentation
+
+- Finalize Arrow vignette (#451, #455).
+
+- Document new Arrow generics (#444, #449).
+
+- Use dbitemplate (@maelle, #442).
+
+
 # DBI 1.2.0 (2023-12-20)
 
 ## Breaking changes

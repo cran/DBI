@@ -27,24 +27,47 @@ data <- data.frame(
 dbWriteTable(con, "tbl", data)
 
 ## -----------------------------------------------------------------------------
-dbReadTableArrow(con, "tbl")
-as.data.frame(dbReadTableArrow(con, "tbl"))
-
-## -----------------------------------------------------------------------------
-stream <- dbGetQueryArrow(con, "SELECT COUNT(*) FROM tbl WHERE a < 3")
+stream <- dbReadTableArrow(con, "tbl")
 stream
 as.data.frame(stream)
 
 ## -----------------------------------------------------------------------------
-stream <- dbGetQueryArrow(con, "SELECT * FROM tbl WHERE a < 3")
+stream <- dbGetQueryArrow(con, "SELECT COUNT(*) AS n FROM tbl WHERE a < 3")
 stream
-stream$get_next()
-stream$get_next()
+path <- tempfile(fileext = ".parquet")
+arrow::write_parquet(arrow::as_record_batch_reader(stream), path)
+arrow::read_parquet(path)
 
 ## -----------------------------------------------------------------------------
-in_arrow <- nanoarrow::as_nanoarrow_array(data.frame(a = 1:4))
-stream <- dbGetQueryArrow(con, "SELECT $a AS batch, * FROM tbl WHERE a < $a", param = in_arrow)
+params <- data.frame(a = 3L)
+stream <- dbGetQueryArrow(con, "SELECT $a AS batch, * FROM tbl WHERE a < $a", params = params)
 as.data.frame(stream)
+
+params <- data.frame(a = c(2L, 4L))
+# Equivalent to dbBind()
+stream <- dbGetQueryArrow(con, "SELECT $a AS batch, * FROM tbl WHERE a < $a", params = params)
+as.data.frame(stream)
+
+## -----------------------------------------------------------------------------
+rs <- dbSendQueryArrow(con, "SELECT $a AS batch, * FROM tbl WHERE a < $a")
+
+in_arrow <- nanoarrow::as_nanoarrow_array(data.frame(a = 1L))
+dbBindArrow(rs, in_arrow)
+as.data.frame(dbFetchArrow(rs))
+
+in_arrow <- nanoarrow::as_nanoarrow_array(data.frame(a = 2L))
+dbBindArrow(rs, in_arrow)
+as.data.frame(dbFetchArrow(rs))
+
+in_arrow <- nanoarrow::as_nanoarrow_array(data.frame(a = 3L))
+dbBindArrow(rs, in_arrow)
+as.data.frame(dbFetchArrow(rs))
+
+in_arrow <- nanoarrow::as_nanoarrow_array(data.frame(a = 1:4L))
+dbBindArrow(rs, in_arrow)
+as.data.frame(dbFetchArrow(rs))
+
+dbClearResult(rs)
 
 ## -----------------------------------------------------------------------------
 stream <- dbGetQueryArrow(con, "SELECT * FROM tbl WHERE a < 3")

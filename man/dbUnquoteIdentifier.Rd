@@ -57,8 +57,8 @@ or quotes used to mark strings
 or identifiers,
 if the database supports this.
 
-Unquoting simple strings (consisting of only letters) wrapped with \code{\link[=SQL]{SQL()}}
-and then quoting via \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}} gives the same result as just
+Unquoting simple strings (consisting of only letters) wrapped with \code{\link[=SQL]{SQL()}} and
+then quoting via \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}} gives the same result as just
 quoting the string.
 Similarly, unquoting expressions of the form \code{SQL("schema.table")}
 and then quoting gives the same result as quoting the identifier
@@ -90,21 +90,34 @@ dbQuoteIdentifier(
 )
 }
 \seealso{
-Other DBIResult generics: 
-\code{\link{DBIResult-class}},
-\code{\link{dbBind}()},
-\code{\link{dbClearResult}()},
-\code{\link{dbColumnInfo}()},
-\code{\link{dbFetch}()},
+Other DBIConnection generics: 
+\code{\link{DBIConnection-class}},
+\code{\link{dbAppendTable}()},
+\code{\link{dbAppendTableArrow}()},
+\code{\link{dbCreateTable}()},
+\code{\link{dbCreateTableArrow}()},
+\code{\link{dbDataType}()},
+\code{\link{dbDisconnect}()},
+\code{\link{dbExecute}()},
+\code{\link{dbExistsTable}()},
+\code{\link{dbGetException}()},
 \code{\link{dbGetInfo}()},
-\code{\link{dbGetRowCount}()},
-\code{\link{dbGetRowsAffected}()},
-\code{\link{dbGetStatement}()},
-\code{\link{dbHasCompleted}()},
+\code{\link{dbGetQuery}()},
+\code{\link{dbGetQueryArrow}()},
 \code{\link{dbIsReadOnly}()},
 \code{\link{dbIsValid}()},
+\code{\link{dbListFields}()},
+\code{\link{dbListObjects}()},
+\code{\link{dbListResults}()},
+\code{\link{dbListTables}()},
 \code{\link{dbQuoteIdentifier}()},
-\code{\link{dbQuoteLiteral}()},
-\code{\link{dbQuoteString}()}
+\code{\link{dbReadTable}()},
+\code{\link{dbReadTableArrow}()},
+\code{\link{dbRemoveTable}()},
+\code{\link{dbSendQuery}()},
+\code{\link{dbSendQueryArrow}()},
+\code{\link{dbSendStatement}()},
+\code{\link{dbWriteTable}()},
+\code{\link{dbWriteTableArrow}()}
 }
-\concept{DBIResult generics}
+\concept{DBIConnection generics}

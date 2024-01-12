@@ -339,7 +339,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Using DBI with Arrow</h1>
 <h4 class="author">Kirill Müller</h4>
-<h4 class="date">29/09/2022</h4>
+<h4 class="date">25/12/2023</h4>
 
 
 
@@ -348,57 +348,70 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>This tutorial is for you if you want to leverage <a href="https://arrow.apache.org/">Apache Arrow</a> for accessing and
 manipulating data on databases. See
 <code>vignette(&quot;DBI&quot;, package = &quot;DBI&quot;)</code> and
-<code>vignette(&quot;DBI&quot;, package = &quot;DBI-advanced&quot;)</code> for tutorials on
+<code>vignette(&quot;DBI-advanced&quot;, package = &quot;DBI&quot;)</code> for tutorials on
 accessing data using R’s data frames instead of Arrow’s structures.</p>
 </div>
 <div id="rationale" class="section level2">
 <h2>Rationale</h2>
 <p>Apache Arrow is</p>
 <blockquote>
-<p>a cross-language development platform for in-memory analytics.</p>
+<p>a cross-language development platform for in-memory analytics,</p>
 </blockquote>
+<p>suitable for large and huge data, with support for out-of-memory
+operation. Arrow is also a data exchange format, the data types covered
+by Arrow align well with the data types supported by SQL databases.</p>
+<p>DBI 1.2.0 introduced support for Arrow as a format for exchanging
+data between R and databases. The aim is to:</p>
 <ul>
-<li>suitable for large and huge data, also out-of-memory</li>
-<li>data exchange format, good support for data types used in SQL
-databases</li>
-<li>new extension points to allow backends (currently DuckDB and adbc)
-to make use of the data exchange format</li>
-<li>faster data retrieval and loading, by avoiding serialization in some
-cases</li>
-<li>better support for reading and summarizing data from a database that
-is larger than memory</li>
-<li>better type fidelity with workflows centered around Arrow</li>
-<li>fundamental data structure:
-<code>arrow::RecordBatchReader</code></li>
+<li>accelerate data retrieval and loading, by using fewer costly data
+conversions;</li>
+<li>better support reading and summarizing data from a database that is
+larger than memory;</li>
+<li>provide better type fidelity with workflows centered around
+Arrow.</li>
 </ul>
+<p>This allows existing code to be used with Arrow, and it allows new
+code to be written that is more efficient and more flexible than code
+that uses R’s data frames.</p>
+<p>The interface is built around the {nanoarrow} R package, with
+<code>nanoarrow::as_nanoarrow_array</code> and
+<code>nanoarrow::as_nanoarrow_array_stream</code> as fundamental data
+structures.</p>
 </div>
 <div id="new-classes-and-generics" class="section level2">
 <h2>New classes and generics</h2>
-<ul>
-<li><p>Zero chance of interfering with existing DBI backends</p></li>
-<li><p>Fully functional fallback implementation for all existing DBI
-backends</p></li>
-<li><p>Requires {arrow} R package</p></li>
-<li><p>New generics:</p>
+<p>DBI 1.2.0 introduces new classes and generics for working with Arrow
+data:</p>
 <ul>
 <li><code>dbReadTableArrow()</code></li>
+<li><code>dbWriteTableArrow()</code></li>
 <li><code>dbCreateTableArrow()</code></li>
 <li><code>dbAppendTableArrow()</code></li>
 <li><code>dbGetQueryArrow()</code></li>
 <li><code>dbSendQueryArrow()</code></li>
+<li><code>dbBindArrow()</code></li>
 <li><code>dbFetchArrow()</code></li>
 <li><code>dbFetchArrowChunk()</code></li>
-<li><code>dbWriteTableArrow()</code></li>
-</ul></li>
-<li><p>New classes:</p>
-<ul>
-<li><code>DBIResultArrow</code></li>
-<li><code>DBIResultArrowDefault</code></li>
-</ul></li>
+<li><code>DBIResultArrow-class</code></li>
+<li><code>DBIResultArrowDefault-class</code></li>
 </ul>
+<p>Compatibility is important for DBI, and implementing new generics and
+classes greatly reduces the risk of breaking existing code. The DBI
+package comes with a fully functional fallback implementation for all
+existing DBI backends. The fallback is not improving performance, but it
+allows existing code to be used with Arrow before switching to a backend
+with native Arrow support. Backends with native support, like the <a href="https://adbi.r-dbi.org/">adbi</a> package, implement the new
+generics and classes for direct support and improved performance.</p>
+<p>In the remainder of this tutorial, we will demonstrate the new
+generics and classes using the RSQLite package. SQLite is an in-memory
+database, this code does not need a database server to be installed and
+running.</p>
 </div>
 <div id="prepare" class="section level2">
 <h2>Prepare</h2>
+<p>We start by setting up a database connection and creating a table
+with some data, using the original <code>dbWriteTable()</code>
+method.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(DBI)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>con <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>())</span>
@@ -413,12 +426,17 @@ backends</p></li>
 </div>
 <div id="read-all-rows-from-a-table" class="section level2">
 <h2>Read all rows from a table</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">dbReadTableArrow</span>(con, <span class="st">&quot;tbl&quot;</span>)</span></code></pre></div>
+<p>The <code>dbReadTableArrow()</code> method reads all rows from a
+table into an Arrow stream, similarly to <code>dbReadTable()</code>.
+Arrow objects implement the <code>as.data.frame()</code> method, so we
+can convert the stream to a data frame.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>stream <span class="ot">&lt;-</span> <span class="fu">dbReadTableArrow</span>(con, <span class="st">&quot;tbl&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>stream</span></code></pre></div>
 <pre><code>## &lt;nanoarrow_array_stream struct&lt;a: int32, b: double, c: string&gt;&gt;
 ##  $ get_schema:function ()  
 ##  $ get_next  :function (schema = x$get_schema(), validate = TRUE)  
 ##  $ release   :function ()</code></pre>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">as.data.frame</span>(<span class="fu">dbReadTableArrow</span>(con, <span class="st">&quot;tbl&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">as.data.frame</span>(stream)</span></code></pre></div>
 <pre><code>##   a   b    c
 ## 1 1 4.5 five
 ## 2 2 4.5 five
@@ -426,69 +444,71 @@ backends</p></li>
 </div>
 <div id="run-queries" class="section level2">
 <h2>Run queries</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>stream <span class="ot">&lt;-</span> <span class="fu">dbGetQueryArrow</span>(con, <span class="st">&quot;SELECT COUNT(*) FROM tbl WHERE a &lt; 3&quot;</span>)</span>
+<p>The <code>dbGetQueryArrow()</code> method runs a query and returns
+the result as an Arrow stream. This stream can be turned into an
+<code>arrow::RecordBatchReader</code> object and processed further,
+without bringing it into R.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>stream <span class="ot">&lt;-</span> <span class="fu">dbGetQueryArrow</span>(con, <span class="st">&quot;SELECT COUNT(*) AS n FROM tbl WHERE a &lt; 3&quot;</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>stream</span></code></pre></div>
-<pre><code>## &lt;nanoarrow_array_stream struct&lt;COUNT(*): int32&gt;&gt;
+<pre><code>## &lt;nanoarrow_array_stream struct&lt;n: int32&gt;&gt;
 ##  $ get_schema:function ()  
 ##  $ get_next  :function (schema = x$get_schema(), validate = TRUE)  
 ##  $ release   :function ()</code></pre>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">as.data.frame</span>(stream)</span></code></pre></div>
-<pre><code>##   COUNT(*)
-## 1        2</code></pre>
-</div>
-<div id="process-data-piecemeal" class="section level2">
-<h2>Process data piecemeal</h2>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>stream <span class="ot">&lt;-</span> <span class="fu">dbGetQueryArrow</span>(con, <span class="st">&quot;SELECT * FROM tbl WHERE a &lt; 3&quot;</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>stream</span></code></pre></div>
-<pre><code>## &lt;nanoarrow_array_stream struct&lt;a: int32, b: double, c: string&gt;&gt;
-##  $ get_schema:function ()  
-##  $ get_next  :function (schema = x$get_schema(), validate = TRUE)  
-##  $ release   :function ()</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>stream<span class="sc">$</span><span class="fu">get_next</span>()</span></code></pre></div>
-<pre><code>## &lt;nanoarrow_array struct[2]&gt;
-##  $ length    : int 2
-##  $ null_count: int 0
-##  $ offset    : int 0
-##  $ buffers   :List of 1
-##   ..$ :&lt;nanoarrow_buffer validity&lt;bool&gt;[0][0 b]&gt; ``
-##  $ children  :List of 3
-##   ..$ a:&lt;nanoarrow_array int32[2]&gt;
-##   .. ..$ length    : int 2
-##   .. ..$ null_count: int 0
-##   .. ..$ offset    : int 0
-##   .. ..$ buffers   :List of 2
-##   .. .. ..$ :&lt;nanoarrow_buffer validity&lt;bool&gt;[0][0 b]&gt; ``
-##   .. .. ..$ :&lt;nanoarrow_buffer data&lt;int32&gt;[2][8 b]&gt; `1 2`
-##   .. ..$ dictionary: NULL
-##   .. ..$ children  : list()
-##   ..$ b:&lt;nanoarrow_array double[2]&gt;
-##   .. ..$ length    : int 2
-##   .. ..$ null_count: int 0
-##   .. ..$ offset    : int 0
-##   .. ..$ buffers   :List of 2
-##   .. .. ..$ :&lt;nanoarrow_buffer validity&lt;bool&gt;[0][0 b]&gt; ``
-##   .. .. ..$ :&lt;nanoarrow_buffer data&lt;double&gt;[2][16 b]&gt; `4.5 4.5`
-##   .. ..$ dictionary: NULL
-##   .. ..$ children  : list()
-##   ..$ c:&lt;nanoarrow_array string[2]&gt;
-##   .. ..$ length    : int 2
-##   .. ..$ null_count: int 0
-##   .. ..$ offset    : int 0
-##   .. ..$ buffers   :List of 3
-##   .. .. ..$ :&lt;nanoarrow_buffer validity&lt;bool&gt;[0][0 b]&gt; ``
-##   .. .. ..$ :&lt;nanoarrow_buffer data_offset&lt;int32&gt;[3][12 b]&gt; `0 4 8`
-##   .. .. ..$ :&lt;nanoarrow_buffer data&lt;string&gt;[8 b]&gt; `fivefive`
-##   .. ..$ dictionary: NULL
-##   .. ..$ children  : list()
-##  $ dictionary: NULL</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>stream<span class="sc">$</span><span class="fu">get_next</span>()</span></code></pre></div>
-<pre><code>## NULL</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>path <span class="ot">&lt;-</span> <span class="fu">tempfile</span>(<span class="at">fileext =</span> <span class="st">&quot;.parquet&quot;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>arrow<span class="sc">::</span><span class="fu">write_parquet</span>(arrow<span class="sc">::</span><span class="fu">as_record_batch_reader</span>(stream), path)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>arrow<span class="sc">::</span><span class="fu">read_parquet</span>(path)</span></code></pre></div>
+<pre><code>##   n
+## 1 2</code></pre>
 </div>
 <div id="prepared-queries" class="section level2">
 <h2>Prepared queries</h2>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>in_arrow <span class="ot">&lt;-</span> nanoarrow<span class="sc">::</span><span class="fu">as_nanoarrow_array</span>(<span class="fu">data.frame</span>(<span class="at">a =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>))</span>
-<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>stream <span class="ot">&lt;-</span> <span class="fu">dbGetQueryArrow</span>(con, <span class="st">&quot;SELECT $a AS batch, * FROM tbl WHERE a &lt; $a&quot;</span>, <span class="at">param =</span> in_arrow)</span>
-<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="fu">as.data.frame</span>(stream)</span></code></pre></div>
+<p>The <code>dbGetQueryArrow()</code> method supports prepared queries,
+using the <code>params</code> argument which accepts a data frame or a
+list.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">a =</span> 3L)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>stream <span class="ot">&lt;-</span> <span class="fu">dbGetQueryArrow</span>(con, <span class="st">&quot;SELECT $a AS batch, * FROM tbl WHERE a &lt; $a&quot;</span>, <span class="at">params =</span> params)</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="fu">as.data.frame</span>(stream)</span></code></pre></div>
+<pre><code>##   batch a   b    c
+## 1     3 1 4.5 five
+## 2     3 2 4.5 five</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">a =</span> <span class="fu">c</span>(2L, 4L))</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="co"># Equivalent to dbBind()</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>stream <span class="ot">&lt;-</span> <span class="fu">dbGetQueryArrow</span>(con, <span class="st">&quot;SELECT $a AS batch, * FROM tbl WHERE a &lt; $a&quot;</span>, <span class="at">params =</span> params)</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="fu">as.data.frame</span>(stream)</span></code></pre></div>
+<pre><code>##   batch a   b    c
+## 1     2 1 4.5 five
+## 2     4 1 4.5 five
+## 3     4 2 4.5 five
+## 4     4 3 4.5 five</code></pre>
+</div>
+<div id="manual-flow" class="section level2">
+<h2>Manual flow</h2>
+<p>For the manual flow, use <code>dbSendQueryArrow()</code> to send a
+query to the database, and <code>dbFetchArrow()</code> to fetch the
+result. This also allows using the new <code>dbBindArrow()</code> method
+to bind data in Arrow format to a prepared query. Result objects must be
+cleared with <code>dbClearResult()</code>.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>rs <span class="ot">&lt;-</span> <span class="fu">dbSendQueryArrow</span>(con, <span class="st">&quot;SELECT $a AS batch, * FROM tbl WHERE a &lt; $a&quot;</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>in_arrow <span class="ot">&lt;-</span> nanoarrow<span class="sc">::</span><span class="fu">as_nanoarrow_array</span>(<span class="fu">data.frame</span>(<span class="at">a =</span> 1L))</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="fu">dbBindArrow</span>(rs, in_arrow)</span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="fu">as.data.frame</span>(<span class="fu">dbFetchArrow</span>(rs))</span></code></pre></div>
+<pre><code>## [1] batch a     b     c    
+## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>in_arrow <span class="ot">&lt;-</span> nanoarrow<span class="sc">::</span><span class="fu">as_nanoarrow_array</span>(<span class="fu">data.frame</span>(<span class="at">a =</span> 2L))</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="fu">dbBindArrow</span>(rs, in_arrow)</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="fu">as.data.frame</span>(<span class="fu">dbFetchArrow</span>(rs))</span></code></pre></div>
+<pre><code>##   batch a   b    c
+## 1     2 1 4.5 five</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>in_arrow <span class="ot">&lt;-</span> nanoarrow<span class="sc">::</span><span class="fu">as_nanoarrow_array</span>(<span class="fu">data.frame</span>(<span class="at">a =</span> 3L))</span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="fu">dbBindArrow</span>(rs, in_arrow)</span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="fu">as.data.frame</span>(<span class="fu">dbFetchArrow</span>(rs))</span></code></pre></div>
+<pre><code>##   batch a   b    c
+## 1     3 1 4.5 five
+## 2     3 2 4.5 five</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>in_arrow <span class="ot">&lt;-</span> nanoarrow<span class="sc">::</span><span class="fu">as_nanoarrow_array</span>(<span class="fu">data.frame</span>(<span class="at">a =</span> <span class="dv">1</span><span class="sc">:</span>4L))</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="fu">dbBindArrow</span>(rs, in_arrow)</span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a><span class="fu">as.data.frame</span>(<span class="fu">dbFetchArrow</span>(rs))</span></code></pre></div>
 <pre><code>##   batch a   b    c
 ## 1     2 1 4.5 five
 ## 2     3 1 4.5 five
@@ -496,42 +516,48 @@ backends</p></li>
 ## 4     4 1 4.5 five
 ## 5     4 2 4.5 five
 ## 6     4 3 4.5 five</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">dbClearResult</span>(rs)</span></code></pre></div>
 </div>
 <div id="writing-data" class="section level2">
 <h2>Writing data</h2>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>stream <span class="ot">&lt;-</span> <span class="fu">dbGetQueryArrow</span>(con, <span class="st">&quot;SELECT * FROM tbl WHERE a &lt; 3&quot;</span>)</span>
-<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="fu">dbWriteTableArrow</span>(con, <span class="st">&quot;tbl_new&quot;</span>, stream)</span>
-<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="fu">dbReadTable</span>(con, <span class="st">&quot;tbl_new&quot;</span>)</span></code></pre></div>
+<p>Streams returned by <code>dbGetQueryArrow()</code> and
+<code>dbReadTableArrow()</code> can be written to a table using
+<code>dbWriteTableArrow()</code>.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>stream <span class="ot">&lt;-</span> <span class="fu">dbGetQueryArrow</span>(con, <span class="st">&quot;SELECT * FROM tbl WHERE a &lt; 3&quot;</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a><span class="fu">dbWriteTableArrow</span>(con, <span class="st">&quot;tbl_new&quot;</span>, stream)</span>
+<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a><span class="fu">dbReadTable</span>(con, <span class="st">&quot;tbl_new&quot;</span>)</span></code></pre></div>
 <pre><code>##   a   b    c
 ## 1 1 4.5 five
 ## 2 2 4.5 five</code></pre>
 </div>
 <div id="appending-data" class="section level2">
 <h2>Appending data</h2>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>stream <span class="ot">&lt;-</span> <span class="fu">dbGetQueryArrow</span>(con, <span class="st">&quot;SELECT * FROM tbl WHERE a &lt; 3&quot;</span>)</span>
-<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="fu">dbCreateTableArrow</span>(con, <span class="st">&quot;tbl_split&quot;</span>, stream)</span>
-<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a><span class="fu">dbAppendTableArrow</span>(con, <span class="st">&quot;tbl_split&quot;</span>, stream)</span></code></pre></div>
-<pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>stream <span class="ot">&lt;-</span> <span class="fu">dbGetQueryArrow</span>(con, <span class="st">&quot;SELECT * FROM tbl WHERE a &gt;= 3&quot;</span>)</span>
-<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a><span class="fu">dbAppendTableArrow</span>(con, <span class="st">&quot;tbl_split&quot;</span>, stream)</span></code></pre></div>
-<pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">dbReadTable</span>(con, <span class="st">&quot;tbl_split&quot;</span>)</span></code></pre></div>
+<p>For more control over the writing process, use
+<code>dbCreateTableArrow()</code> and
+<code>dbAppendTableArrow()</code>.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>stream <span class="ot">&lt;-</span> <span class="fu">dbGetQueryArrow</span>(con, <span class="st">&quot;SELECT * FROM tbl WHERE a &lt; 3&quot;</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a><span class="fu">dbCreateTableArrow</span>(con, <span class="st">&quot;tbl_split&quot;</span>, stream)</span>
+<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a><span class="fu">dbAppendTableArrow</span>(con, <span class="st">&quot;tbl_split&quot;</span>, stream)</span></code></pre></div>
+<pre><code>## [1] 2</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a>stream <span class="ot">&lt;-</span> <span class="fu">dbGetQueryArrow</span>(con, <span class="st">&quot;SELECT * FROM tbl WHERE a &gt;= 3&quot;</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a><span class="fu">dbAppendTableArrow</span>(con, <span class="st">&quot;tbl_split&quot;</span>, stream)</span></code></pre></div>
+<pre><code>## [1] 1</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="fu">dbReadTable</span>(con, <span class="st">&quot;tbl_split&quot;</span>)</span></code></pre></div>
 <pre><code>##   a   b    c
 ## 1 1 4.5 five
 ## 2 2 4.5 five
 ## 3 3 4.5 five</code></pre>
-<p>As usual, do not forget to disconnect from the database when
-done.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 <div id="conclusion" class="section level2">
 <h2>Conclusion</h2>
-<p>That concludes the major features of DBI. For more details on the
-library functions covered in this tutorial see the DBI specification at
-<code>vignette(&quot;spec&quot;, package = &quot;DBI&quot;)</code>.</p>
-<ul>
-<li>See arrow package for further processing</li>
-</ul>
+<p>Do not forget to disconnect from the database when done.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
+<p>That concludes the major features of DBI’s new Arrow interface. For
+more details on the library functions covered in this tutorial see the
+DBI specification at <code>vignette(&quot;spec&quot;, package = &quot;DBI&quot;)</code>. See
+the <a href="https://adbi.r-dbi.org/">adbi</a> package for a backend
+with native Arrow support, and <a href="https://github.com/apache/arrow-nanoarrow">nanoarrow</a> and <a href="https://arrow.apache.org/docs/r/">arrow</a> for packages to work
+with the Arrow format.</p>
 </div>
 
 
