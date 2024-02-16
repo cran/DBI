@@ -1,7 +1,7 @@
 Package: DBI
 Title: R Database Interface
-Version: 1.2.1
-Date: 2024-01-12
+Version: 1.2.2
+Date: 2024-02-09
 Authors@R: c(
     person("R Special Interest Group on Databases (R-SIG-DB)", role = "aut"),
     person("Hadley", "Wickham", role = "aut"),
@@ -34,11 +34,11 @@ Config/Needs/website: r-dbi/DBItest, r-dbi/dbitemplate, adbi,
         RSQLite, sergeant, sparklyr, withr
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2024-01-12 00:13:18 UTC; kirill
+Packaged: 2024-02-09 07:30:24 UTC; kirill
 Author: R Special Interest Group on Databases (R-SIG-DB) [aut],
   Hadley Wickham [aut],
   Kirill Müller [aut, cre] (<https://orcid.org/0000-0002-1416-3412>),
   R Consortium [fnd]
 Maintainer: Kirill Müller <kirill@cynkra.com>
 Repository: CRAN
-Date/Publication: 2024-01-12 12:20:02 UTC
+Date/Publication: 2024-02-16 13:00:02 UTC

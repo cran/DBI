@@ -50,7 +50,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -465,13 +465,13 @@ without bringing it into R.</p>
 <p>The <code>dbGetQueryArrow()</code> method supports prepared queries,
 using the <code>params</code> argument which accepts a data frame or a
 list.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">a =</span> 3L)</span>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">a =</span> <span class="dv">3</span><span class="dt">L</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>stream <span class="ot">&lt;-</span> <span class="fu">dbGetQueryArrow</span>(con, <span class="st">&quot;SELECT $a AS batch, * FROM tbl WHERE a &lt; $a&quot;</span>, <span class="at">params =</span> params)</span>
 <span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="fu">as.data.frame</span>(stream)</span></code></pre></div>
 <pre><code>##   batch a   b    c
 ## 1     3 1 4.5 five
 ## 2     3 2 4.5 five</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">a =</span> <span class="fu">c</span>(2L, 4L))</span>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">a =</span> <span class="fu">c</span>(<span class="dv">2</span><span class="dt">L</span>, <span class="dv">4</span><span class="dt">L</span>))</span>
 <span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="co"># Equivalent to dbBind()</span></span>
 <span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>stream <span class="ot">&lt;-</span> <span class="fu">dbGetQueryArrow</span>(con, <span class="st">&quot;SELECT $a AS batch, * FROM tbl WHERE a &lt; $a&quot;</span>, <span class="at">params =</span> params)</span>
 <span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="fu">as.data.frame</span>(stream)</span></code></pre></div>
@@ -490,23 +490,23 @@ to bind data in Arrow format to a prepared query. Result objects must be
 cleared with <code>dbClearResult()</code>.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>rs <span class="ot">&lt;-</span> <span class="fu">dbSendQueryArrow</span>(con, <span class="st">&quot;SELECT $a AS batch, * FROM tbl WHERE a &lt; $a&quot;</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>in_arrow <span class="ot">&lt;-</span> nanoarrow<span class="sc">::</span><span class="fu">as_nanoarrow_array</span>(<span class="fu">data.frame</span>(<span class="at">a =</span> 1L))</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>in_arrow <span class="ot">&lt;-</span> nanoarrow<span class="sc">::</span><span class="fu">as_nanoarrow_array</span>(<span class="fu">data.frame</span>(<span class="at">a =</span> <span class="dv">1</span><span class="dt">L</span>))</span>
 <span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="fu">dbBindArrow</span>(rs, in_arrow)</span>
 <span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="fu">as.data.frame</span>(<span class="fu">dbFetchArrow</span>(rs))</span></code></pre></div>
 <pre><code>## [1] batch a     b     c    
 ## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>in_arrow <span class="ot">&lt;-</span> nanoarrow<span class="sc">::</span><span class="fu">as_nanoarrow_array</span>(<span class="fu">data.frame</span>(<span class="at">a =</span> 2L))</span>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>in_arrow <span class="ot">&lt;-</span> nanoarrow<span class="sc">::</span><span class="fu">as_nanoarrow_array</span>(<span class="fu">data.frame</span>(<span class="at">a =</span> <span class="dv">2</span><span class="dt">L</span>))</span>
 <span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="fu">dbBindArrow</span>(rs, in_arrow)</span>
 <span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="fu">as.data.frame</span>(<span class="fu">dbFetchArrow</span>(rs))</span></code></pre></div>
 <pre><code>##   batch a   b    c
 ## 1     2 1 4.5 five</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>in_arrow <span class="ot">&lt;-</span> nanoarrow<span class="sc">::</span><span class="fu">as_nanoarrow_array</span>(<span class="fu">data.frame</span>(<span class="at">a =</span> 3L))</span>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>in_arrow <span class="ot">&lt;-</span> nanoarrow<span class="sc">::</span><span class="fu">as_nanoarrow_array</span>(<span class="fu">data.frame</span>(<span class="at">a =</span> <span class="dv">3</span><span class="dt">L</span>))</span>
 <span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="fu">dbBindArrow</span>(rs, in_arrow)</span>
 <span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="fu">as.data.frame</span>(<span class="fu">dbFetchArrow</span>(rs))</span></code></pre></div>
 <pre><code>##   batch a   b    c
 ## 1     3 1 4.5 five
 ## 2     3 2 4.5 five</code></pre>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>in_arrow <span class="ot">&lt;-</span> nanoarrow<span class="sc">::</span><span class="fu">as_nanoarrow_array</span>(<span class="fu">data.frame</span>(<span class="at">a =</span> <span class="dv">1</span><span class="sc">:</span>4L))</span>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>in_arrow <span class="ot">&lt;-</span> nanoarrow<span class="sc">::</span><span class="fu">as_nanoarrow_array</span>(<span class="fu">data.frame</span>(<span class="at">a =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span><span class="dt">L</span>))</span>
 <span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="fu">dbBindArrow</span>(rs, in_arrow)</span>
 <span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a><span class="fu">as.data.frame</span>(<span class="fu">dbFetchArrow</span>(rs))</span></code></pre></div>
 <pre><code>##   batch a   b    c

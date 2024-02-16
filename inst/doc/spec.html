@@ -50,7 +50,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -365,7 +365,7 @@ the tests will be reflected in this document.</p>
 
 
 
-<div id="dbi-r-database-interface" class="section level2 container">
+<div id="dbi-r-database-interface" class="section level2">
 <h2>DBI: R Database Interface</h2>
 <p>DBI defines an interface for communication between R and relational
 database management systems. All classes in this package are virtual and
@@ -405,7 +405,7 @@ list.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>RSQLite<span class="sc">::</span><span class="fu">SQLite</span>()</span></code></pre></div>
 </div>
 </div>
-<div id="determine-the-sql-data-type-of-an-object" class="section level2 container">
+<div id="determine-the-sql-data-type-of-an-object" class="section level2">
 <h2>Determine the SQL data type of an object</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">dbDataType</span>(dbObj, obj, ...)</span></code></pre></div>
@@ -417,16 +417,6 @@ type of an R object according to the SQL 92 specification, which may
 serve as a starting point for driver implementations. DBI also provides
 an implementation for data.frame which will return a character vector
 giving the type for each column in the dataframe.</p>
-<div id="methods-in-other-packages" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><p><code>RSQLite::dbDataType(&quot;SQLiteConnection&quot;)</code></p></li>
-<li><p><code>RSQLite::dbDataType(&quot;SQLiteDriver&quot;)</code></p></li>
-</ul>
-</div>
 </div>
 <div id="arguments" class="section level3">
 <h3>Arguments</h3>
@@ -523,7 +513,7 @@ SQL statement of the form <code>&quot;CREATE TABLE test (a ...)&quot;</code>.</p
 <span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="create-a-connection-to-a-dbms" class="section level2 container">
+<div id="create-a-connection-to-a-dbms" class="section level2">
 <h2>Create a connection to a DBMS</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">dbConnect</span>(drv, ...)</span></code></pre></div>
@@ -536,16 +526,6 @@ its output to different objects. The authentication mechanism is left
 unspecified, so check the documentation of individual drivers for
 details. Use <code>dbCanConnect()</code> to check if a connection can be
 established.</p>
-<div id="methods-in-other-packages-1" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><p><code>RSQLite::dbConnect(&quot;SQLiteConnection&quot;)</code></p></li>
-<li><p><code>RSQLite::dbConnect(&quot;SQLiteDriver&quot;)</code></p></li>
-</ul>
-</div>
 </div>
 <div id="arguments-1" class="section level3">
 <h3>Arguments</h3>
@@ -630,7 +610,7 @@ coerced using <code>as.integer()</code> (with warning on overflow),
 <span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="fu">dbListTables</span>(con <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="st">&quot;:memory:&quot;</span>))</span></code></pre></div>
 </div>
 </div>
-<div id="disconnect-close-a-connection" class="section level2 container">
+<div id="disconnect-close-a-connection" class="section level2">
 <h2>Disconnect (close) a connection</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">dbDisconnect</span>(conn, ...)</span></code></pre></div>
@@ -638,15 +618,6 @@ coerced using <code>as.integer()</code> (with warning on overflow),
 <h3>Description</h3>
 <p>This closes the connection, discards all pending work, and frees
 resources (e.g., memory, sockets).</p>
-<div id="methods-in-other-packages-2" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><code>RSQLite::dbDisconnect(&quot;SQLiteConnection&quot;)</code></li>
-</ul>
-</div>
 </div>
 <div id="arguments-2" class="section level3">
 <h3>Arguments</h3>
@@ -682,7 +653,7 @@ connection.</p>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="execute-a-query-on-a-given-database-connection" class="section level2 container">
+<div id="execute-a-query-on-a-given-database-connection" class="section level2">
 <h2>Execute a query on a given database connection</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">dbSendQuery</span>(conn, statement, ...)</span></code></pre></div>
@@ -697,15 +668,6 @@ need. For interactive use, you should almost always prefer
 <code>dbGetQuery()</code>. Use <code>dbSendQueryArrow()</code> or
 <code>dbGetQueryArrow()</code> instead to retrieve the results as an
 Arrow object.</p>
-<div id="methods-in-other-packages-3" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><code>RSQLite::dbSendQuery(&quot;SQLiteConnection&quot;, &quot;character&quot;)</code></li>
-</ul>
-</div>
 </div>
 <div id="arguments-3" class="section level3">
 <h3>Arguments</h3>
@@ -874,23 +836,23 @@ the <code>immediate</code> argument is set to <code>TRUE</code>.</p>
 <span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>rs <span class="ot">&lt;-</span> <span class="fu">dbSendQuery</span>(</span>
 <span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>  con,</span>
 <span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>  <span class="st">&quot;SELECT * FROM mtcars WHERE cyl = ?&quot;</span>,</span>
-<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>  <span class="at">params =</span> <span class="fu">list</span>(4L)</span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>  <span class="at">params =</span> <span class="fu">list</span>(<span class="dv">4</span><span class="dt">L</span>)</span>
 <span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>)</span>
 <span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="fu">dbFetch</span>(rs)</span>
 <span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="fu">dbClearResult</span>(rs)</span>
 <span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a></span>
 <span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="co"># Pass multiple sets of values with dbBind():</span></span>
 <span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a>rs <span class="ot">&lt;-</span> <span class="fu">dbSendQuery</span>(con, <span class="st">&quot;SELECT * FROM mtcars WHERE cyl = ?&quot;</span>)</span>
-<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a><span class="fu">dbBind</span>(rs, <span class="fu">list</span>(6L))</span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a><span class="fu">dbBind</span>(rs, <span class="fu">list</span>(<span class="dv">6</span><span class="dt">L</span>))</span>
 <span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a><span class="fu">dbFetch</span>(rs)</span>
-<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a><span class="fu">dbBind</span>(rs, <span class="fu">list</span>(8L))</span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a><span class="fu">dbBind</span>(rs, <span class="fu">list</span>(<span class="dv">8</span><span class="dt">L</span>))</span>
 <span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a><span class="fu">dbFetch</span>(rs)</span>
 <span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a><span class="fu">dbClearResult</span>(rs)</span>
 <span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a></span>
 <span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="fetch-records-from-a-previously-executed-query" class="section level2 container">
+<div id="fetch-records-from-a-previously-executed-query" class="section level2">
 <h2>Fetch records from a previously executed query</h2>
 <p>This section describes the behavior of the following methods:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">dbFetch</span>(res, <span class="at">n =</span> <span class="sc">-</span><span class="dv">1</span>, ...)</span>
@@ -900,15 +862,6 @@ the <code>immediate</code> argument is set to <code>TRUE</code>.</p>
 <h3>Description</h3>
 <p>Fetch the next <code>n</code> elements (rows) from the result set and
 return them as a data.frame.</p>
-<div id="methods-in-other-packages-4" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><code>RSQLite::dbFetch(&quot;SQLiteResult&quot;)</code></li>
-</ul>
-</div>
 </div>
 <div id="arguments-4" class="section level3">
 <h3>Arguments</h3>
@@ -1082,7 +1035,7 @@ representation of the data</p></li>
 <span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="clear-a-result-set" class="section level2 container">
+<div id="clear-a-result-set" class="section level2">
 <h2>Clear a result set</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">dbClearResult</span>(res, ...)</span></code></pre></div>
@@ -1091,15 +1044,6 @@ representation of the data</p></li>
 <p>Frees all resources (local and remote) associated with a result set.
 This step is mandatory for all objects obtained by calling
 <code>dbSendQuery()</code> or <code>dbSendStatement()</code>.</p>
-<div id="methods-in-other-packages-5" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><code>RSQLite::dbClearResult(&quot;SQLiteResult&quot;)</code></li>
-</ul>
-</div>
 </div>
 <div id="arguments-5" class="section level3">
 <h3>Arguments</h3>
@@ -1210,7 +1154,7 @@ can expect a call to <code>dbClearResult()</code> for each
 <span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="bind-values-to-a-parameterizedprepared-statement" class="section level2 container">
+<div id="bind-values-to-a-parameterizedprepared-statement" class="section level2">
 <h2>Bind values to a parameterized/prepared statement</h2>
 <p>This section describes the behavior of the following methods:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">dbBind</span>(res, params, ...)</span>
@@ -1228,20 +1172,31 @@ values, and are intended to be called on the result set before calling
 passed to <code>dbBind()</code> as lists or data frames, and to
 <code>dbBindArrow()</code> as a stream created by
 <code>nanoarrow::as_nanoarrow_array_stream()</code>.</p>
-<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="Experimental" /></a></p>
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><svg id="svg_93af85992c106be3935b" alt="Experimental" width="138" height="20" role="img" aria-label="lifecycle: experimental" viewBox="0 0 138 20">
+    <title>lifecycle: experimental</title>
+    <linearGradient id="svg_93af85992c106be3935b_s" x2="0" y2="100%">
+        <stop offset="0" stop-color="#bbb" stop-opacity=".1"></stop>
+        <stop offset="1" stop-opacity=".1"></stop>
+    </linearGradient>
+    <clipPath id="svg_93af85992c106be3935b_r">
+        <rect width="138" height="20" rx="3" fill="#fff" />
+    </clipPath>
+    <g clip-path="url(#r)">
+        <rect width="55" height="20" fill="#555" />
+        <rect x="55" width="83" height="20" fill="#fe7d37" />
+        <rect width="138" height="20" fill="url(#s)" />
+    </g>
+    <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110">
+        <text aria-hidden="true" x="285" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="450">lifecycle</text>
+        <text x="285" y="140" transform="scale(.1)" fill="#fff" textLength="450">lifecycle</text>
+        <text aria-hidden="true" x="955" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="730">experimental</text>
+        <text x="955" y="140" transform="scale(.1)" fill="#fff" textLength="730">experimental</text>
+    </g>
+</svg></a></p>
 <p><code>dbBindArrow()</code> is experimental, as are the other
 <code>⁠*Arrow⁠</code> functions. <code>dbSendQuery()</code> is compatible
 with <code>dbBindArrow()</code>, and <code>dbSendQueryArrow()</code> is
 compatible with <code>dbBind()</code>.</p>
-<div id="methods-in-other-packages-6" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><code>RSQLite::dbBind(&quot;SQLiteResult&quot;)</code></li>
-</ul>
-</div>
 </div>
 <div id="arguments-6" class="section level3">
 <h3>Arguments</h3>
@@ -1546,7 +1501,7 @@ NULL values)</p></li>
 <span id="cb15-55"><a href="#cb15-55" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="retrieve-results-from-a-query" class="section level2 container">
+<div id="retrieve-results-from-a-query" class="section level2">
 <h2>Retrieve results from a query</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">dbGetQuery</span>(conn, statement, ...)</span></code></pre></div>
@@ -1707,7 +1662,7 @@ raised, but a subsequent call to <code>dbGetQuery()</code> with proper
 <span id="cb17-17"><a href="#cb17-17" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="execute-a-data-manipulation-statement-on-a-given-database-connection" class="section level2 container">
+<div id="execute-a-data-manipulation-statement-on-a-given-database-connection" class="section level2">
 <h2>Execute a data manipulation statement on a given database
 connection</h2>
 <p>This section describes the behavior of the following method:</p>
@@ -1880,7 +1835,7 @@ the <code>immediate</code> argument is set to <code>TRUE</code>.</p>
 <span id="cb19-15"><a href="#cb19-15" tabindex="-1"></a>rs <span class="ot">&lt;-</span> <span class="fu">dbSendStatement</span>(</span>
 <span id="cb19-16"><a href="#cb19-16" tabindex="-1"></a>  con,</span>
 <span id="cb19-17"><a href="#cb19-17" tabindex="-1"></a>  <span class="st">&quot;INSERT INTO cars (speed, dist) VALUES (?, ?)&quot;</span>,</span>
-<span id="cb19-18"><a href="#cb19-18" tabindex="-1"></a>  <span class="at">params =</span> <span class="fu">list</span>(4L, 5L)</span>
+<span id="cb19-18"><a href="#cb19-18" tabindex="-1"></a>  <span class="at">params =</span> <span class="fu">list</span>(<span class="dv">4</span><span class="dt">L</span>, <span class="dv">5</span><span class="dt">L</span>)</span>
 <span id="cb19-19"><a href="#cb19-19" tabindex="-1"></a>)</span>
 <span id="cb19-20"><a href="#cb19-20" tabindex="-1"></a><span class="fu">dbClearResult</span>(rs)</span>
 <span id="cb19-21"><a href="#cb19-21" tabindex="-1"></a></span>
@@ -1890,14 +1845,14 @@ the <code>immediate</code> argument is set to <code>TRUE</code>.</p>
 <span id="cb19-25"><a href="#cb19-25" tabindex="-1"></a>  <span class="st">&quot;INSERT INTO cars (speed, dist) VALUES (?, ?)&quot;</span></span>
 <span id="cb19-26"><a href="#cb19-26" tabindex="-1"></a>)</span>
 <span id="cb19-27"><a href="#cb19-27" tabindex="-1"></a><span class="fu">dbBind</span>(rs, <span class="fu">list</span>(<span class="dv">5</span><span class="sc">:</span><span class="dv">6</span>, <span class="dv">6</span><span class="sc">:</span><span class="dv">7</span>))</span>
-<span id="cb19-28"><a href="#cb19-28" tabindex="-1"></a><span class="fu">dbBind</span>(rs, <span class="fu">list</span>(7L, 8L))</span>
+<span id="cb19-28"><a href="#cb19-28" tabindex="-1"></a><span class="fu">dbBind</span>(rs, <span class="fu">list</span>(<span class="dv">7</span><span class="dt">L</span>, <span class="dv">8</span><span class="dt">L</span>))</span>
 <span id="cb19-29"><a href="#cb19-29" tabindex="-1"></a><span class="fu">dbClearResult</span>(rs)</span>
 <span id="cb19-30"><a href="#cb19-30" tabindex="-1"></a><span class="fu">dbReadTable</span>(con, <span class="st">&quot;cars&quot;</span>)   <span class="co"># there are now 10 rows</span></span>
 <span id="cb19-31"><a href="#cb19-31" tabindex="-1"></a></span>
 <span id="cb19-32"><a href="#cb19-32" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="change-database-state" class="section level2 container">
+<div id="change-database-state" class="section level2">
 <h2>Change database state</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">dbExecute</span>(conn, statement, ...)</span></code></pre></div>
@@ -2041,7 +1996,7 @@ statement is not a non-<code>NA</code> string.</p>
 <span id="cb21-19"><a href="#cb21-19" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="quote-literal-strings" class="section level2 container">
+<div id="quote-literal-strings" class="section level2">
 <h2>Quote literal strings</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">dbQuoteString</span>(conn, x, ...)</span></code></pre></div>
@@ -2122,7 +2077,7 @@ row.</p>
 <span id="cb23-14"><a href="#cb23-14" tabindex="-1"></a><span class="fu">dbQuoteString</span>(<span class="fu">ANSI</span>(), <span class="fu">dbQuoteString</span>(<span class="fu">ANSI</span>(), name))</span></code></pre></div>
 </div>
 </div>
-<div id="quote-identifiers" class="section level2 container">
+<div id="quote-identifiers" class="section level2">
 <h2>Quote identifiers</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">dbQuoteIdentifier</span>(conn, x, ...)</span></code></pre></div>
@@ -2132,16 +2087,6 @@ row.</p>
 query as a column or table name, to make sure that you generate valid
 SQL and protect against SQL injection attacks. The inverse operation is
 <code>dbUnquoteIdentifier()</code>.</p>
-<div id="methods-in-other-packages-7" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><p><code>RSQLite::dbQuoteIdentifier(&quot;SQLiteConnection&quot;, &quot;SQL&quot;)</code></p></li>
-<li><p><code>RSQLite::dbQuoteIdentifier(&quot;SQLiteConnection&quot;, &quot;character&quot;)</code></p></li>
-</ul>
-</div>
 </div>
 <div id="arguments-11" class="section level3">
 <h3>Arguments</h3>
@@ -2222,7 +2167,7 @@ query, and not by <code>dbQuoteIdentifier()</code>.</p>
 <span id="cb25-16"><a href="#cb25-16" tabindex="-1"></a><span class="fu">dbQuoteIdentifier</span>(<span class="fu">ANSI</span>(), <span class="fu">dbQuoteIdentifier</span>(<span class="fu">ANSI</span>(), name))</span></code></pre></div>
 </div>
 </div>
-<div id="read-database-tables-as-data-frames" class="section level2 container">
+<div id="read-database-tables-as-data-frames" class="section level2">
 <h2>Read database tables as data frames</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">dbReadTable</span>(conn, name, ...)</span></code></pre></div>
@@ -2232,15 +2177,6 @@ query, and not by <code>dbQuoteIdentifier()</code>.</p>
 column to row names and converting the column names to valid R
 identifiers. Use <code>dbReadTableArrow()</code> instead to obtain an
 Arrow object.</p>
-<div id="methods-in-other-packages-8" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><code>RSQLite::dbReadTable(&quot;SQLiteConnection&quot;, &quot;character&quot;)</code></li>
-</ul>
-</div>
 </div>
 <div id="arguments-12" class="section level3">
 <h3>Arguments</h3>
@@ -2386,7 +2322,7 @@ non-scalar. Unsupported values for <code>row.names</code> and
 <span id="cb27-6"><a href="#cb27-6" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="copy-data-frames-to-database-tables" class="section level2 container">
+<div id="copy-data-frames-to-database-tables" class="section level2">
 <h2>Copy data frames to database tables</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="fu">dbWriteTable</span>(conn, name, value, ...)</span></code></pre></div>
@@ -2395,16 +2331,6 @@ non-scalar. Unsupported values for <code>row.names</code> and
 <p>Writes, overwrites or appends a data frame to a database table,
 optionally converting row names to a column and specifying SQL data
 types for fields.</p>
-<div id="methods-in-other-packages-9" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><p><code>RSQLite::dbWriteTable(&quot;SQLiteConnection&quot;, &quot;character&quot;, &quot;character&quot;)</code></p></li>
-<li><p><code>RSQLite::dbWriteTable(&quot;SQLiteConnection&quot;, &quot;character&quot;, &quot;data.frame&quot;)</code></p></li>
-</ul>
-</div>
 </div>
 <div id="arguments-13" class="section level3">
 <h3>Arguments</h3>
@@ -2633,7 +2559,7 @@ or missing names, incompatible columns) also raise an error.</p>
 <span id="cb29-14"><a href="#cb29-14" tabindex="-1"></a><span class="fu">dbReadTable</span>(con, <span class="st">&quot;mtcars&quot;</span>)</span></code></pre></div>
 </div>
 </div>
-<div id="list-remote-tables" class="section level2 container">
+<div id="list-remote-tables" class="section level2">
 <h2>List remote tables</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="fu">dbListTables</span>(conn, ...)</span></code></pre></div>
@@ -2643,15 +2569,6 @@ or missing names, incompatible columns) also raise an error.</p>
 connection. This should include views and temporary objects, but not all
 database backends (in particular <span class="pkg">RMariaDB</span> and
 <span class="pkg">RMySQL</span>) support this.</p>
-<div id="methods-in-other-packages-10" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><code>RSQLite::dbListTables(&quot;SQLiteConnection&quot;)</code></li>
-</ul>
-</div>
 </div>
 <div id="arguments-14" class="section level3">
 <h3>Arguments</h3>
@@ -2697,22 +2614,13 @@ connection.</p>
 <span id="cb31-7"><a href="#cb31-7" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="does-a-table-exist" class="section level2 container">
+<div id="does-a-table-exist" class="section level2">
 <h2>Does a table exist?</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a><span class="fu">dbExistsTable</span>(conn, name, ...)</span></code></pre></div>
 <div id="description-15" class="section level3">
 <h3>Description</h3>
 <p>Returns if a table given by name exists in the database.</p>
-<div id="methods-in-other-packages-11" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><code>RSQLite::dbExistsTable(&quot;SQLiteConnection&quot;, &quot;character&quot;)</code></li>
-</ul>
-</div>
 </div>
 <div id="arguments-15" class="section level3">
 <h3>Arguments</h3>
@@ -2815,7 +2723,7 @@ more quoting is done</p></li>
 <span id="cb33-7"><a href="#cb33-7" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="remove-a-table-from-the-database" class="section level2 container">
+<div id="remove-a-table-from-the-database" class="section level2">
 <h2>Remove a table from the database</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="fu">dbRemoveTable</span>(conn, name, ...)</span></code></pre></div>
@@ -2823,15 +2731,6 @@ more quoting is done</p></li>
 <h3>Description</h3>
 <p>Remove a remote table (e.g., created by <code>dbWriteTable()</code>)
 from the database.</p>
-<div id="methods-in-other-packages-12" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><code>RSQLite::dbRemoveTable(&quot;SQLiteConnection&quot;, &quot;character&quot;)</code></li>
-</ul>
-</div>
 </div>
 <div id="arguments-16" class="section level3">
 <h3>Arguments</h3>
@@ -2957,7 +2856,7 @@ non-scalar.</p>
 <span id="cb35-9"><a href="#cb35-9" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="list-field-names-of-a-remote-table" class="section level2 container">
+<div id="list-field-names-of-a-remote-table" class="section level2">
 <h2>List field names of a remote table</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a><span class="fu">dbListFields</span>(conn, name, ...)</span></code></pre></div>
@@ -3064,7 +2963,7 @@ column.</p>
 <span id="cb37-6"><a href="#cb37-6" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="is-this-dbms-object-still-valid" class="section level2 container">
+<div id="is-this-dbms-object-still-valid" class="section level2">
 <h2>Is this DBMS object still valid?</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a><span class="fu">dbIsValid</span>(dbObj, ...)</span></code></pre></div>
@@ -3072,17 +2971,6 @@ column.</p>
 <h3>Description</h3>
 <p>This generic tests whether a database object is still valid (i.e. it
 hasn’t been disconnected or cleared).</p>
-<div id="methods-in-other-packages-13" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><p><code>RSQLite::dbIsValid(&quot;SQLiteConnection&quot;)</code></p></li>
-<li><p><code>RSQLite::dbIsValid(&quot;SQLiteDriver&quot;)</code></p></li>
-<li><p><code>RSQLite::dbIsValid(&quot;SQLiteResult&quot;)</code></p></li>
-</ul>
-</div>
 </div>
 <div id="arguments-18" class="section level3">
 <h3>Arguments</h3>
@@ -3140,7 +3028,7 @@ failure, etc.), <code>dbIsValid()</code> should return
 <span id="cb39-13"><a href="#cb39-13" tabindex="-1"></a><span class="fu">dbIsValid</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="completion-status" class="section level2 container">
+<div id="completion-status" class="section level2">
 <h2>Completion status</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="fu">dbHasCompleted</span>(res, ...)</span></code></pre></div>
@@ -3149,15 +3037,6 @@ failure, etc.), <code>dbIsValid()</code> should return
 <p>This method returns if the operation has completed. A
 <code>SELECT</code> query is completed if all rows have been fetched. A
 data manipulation statement is always completed.</p>
-<div id="methods-in-other-packages-14" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><code>RSQLite::dbHasCompleted(&quot;SQLiteResult&quot;)</code></li>
-</ul>
-</div>
 </div>
 <div id="arguments-19" class="section level3">
 <h3>Arguments</h3>
@@ -3252,7 +3131,7 @@ value is unspecified after fetching n rows, but the result value is
 <span id="cb41-13"><a href="#cb41-13" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="get-the-statement-associated-with-a-result-set" class="section level2 container">
+<div id="get-the-statement-associated-with-a-result-set" class="section level2">
 <h2>Get the statement associated with a result set</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a><span class="fu">dbGetStatement</span>(res, ...)</span></code></pre></div>
@@ -3260,15 +3139,6 @@ value is unspecified after fetching n rows, but the result value is
 <h3>Description</h3>
 <p>Returns the statement that was passed to <code>dbSendQuery()</code>
 or <code>dbSendStatement()</code>.</p>
-<div id="methods-in-other-packages-15" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><code>RSQLite::dbGetStatement(&quot;SQLiteResult&quot;)</code></li>
-</ul>
-</div>
 </div>
 <div id="arguments-20" class="section level3">
 <h3>Arguments</h3>
@@ -3307,7 +3177,7 @@ either <code>dbSendQuery()</code> or <code>dbSendStatement()</code>.</p>
 <span id="cb43-8"><a href="#cb43-8" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="the-number-of-rows-fetched-so-far" class="section level2 container">
+<div id="the-number-of-rows-fetched-so-far" class="section level2">
 <h2>The number of rows fetched so far</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a><span class="fu">dbGetRowCount</span>(res, ...)</span></code></pre></div>
@@ -3315,15 +3185,6 @@ either <code>dbSendQuery()</code> or <code>dbSendStatement()</code>.</p>
 <h3>Description</h3>
 <p>Returns the total number of rows actually fetched with calls to
 <code>dbFetch()</code> for this result set.</p>
-<div id="methods-in-other-packages-16" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><code>RSQLite::dbGetRowCount(&quot;SQLiteResult&quot;)</code></li>
-</ul>
-</div>
 </div>
 <div id="arguments-21" class="section level3">
 <h3>Arguments</h3>
@@ -3376,7 +3237,7 @@ before and after calling <code>dbFetch()</code>.</p>
 <span id="cb45-14"><a href="#cb45-14" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="the-number-of-rows-affected" class="section level2 container">
+<div id="the-number-of-rows-affected" class="section level2">
 <h2>The number of rows affected</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a><span class="fu">dbGetRowsAffected</span>(res, ...)</span></code></pre></div>
@@ -3384,15 +3245,6 @@ before and after calling <code>dbFetch()</code>.</p>
 <h3>Description</h3>
 <p>This method returns the number of rows that were added, deleted, or
 updated by a data manipulation statement.</p>
-<div id="methods-in-other-packages-17" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><code>RSQLite::dbGetRowsAffected(&quot;SQLiteResult&quot;)</code></li>
-</ul>
-</div>
 </div>
 <div id="arguments-22" class="section level3">
 <h3>Arguments</h3>
@@ -3468,7 +3320,7 @@ this step is always executed.</p></li>
 <span id="cb47-9"><a href="#cb47-9" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="information-about-result-types" class="section level2 container">
+<div id="information-about-result-types" class="section level2">
 <h2>Information about result types</h2>
 <p>This section describes the behavior of the following method:</p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a><span class="fu">dbColumnInfo</span>(res, ...)</span></code></pre></div>
@@ -3478,15 +3330,6 @@ this step is always executed.</p></li>
 data.frame should have as many rows as there are output fields in the
 result set, and each column in the data.frame describes an aspect of the
 result set field (field name, type, etc.)</p>
-<div id="methods-in-other-packages-18" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><code>RSQLite::dbColumnInfo(&quot;SQLiteResult&quot;)</code></li>
-</ul>
-</div>
 </div>
 <div id="arguments-23" class="section level3">
 <h3>Arguments</h3>
@@ -3579,7 +3422,7 @@ unchanged.</p>
 <span id="cb49-8"><a href="#cb49-8" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="begincommitrollback-sql-transactions" class="section level2 container">
+<div id="begincommitrollback-sql-transactions" class="section level2">
 <h2>Begin/commit/rollback SQL transactions</h2>
 <p>This section describes the behavior of the following methods:</p>
 <div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a><span class="fu">dbBegin</span>(conn, ...)</span>
@@ -3595,17 +3438,6 @@ with <code>dbCommit()</code> or undone with <code>dbRollback()</code>.
 In any case, the DBMS guarantees that either all or none of the
 statements have a permanent effect. This helps ensuring consistency of
 write operations to multiple tables.</p>
-<div id="methods-in-other-packages-19" class="section level4">
-<h4>Methods in other packages</h4>
-<p>This documentation page describes the generics. Refer to the
-documentation pages linked below for the documentation for the methods
-that are implemented in various backend packages.</p>
-<ul>
-<li><p><code>RSQLite::dbBegin(&quot;SQLiteConnection&quot;)</code></p></li>
-<li><p><code>RSQLite::dbCommit(&quot;SQLiteConnection&quot;)</code></p></li>
-<li><p><code>RSQLite::dbRollback(&quot;SQLiteConnection&quot;)</code></p></li>
-</ul>
-</div>
 </div>
 <div id="arguments-24" class="section level3">
 <h3>Arguments</h3>
@@ -3701,7 +3533,7 @@ is set.</p>
 <span id="cb51-30"><a href="#cb51-30" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 </div>
-<div id="self-contained-sql-transactions" class="section level2 container">
+<div id="self-contained-sql-transactions" class="section level2">
 <h2>Self-contained SQL transactions</h2>
 <p>This section describes the behavior of the following methods:</p>
 <div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" tabindex="-1"></a><span class="fu">dbWithTransaction</span>(conn, code, ...)</span>
