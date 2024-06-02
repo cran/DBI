@@ -1,7 +1,7 @@
 Package: DBI
 Title: R Database Interface
-Version: 1.2.2
-Date: 2024-02-09
+Version: 1.2.3
+Date: 2024-06-02
 Authors@R: c(
     person("R Special Interest Group on Databases (R-SIG-DB)", role = "aut"),
     person("Hadley", "Wickham", role = "aut"),
@@ -26,7 +26,7 @@ Config/autostyle/scope: line_breaks
 Config/autostyle/strict: false
 Config/Needs/check: r-dbi/DBItest
 Encoding: UTF-8
-RoxygenNote: 7.3.0.9000
+RoxygenNote: 7.3.1
 Config/Needs/website: r-dbi/DBItest, r-dbi/dbitemplate, adbi,
         AzureKusto, bigrquery, DatabaseConnector, dittodb, duckdb,
         implyr, lazysf, odbc, pool, RAthena, IMSMWU/RClickhouse, RH2,
@@ -34,11 +34,11 @@ Config/Needs/website: r-dbi/DBItest, r-dbi/dbitemplate, adbi,
         RSQLite, sergeant, sparklyr, withr
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2024-02-09 07:30:24 UTC; kirill
+Packaged: 2024-06-02 20:26:05 UTC; kirill
 Author: R Special Interest Group on Databases (R-SIG-DB) [aut],
   Hadley Wickham [aut],
   Kirill Müller [aut, cre] (<https://orcid.org/0000-0002-1416-3412>),
   R Consortium [fnd]
 Maintainer: Kirill Müller <kirill@cynkra.com>
 Repository: CRAN
-Date/Publication: 2024-02-16 13:00:02 UTC
+Date/Publication: 2024-06-02 21:50:02 UTC

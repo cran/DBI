@@ -257,7 +257,7 @@ resources (e.g., memory, sockets).
 
 A warning is issued on garbage collection when a connection has been
 released without calling `dbDisconnect()`, but this cannot be tested
-automatically. A warning is issued immediately when calling
+automatically. At least one warning is issued immediately when calling
 `dbDisconnect()` on an already disconnected or invalid connection.
 
 ### Examples
@@ -404,7 +404,7 @@ active connection established by `dbConnect()`. See also
     result set without retrieving actual data.
 
 4.  Use `dbFetch()` to get the entire result set, a page of results, or
-    the remaining rows. Fetching zero rows is also possible to retrieeve
+    the remaining rows. Fetching zero rows is also possible to retrieve
     the structure of the result set as a data frame. This step can be
     called multiple times. Only forward paging is supported, you need to
     cache previous pages if you need to navigate backwards.
@@ -522,7 +522,7 @@ active connection established by `dbConnect()`. See also
     result set without retrieving actual data.
 
 4.  Use `dbFetch()` to get the entire result set, a page of results, or
-    the remaining rows. Fetching zero rows is also possible to retrieeve
+    the remaining rows. Fetching zero rows is also possible to retrieve
     the structure of the result set as a data frame. This step can be
     called multiple times. Only forward paging is supported, you need to
     cache previous pages if you need to navigate backwards.
@@ -688,7 +688,7 @@ active connection established by `dbConnect()`. See also
     result set without retrieving actual data.
 
 4.  Use `dbFetch()` to get the entire result set, a page of results, or
-    the remaining rows. Fetching zero rows is also possible to retrieeve
+    the remaining rows. Fetching zero rows is also possible to retrieve
     the structure of the result set as a data frame. This step can be
     called multiple times. Only forward paging is supported, you need to
     cache previous pages if you need to navigate backwards.
@@ -855,7 +855,7 @@ active connection established by `dbConnect()`. See also
     result set without retrieving actual data.
 
 4.  Use `dbFetch()` to get the entire result set, a page of results, or
-    the remaining rows. Fetching zero rows is also possible to retrieeve
+    the remaining rows. Fetching zero rows is also possible to retrieve
     the structure of the result set as a data frame. This step can be
     called multiple times. Only forward paging is supported, you need to
     cache previous pages if you need to navigate backwards.
@@ -2500,7 +2500,7 @@ active connection established by `dbConnect()`. See also
     result set without retrieving actual data.
 
 4.  Use `dbFetch()` to get the entire result set, a page of results, or
-    the remaining rows. Fetching zero rows is also possible to retrieeve
+    the remaining rows. Fetching zero rows is also possible to retrieve
     the structure of the result set as a data frame. This step can be
     called multiple times. Only forward paging is supported, you need to
     cache previous pages if you need to navigate backwards.
@@ -2785,7 +2785,7 @@ active connection established by `dbConnect()`. See also
     result set without retrieving actual data.
 
 4.  Use `dbFetch()` to get the entire result set, a page of results, or
-    the remaining rows. Fetching zero rows is also possible to retrieeve
+    the remaining rows. Fetching zero rows is also possible to retrieve
     the structure of the result set as a data frame. This step can be
     called multiple times. Only forward paging is supported, you need to
     cache previous pages if you need to navigate backwards.
@@ -3008,7 +3008,7 @@ dbWithTransaction(
   }
 )
 
-# The code is executed as if in the curent environment:
+# The code is executed as if in the current environment:
 withdrawal
 
 # The changes are committed to the database after successful execution:
@@ -3033,4 +3033,75 @@ dbReadTable(con, "cash")
 dbReadTable(con, "account")
 
 dbDisconnect(con)
+```
+
+## Get DBMS metadata
+
+This section describes the behavior of the following method:
+
+``` r
+dbGetInfo(dbObj, ...)
+```
+
+### Description
+
+Retrieves information on objects of class DBIDriver, DBIConnection or
+DBIResult.
+
+### Arguments
+
+|         |                                                                                    |
+|---------|------------------------------------------------------------------------------------|
+| `dbObj` | An object inheriting from DBIObject, i.e. DBIDriver, DBIConnection, or a DBIResult |
+| `...`   | Other arguments to methods.                                                        |
+
+### Value
+
+For objects of class DBIDriver, `dbGetInfo()` returns a named list that
+contains at least the following components:
+
+- `driver.version`: the package version of the DBI backend,
+
+- `client.version`: the version of the DBMS client library.
+
+For objects of class DBIConnection, `dbGetInfo()` returns a named list
+that contains at least the following components:
+
+- `db.version`: version of the database server,
+
+- `dbname`: database name,
+
+- `username`: username to connect to the database,
+
+- `host`: hostname of the database server,
+
+- `port`: port on the database server. It must not contain a `password`
+  component. Components that are not applicable should be set to `NA`.
+
+For objects of class DBIResult, `dbGetInfo()` returns a named list that
+contains at least the following components:
+
+- `statatment`: the statement used with `dbSendQuery()` or
+  `dbExecute()`, as returned by `dbGetStatement()`,
+
+- `row.count`: the number of rows fetched so far (for queries), as
+  returned by `dbGetRowCount()`,
+
+- `rows.affected`: the number of rows affected (for statements), as
+  returned by `dbGetRowsAffected()`
+
+- `has.completed`: a logical that indicates if the query or statement
+  has completed, as returned by `dbHasCompleted()`.
+
+### Implementation notes
+
+The default implementation for `⁠DBIResult objects⁠` constructs such a
+list from the return values of the corresponding methods,
+`dbGetStatement()`, `dbGetRowCount()`, `dbGetRowsAffected()`, and
+`dbHasCompleted()`.
+
+### Examples
+
+``` r
+dbGetInfo(RSQLite::SQLite())
 ```

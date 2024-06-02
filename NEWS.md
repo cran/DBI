@@ -1,5 +1,19 @@
 <!-- NEWS.md is maintained by https://fledge.cynkra.com, contributors should not edit this file -->
 
+# DBI 1.2.3 (2024-06-02)
+
+## Bug fixes
+
+- `dbQuoteLiteral()` uses the format `"%Y-%m-%d %H-%M-%S%z"` which is understood by more databases (#467, #474).
+
+## Documentation
+
+- Use relational-data.org as a replacement for relational.fit.cvut.cz.
+- Set BS version explicitly for now (@maelle, #478).
+- Include `dbGetInfo()` in the spec (#477).
+- Fix typos (@salim-b, #469, @MichaelChirico, #482).
+
+
 # DBI 1.2.2 (2024-02-09)
 
 ## Bug fixes

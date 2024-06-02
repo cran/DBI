@@ -643,9 +643,9 @@ resources (e.g., memory, sockets).</p>
 <h3>Failure modes</h3>
 <p>A warning is issued on garbage collection when a connection has been
 released without calling <code>dbDisconnect()</code>, but this cannot be
-tested automatically. A warning is issued immediately when calling
-<code>dbDisconnect()</code> on an already disconnected or invalid
-connection.</p>
+tested automatically. At least one warning is issued immediately when
+calling <code>dbDisconnect()</code> on an already disconnected or
+invalid connection.</p>
 </div>
 <div id="examples-3" class="section level3">
 <h3>Examples</h3>
@@ -801,7 +801,7 @@ the database backend.</p></li>
 structure of the result set without retrieving actual data.</p></li>
 <li><p>Use <code>dbFetch()</code> to get the entire result set, a page
 of results, or the remaining rows. Fetching zero rows is also possible
-to retrieeve the structure of the result set as a data frame. This step
+to retrieve the structure of the result set as a data frame. This step
 can be called multiple times. Only forward paging is supported, you need
 to cache previous pages if you need to navigate backwards.</p></li>
 <li><p>Use <code>dbHasCompleted()</code> to tell when you’re done. This
@@ -929,7 +929,7 @@ the database backend.</p></li>
 structure of the result set without retrieving actual data.</p></li>
 <li><p>Use <code>dbFetch()</code> to get the entire result set, a page
 of results, or the remaining rows. Fetching zero rows is also possible
-to retrieeve the structure of the result set as a data frame. This step
+to retrieve the structure of the result set as a data frame. This step
 can be called multiple times. Only forward paging is supported, you need
 to cache previous pages if you need to navigate backwards.</p></li>
 <li><p>Use <code>dbHasCompleted()</code> to tell when you’re done. This
@@ -1088,7 +1088,7 @@ the database backend.</p></li>
 structure of the result set without retrieving actual data.</p></li>
 <li><p>Use <code>dbFetch()</code> to get the entire result set, a page
 of results, or the remaining rows. Fetching zero rows is also possible
-to retrieeve the structure of the result set as a data frame. This step
+to retrieve the structure of the result set as a data frame. This step
 can be called multiple times. Only forward paging is supported, you need
 to cache previous pages if you need to navigate backwards.</p></li>
 <li><p>Use <code>dbHasCompleted()</code> to tell when you’re done. This
@@ -1281,7 +1281,7 @@ the database backend.</p></li>
 structure of the result set without retrieving actual data.</p></li>
 <li><p>Use <code>dbFetch()</code> to get the entire result set, a page
 of results, or the remaining rows. Fetching zero rows is also possible
-to retrieeve the structure of the result set as a data frame. This step
+to retrieve the structure of the result set as a data frame. This step
 can be called multiple times. Only forward paging is supported, you need
 to cache previous pages if you need to navigate backwards.</p></li>
 <li><p>Use <code>dbHasCompleted()</code> to tell when you’re done. This
@@ -3084,7 +3084,7 @@ the database backend.</p></li>
 structure of the result set without retrieving actual data.</p></li>
 <li><p>Use <code>dbFetch()</code> to get the entire result set, a page
 of results, or the remaining rows. Fetching zero rows is also possible
-to retrieeve the structure of the result set as a data frame. This step
+to retrieve the structure of the result set as a data frame. This step
 can be called multiple times. Only forward paging is supported, you need
 to cache previous pages if you need to navigate backwards.</p></li>
 <li><p>Use <code>dbHasCompleted()</code> to tell when you’re done. This
@@ -3380,7 +3380,7 @@ the database backend.</p></li>
 structure of the result set without retrieving actual data.</p></li>
 <li><p>Use <code>dbFetch()</code> to get the entire result set, a page
 of results, or the remaining rows. Fetching zero rows is also possible
-to retrieeve the structure of the result set as a data frame. This step
+to retrieve the structure of the result set as a data frame. This step
 can be called multiple times. Only forward paging is supported, you need
 to cache previous pages if you need to navigate backwards.</p></li>
 <li><p>Use <code>dbHasCompleted()</code> to tell when you’re done. This
@@ -3618,7 +3618,7 @@ environment.</p>
 <span id="cb53-13"><a href="#cb53-13" tabindex="-1"></a>  }</span>
 <span id="cb53-14"><a href="#cb53-14" tabindex="-1"></a>)</span>
 <span id="cb53-15"><a href="#cb53-15" tabindex="-1"></a></span>
-<span id="cb53-16"><a href="#cb53-16" tabindex="-1"></a><span class="co"># The code is executed as if in the curent environment:</span></span>
+<span id="cb53-16"><a href="#cb53-16" tabindex="-1"></a><span class="co"># The code is executed as if in the current environment:</span></span>
 <span id="cb53-17"><a href="#cb53-17" tabindex="-1"></a>withdrawal</span>
 <span id="cb53-18"><a href="#cb53-18" tabindex="-1"></a></span>
 <span id="cb53-19"><a href="#cb53-19" tabindex="-1"></a><span class="co"># The changes are committed to the database after successful execution:</span></span>
@@ -3643,6 +3643,84 @@ environment.</p>
 <span id="cb53-38"><a href="#cb53-38" tabindex="-1"></a><span class="fu">dbReadTable</span>(con, <span class="st">&quot;account&quot;</span>)</span>
 <span id="cb53-39"><a href="#cb53-39" tabindex="-1"></a></span>
 <span id="cb53-40"><a href="#cb53-40" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
+</div>
+</div>
+<div id="get-dbms-metadata" class="section level2">
+<h2>Get DBMS metadata</h2>
+<p>This section describes the behavior of the following method:</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" tabindex="-1"></a><span class="fu">dbGetInfo</span>(dbObj, ...)</span></code></pre></div>
+<div id="description-26" class="section level3">
+<h3>Description</h3>
+<p>Retrieves information on objects of class DBIDriver, DBIConnection or
+DBIResult.</p>
+</div>
+<div id="arguments-26" class="section level3">
+<h3>Arguments</h3>
+<table>
+<colgroup>
+<col width="9%" />
+<col width="90%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>dbObj</code></td>
+<td>An object inheriting from DBIObject, i.e. DBIDriver, DBIConnection,
+or a DBIResult</td>
+</tr>
+<tr class="even">
+<td><code>...</code></td>
+<td>Other arguments to methods.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="value-26" class="section level3">
+<h3>Value</h3>
+<p>For objects of class DBIDriver, <code>dbGetInfo()</code> returns a
+named list that contains at least the following components:</p>
+<ul>
+<li><p><code>driver.version</code>: the package version of the DBI
+backend,</p></li>
+<li><p><code>client.version</code>: the version of the DBMS client
+library.</p></li>
+</ul>
+<p>For objects of class DBIConnection, <code>dbGetInfo()</code> returns
+a named list that contains at least the following components:</p>
+<ul>
+<li><p><code>db.version</code>: version of the database server,</p></li>
+<li><p><code>dbname</code>: database name,</p></li>
+<li><p><code>username</code>: username to connect to the
+database,</p></li>
+<li><p><code>host</code>: hostname of the database server,</p></li>
+<li><p><code>port</code>: port on the database server. It must not
+contain a <code>password</code> component. Components that are not
+applicable should be set to <code>NA</code>.</p></li>
+</ul>
+<p>For objects of class DBIResult, <code>dbGetInfo()</code> returns a
+named list that contains at least the following components:</p>
+<ul>
+<li><p><code>statatment</code>: the statement used with
+<code>dbSendQuery()</code> or <code>dbExecute()</code>, as returned by
+<code>dbGetStatement()</code>,</p></li>
+<li><p><code>row.count</code>: the number of rows fetched so far (for
+queries), as returned by <code>dbGetRowCount()</code>,</p></li>
+<li><p><code>rows.affected</code>: the number of rows affected (for
+statements), as returned by <code>dbGetRowsAffected()</code></p></li>
+<li><p><code>has.completed</code>: a logical that indicates if the query
+or statement has completed, as returned by
+<code>dbHasCompleted()</code>.</p></li>
+</ul>
+</div>
+<div id="implementation-notes-2" class="section level3">
+<h3>Implementation notes</h3>
+<p>The default implementation for <code>⁠DBIResult objects⁠</code>
+constructs such a list from the return values of the corresponding
+methods, <code>dbGetStatement()</code>, <code>dbGetRowCount()</code>,
+<code>dbGetRowsAffected()</code>, and <code>dbHasCompleted()</code>.</p>
+</div>
+<div id="examples-27" class="section level3">
+<h3>Examples</h3>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" tabindex="-1"></a><span class="fu">dbGetInfo</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>())</span></code></pre></div>
 </div>
 </div>
 
