@@ -7,8 +7,8 @@
 dbListTables(conn, ...)
 }
 \arguments{
-\item{conn}{A \linkS4class{DBIConnection} object, as returned by
-\code{\link[=dbConnect]{dbConnect()}}.}
+\item{conn}{A \link[=DBIConnection-class]{DBI::DBIConnection} object,
+as returned by \code{\link[=dbConnect]{dbConnect()}}.}
 
 \item{...}{Other parameters passed on to methods.}
 }
@@ -18,7 +18,7 @@ returns a character vector
 that enumerates all tables
 and views
 in the database.
-Tables added with \code{\link[=dbWriteTable]{dbWriteTable()}} are
+Tables added with \code{\link[DBI:dbWriteTable]{DBI::dbWriteTable()}} are
 part of the list.
 As soon a table is removed from the database,
 it is also removed from the list of database tables.
@@ -44,7 +44,7 @@ or invalid connection.
 }
 
 \examples{
-\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
 dbListTables(con)

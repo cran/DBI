@@ -38,8 +38,8 @@
 #' Subclasses should override this method only if they provide some sort of
 #' performance optimization.
 #'
-#' @param conn A [DBIConnection-class] object, as returned by
-#'   [dbConnect()].
+#' @param conn A [DBI::DBIConnection][DBIConnection-class] object,
+#'   as returned by [dbConnect()].
 #' @param statement a character string containing SQL.
 #' @param ... Other parameters passed on to methods.
 #' @family DBIConnection generics
@@ -54,6 +54,7 @@
 #' dbGetQueryArrow(con, "SELECT * FROM mtcars")
 #'
 #' dbDisconnect(con)
-setGeneric("dbGetQueryArrow",
-  def = function(conn, statement, ...) standardGeneric("dbGetQueryArrow")
-)
+setGeneric("dbGetQueryArrow", def = function(conn, statement, ...) {
+  otel_query_local_active_span(conn, statement)
+  standardGeneric("dbGetQueryArrow")
+})

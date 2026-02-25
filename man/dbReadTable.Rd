@@ -7,8 +7,8 @@
 dbReadTable(conn, name, ...)
 }
 \arguments{
-\item{conn}{A \linkS4class{DBIConnection} object, as returned by
-\code{\link[=dbConnect]{dbConnect()}}.}
+\item{conn}{A \link[=DBIConnection-class]{DBI::DBIConnection} object,
+as returned by \code{\link[=dbConnect]{dbConnect()}}.}
 
 \item{name}{The table name, passed on to \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}}. Options are:
 \itemize{
@@ -24,13 +24,13 @@ given verbatim, e.g. \code{SQL('"my_schema"."table_name"')}
 }
 \value{
 \code{dbReadTable()} returns a data frame that contains the complete data
-from the remote table, effectively the result of calling \code{\link[=dbGetQuery]{dbGetQuery()}} with
+from the remote table, effectively the result of calling \code{\link[DBI:dbGetQuery]{DBI::dbGetQuery()}} with
 \verb{SELECT * FROM <name>}.
 
 An empty table is returned as a data frame with zero rows.
 
 The presence of \link{rownames} depends on the \code{row.names} argument,
-see \code{\link[=sqlColumnToRownames]{sqlColumnToRownames()}} for details:
+see \code{\link[DBI:rownames]{DBI::sqlColumnToRownames()}} for details:
 \itemize{
 \item If \code{FALSE} or \code{NULL}, the returned data frame doesn't have row names.
 \item If \code{TRUE}, a column named "row_names" is converted to row names.
@@ -78,7 +78,7 @@ An error is raised if \code{row.names} is set to a string and no corresponding c
 An error is raised when calling this method for a closed
 or invalid connection.
 An error is raised
-if \code{name} cannot be processed with \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}}
+if \code{name} cannot be processed with \code{\link[DBI:dbQuoteIdentifier]{DBI::dbQuoteIdentifier()}}
 or if this results in a non-scalar.
 Unsupported values for \code{row.names} and \code{check.names}
 (non-scalars,
@@ -113,13 +113,13 @@ to support databases that allow non-syntactic names for their objects:
 \item If an unquoted table name as string: \code{dbReadTable()} will do the
 quoting,
 perhaps by calling \code{dbQuoteIdentifier(conn, x = name)}
-\item If the result of a call to \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}}: no more quoting is done
+\item If the result of a call to \code{\link[DBI:dbQuoteIdentifier]{DBI::dbQuoteIdentifier()}}: no more quoting is done
 }
 
 }
 
 \examples{
-\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
 dbWriteTable(con, "mtcars", mtcars[1:10, ])

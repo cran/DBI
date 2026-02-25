@@ -7,11 +7,11 @@
 dbCanConnect(drv, ...)
 }
 \arguments{
-\item{drv}{an object that inherits from \linkS4class{DBIDriver},
-or an existing \linkS4class{DBIConnection}
+\item{drv}{An object that inherits from \link[=DBIDriver-class]{DBI::DBIDriver},
+or an existing \link[=DBIConnection-class]{DBI::DBIConnection}
 object (in order to clone an existing connection).}
 
-\item{...}{authentication arguments needed by the DBMS instance; these
+\item{...}{Authentication arguments needed by the DBMS instance; these
 typically include \code{user}, \code{password}, \code{host}, \code{port}, \code{dbname}, etc.
 For details see the appropriate \code{DBIDriver}.}
 }
@@ -28,7 +28,7 @@ a lighter-weight check.
 \Sexpr[results=rd,stage=render]{DBI:::methods_as_rd("dbCanConnect")}
 }
 \examples{
-\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 # SQLite only needs a path to the database. (Here, ":memory:" is a special
 # path that creates an in-memory database.) Other database drivers
 # will require more details (like user, password, host, port, etc.)

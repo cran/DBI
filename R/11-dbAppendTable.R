@@ -36,6 +36,18 @@
 #' dbAppendTable(con, "iris", iris)
 #' dbReadTable(con, "iris")
 #' dbDisconnect(con)
-setGeneric("dbAppendTable",
-  def = function(conn, name, value, ..., row.names = NULL) standardGeneric("dbAppendTable")
+setGeneric(
+  "dbAppendTable",
+  def = function(conn, name, value, ..., row.names = NULL) {
+    otel_local_active_span(
+      "INSERT INTO",
+      conn,
+      label = .dbi_get_collection_name(name, conn),
+      attributes = list(
+        db.collection.name = .dbi_get_collection_name(name, conn),
+        db.operation.name = "INSERT INTO"
+      )
+    )
+    standardGeneric("dbAppendTable")
+  }
 )

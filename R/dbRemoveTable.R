@@ -24,6 +24,15 @@
 #' dbExistsTable(con, "iris")
 #'
 #' dbDisconnect(con)
-setGeneric("dbRemoveTable",
-  def = function(conn, name, ...) standardGeneric("dbRemoveTable")
-)
+setGeneric("dbRemoveTable", def = function(conn, name, ...) {
+  otel_local_active_span(
+    "DROP TABLE",
+    conn,
+    label = .dbi_get_collection_name(name, conn),
+    attributes = list(
+      db.collection.name = .dbi_get_collection_name(name, conn),
+      db.operation.name = "DROP TABLE"
+    )
+  )
+  standardGeneric("dbRemoveTable")
+})

@@ -7,8 +7,8 @@
 dbQuoteIdentifier(conn, x, ...)
 }
 \arguments{
-\item{conn}{A \linkS4class{DBIConnection} object, as returned by
-\code{\link[=dbConnect]{dbConnect()}}.}
+\item{conn}{A \link[=DBIConnection-class]{DBI::DBIConnection} object,
+as returned by \code{\link[=dbConnect]{dbConnect()}}.}
 
 \item{x}{A character vector, \link{SQL} or \link{Id} object to quote as identifier.}
 
@@ -22,8 +22,8 @@ The names of the input argument are preserved in the output.
 When passing the returned object again to \code{dbQuoteIdentifier()}
 as \code{x}
 argument, it is returned unchanged.
-Passing objects of class \link{SQL} should also return them unchanged.
-(For backends it may be most convenient to return \link{SQL} objects
+Passing objects of class \link[DBI:SQL]{DBI::SQL} should also return them unchanged.
+(For backends it may be most convenient to return \link[DBI:SQL]{DBI::SQL} objects
 to achieve this behavior, but this is not required.)
 }
 \description{
@@ -46,7 +46,7 @@ but not for an empty string.
 \section{Specification}{
 
 
-Calling \code{\link[=dbGetQuery]{dbGetQuery()}} for a query of the format \verb{SELECT 1 AS ...}
+Calling \code{\link[DBI:dbGetQuery]{DBI::dbGetQuery()}} for a query of the format \verb{SELECT 1 AS ...}
 returns a data frame with the identifier, unquoted, as column name.
 Quoted identifiers can be used as table and column names in SQL queries,
 in particular in queries like \verb{SELECT 1 AS ...}

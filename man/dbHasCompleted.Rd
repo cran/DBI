@@ -7,16 +7,16 @@
 dbHasCompleted(res, ...)
 }
 \arguments{
-\item{res}{An object inheriting from \linkS4class{DBIResult}.}
+\item{res}{An object inheriting from \link[=DBIResult-class]{DBI::DBIResult}.}
 
 \item{...}{Other arguments passed on to methods.}
 }
 \value{
 \code{dbHasCompleted()} returns a logical scalar.
-For a query initiated by \code{\link[=dbSendQuery]{dbSendQuery()}} with non-empty result set,
+For a query initiated by \code{\link[DBI:dbSendQuery]{DBI::dbSendQuery()}} with non-empty result set,
 \code{dbHasCompleted()} returns \code{FALSE} initially
-and \code{TRUE} after calling \code{\link[=dbFetch]{dbFetch()}} without limit.
-For a query initiated by \code{\link[=dbSendStatement]{dbSendStatement()}},
+and \code{TRUE} after calling \code{\link[DBI:dbFetch]{DBI::dbFetch()}} without limit.
+For a query initiated by \code{\link[DBI:dbSendStatement]{DBI::dbSendStatement()}},
 \code{dbHasCompleted()} always returns \code{TRUE}.
 }
 \description{
@@ -68,7 +68,7 @@ to ensure that this step is always executed.
 
 
 Attempting to query completion status for a result set cleared with
-\code{\link[=dbClearResult]{dbClearResult()}} gives an error.
+\code{\link[DBI:dbClearResult]{DBI::dbClearResult()}} gives an error.
 
 }
 
@@ -90,7 +90,7 @@ row.
 }
 
 \examples{
-\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
 dbWriteTable(con, "mtcars", mtcars)

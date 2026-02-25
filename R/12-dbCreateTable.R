@@ -34,6 +34,18 @@
 #' dbCreateTable(con, "iris", iris)
 #' dbReadTable(con, "iris")
 #' dbDisconnect(con)
-setGeneric("dbCreateTable",
-  def = function(conn, name, fields, ..., row.names = NULL, temporary = FALSE) standardGeneric("dbCreateTable")
+setGeneric(
+  "dbCreateTable",
+  def = function(conn, name, fields, ..., row.names = NULL, temporary = FALSE) {
+    otel_local_active_span(
+      "CREATE TABLE",
+      conn,
+      label = .dbi_get_collection_name(name, conn),
+      attributes = list(
+        db.collection.name = .dbi_get_collection_name(name, conn),
+        db.operation.name = "CREATE TABLE"
+      )
+    )
+    standardGeneric("dbCreateTable")
+  }
 )

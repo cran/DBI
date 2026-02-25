@@ -7,8 +7,8 @@
 dbReadTableArrow(conn, name, ...)
 }
 \arguments{
-\item{conn}{A \linkS4class{DBIConnection} object, as returned by
-\code{\link[=dbConnect]{dbConnect()}}.}
+\item{conn}{A \link[=DBIConnection-class]{DBI::DBIConnection} object,
+as returned by \code{\link[=dbConnect]{dbConnect()}}.}
 
 \item{name}{The table name, passed on to \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}}. Options are:
 \itemize{
@@ -24,7 +24,7 @@ given verbatim, e.g. \code{SQL('"my_schema"."table_name"')}
 }
 \value{
 \code{dbReadTableArrow()} returns an Arrow object that contains the complete data
-from the remote table, effectively the result of calling \code{\link[=dbGetQueryArrow]{dbGetQueryArrow()}} with
+from the remote table, effectively the result of calling \code{\link[DBI:dbGetQueryArrow]{DBI::dbGetQueryArrow()}} with
 \verb{SELECT * FROM <name>}.
 
 An empty table is returned as an Arrow object with zero rows.
@@ -51,7 +51,7 @@ An error is raised if the table does not exist.
 An error is raised when calling this method for a closed
 or invalid connection.
 An error is raised
-if \code{name} cannot be processed with \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}} or
+if \code{name} cannot be processed with \code{\link[DBI:dbQuoteIdentifier]{DBI::dbQuoteIdentifier()}} or
 if this results in a non-scalar.
 
 }
@@ -65,13 +65,13 @@ to support databases that allow non-syntactic names for their objects:
 \item If an unquoted table name as string: \code{dbReadTableArrow()} will do the
 quoting,
 perhaps by calling \code{dbQuoteIdentifier(conn, x = name)}
-\item If the result of a call to \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}}: no more quoting is done
+\item If the result of a call to \code{\link[DBI:dbQuoteIdentifier]{DBI::dbQuoteIdentifier()}}: no more quoting is done
 }
 
 }
 
 \examples{
-\dontshow{if (requireNamespace("RSQLite", quietly = TRUE) && requireNamespace("nanoarrow", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (requireNamespace("RSQLite", quietly = TRUE) && requireNamespace("nanoarrow", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 # Read data as Arrow table
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 

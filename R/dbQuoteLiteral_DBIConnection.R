@@ -19,7 +19,7 @@ dbQuoteLiteral_DBIConnection <- function(conn, x, ...) {
   if (inherits(x, "POSIXt")) {
     return(dbQuoteString(
       conn,
-      strftime(as.POSIXct(x), "%Y-%m-%d %H-%M-%S%z")
+      strftime(as.POSIXct(x), "%Y-%m-%d %H:%M:%S%z")
     ))
   }
 
@@ -58,4 +58,8 @@ dbQuoteLiteral_DBIConnection <- function(conn, x, ...) {
 }
 #' @rdname hidden_aliases
 #' @export
-setMethod("dbQuoteLiteral", signature("DBIConnection"), dbQuoteLiteral_DBIConnection)
+setMethod(
+  "dbQuoteLiteral",
+  signature("DBIConnection"),
+  dbQuoteLiteral_DBIConnection
+)

@@ -36,6 +36,12 @@
 #' dbReadTable(con, "mtcars")
 #'
 #' dbDisconnect(con)
-setGeneric("dbWriteTableArrow",
-  def = function(conn, name, value, ...) standardGeneric("dbWriteTableArrow")
-)
+setGeneric("dbWriteTableArrow", def = function(conn, name, value, ...) {
+  otel_local_active_span(
+    "dbWriteTableArrow",
+    conn,
+    label = .dbi_get_collection_name(name, conn),
+    attributes = list(db.collection.name = .dbi_get_collection_name(name, conn))
+  )
+  standardGeneric("dbWriteTableArrow")
+})

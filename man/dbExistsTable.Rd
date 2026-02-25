@@ -7,8 +7,8 @@
 dbExistsTable(conn, name, ...)
 }
 \arguments{
-\item{conn}{A \linkS4class{DBIConnection} object, as returned by
-\code{\link[=dbConnect]{dbConnect()}}.}
+\item{conn}{A \link[=DBIConnection-class]{DBI::DBIConnection} object,
+as returned by \code{\link[=dbConnect]{dbConnect()}}.}
 
 \item{name}{The table name, passed on to \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}}. Options are:
 \itemize{
@@ -39,7 +39,7 @@ Returns if a table given by name exists in the database.
 An error is raised when calling this method for a closed
 or invalid connection.
 An error is also raised
-if \code{name} cannot be processed with \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}} or
+if \code{name} cannot be processed with \code{\link[DBI:dbQuoteIdentifier]{DBI::dbQuoteIdentifier()}} or
 if this results in a non-scalar.
 
 }
@@ -53,15 +53,15 @@ to support databases that allow non-syntactic names for their objects:
 \item If an unquoted table name as string: \code{dbExistsTable()} will do the
 quoting,
 perhaps by calling \code{dbQuoteIdentifier(conn, x = name)}
-\item If the result of a call to \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}}: no more quoting is done
+\item If the result of a call to \code{\link[DBI:dbQuoteIdentifier]{DBI::dbQuoteIdentifier()}}: no more quoting is done
 }
 
-For all tables listed by \code{\link[=dbListTables]{dbListTables()}}, \code{dbExistsTable()} returns \code{TRUE}.
+For all tables listed by \code{\link[DBI:dbListTables]{DBI::dbListTables()}}, \code{dbExistsTable()} returns \code{TRUE}.
 
 }
 
 \examples{
-\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
 dbExistsTable(con, "iris")

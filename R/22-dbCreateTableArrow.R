@@ -32,6 +32,18 @@
 #' dbCreateTableArrow(con, "df", nanoarrow::infer_nanoarrow_schema(ptype))
 #' dbReadTable(con, "df")
 #' dbDisconnect(con)
-setGeneric("dbCreateTableArrow",
-  def = function(conn, name, value, ..., temporary = FALSE) standardGeneric("dbCreateTableArrow")
+setGeneric(
+  "dbCreateTableArrow",
+  def = function(conn, name, value, ..., temporary = FALSE) {
+    otel_local_active_span(
+      "CREATE TABLE",
+      conn,
+      label = .dbi_get_collection_name(name, conn),
+      attributes = list(
+        db.collection.name = .dbi_get_collection_name(name, conn),
+        db.operation.name = "CREATE TABLE"
+      )
+    )
+    standardGeneric("dbCreateTableArrow")
+  }
 )

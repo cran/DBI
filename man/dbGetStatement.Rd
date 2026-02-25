@@ -7,14 +7,14 @@
 dbGetStatement(res, ...)
 }
 \arguments{
-\item{res}{An object inheriting from \linkS4class{DBIResult}.}
+\item{res}{An object inheriting from \link[=DBIResult-class]{DBI::DBIResult}.}
 
 \item{...}{Other arguments passed on to methods.}
 }
 \value{
 \code{dbGetStatement()} returns a string, the query used in
-either \code{\link[=dbSendQuery]{dbSendQuery()}} or
-\code{\link[=dbSendStatement]{dbSendStatement()}}.
+either \code{\link[DBI:dbSendQuery]{DBI::dbSendQuery()}} or
+\code{\link[DBI:dbSendStatement]{DBI::dbSendStatement()}}.
 }
 \description{
 Returns the statement that was passed to \code{\link[=dbSendQuery]{dbSendQuery()}}
@@ -26,12 +26,12 @@ or \code{\link[=dbSendStatement]{dbSendStatement()}}.
 
 
 Attempting to query the statement for a result set cleared with
-\code{\link[=dbClearResult]{dbClearResult()}} gives an error.
+\code{\link[DBI:dbClearResult]{DBI::dbClearResult()}} gives an error.
 
 }
 
 \examples{
-\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
 dbWriteTable(con, "mtcars", mtcars)

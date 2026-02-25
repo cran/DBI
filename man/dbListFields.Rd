@@ -7,8 +7,8 @@
 dbListFields(conn, name, ...)
 }
 \arguments{
-\item{conn}{A \linkS4class{DBIConnection} object, as returned by
-\code{\link[=dbConnect]{dbConnect()}}.}
+\item{conn}{A \link[=DBIConnection-class]{DBI::DBIConnection} object,
+as returned by \code{\link[=dbConnect]{dbConnect()}}.}
 
 \item{name}{The table name, passed on to \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}}. Options are:
 \itemize{
@@ -55,9 +55,9 @@ or invalid connection.
 The \code{name} argument can be
 \itemize{
 \item a string
-\item the return value of \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}}
+\item the return value of \code{\link[DBI:dbQuoteIdentifier]{DBI::dbQuoteIdentifier()}}
 \item a value from the \code{table} column from the return value of
-\code{\link[=dbListObjects]{dbListObjects()}} where \code{is_prefix} is \code{FALSE}
+\code{\link[DBI:dbListObjects]{DBI::dbListObjects()}} where \code{is_prefix} is \code{FALSE}
 }
 
 A column named \code{row_names} is treated like any other column.
@@ -65,7 +65,7 @@ A column named \code{row_names} is treated like any other column.
 }
 
 \examples{
-\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
 dbWriteTable(con, "mtcars", mtcars)

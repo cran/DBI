@@ -45,6 +45,12 @@
 #' # No row names
 #' dbWriteTable(con, "mtcars", mtcars[1:10, ], overwrite = TRUE, row.names = FALSE)
 #' dbReadTable(con, "mtcars")
-setGeneric("dbWriteTable",
-  def = function(conn, name, value, ...) standardGeneric("dbWriteTable")
-)
+setGeneric("dbWriteTable", def = function(conn, name, value, ...) {
+  otel_local_active_span(
+    "dbWriteTable",
+    conn,
+    label = .dbi_get_collection_name(name, conn),
+    attributes = list(db.collection.name = .dbi_get_collection_name(name, conn))
+  )
+  standardGeneric("dbWriteTable")
+})

@@ -7,19 +7,19 @@
 dbGetRowsAffected(res, ...)
 }
 \arguments{
-\item{res}{An object inheriting from \linkS4class{DBIResult}.}
+\item{res}{An object inheriting from \link[=DBIResult-class]{DBI::DBIResult}.}
 
 \item{...}{Other arguments passed on to methods.}
 }
 \value{
 \code{dbGetRowsAffected()} returns a scalar number (integer or numeric),
 the number of rows affected by a data manipulation statement
-issued with \code{\link[=dbSendStatement]{dbSendStatement()}}.
+issued with \code{\link[DBI:dbSendStatement]{DBI::dbSendStatement()}}.
 The value is available directly after the call
-and does not change after calling \code{\link[=dbFetch]{dbFetch()}}.
+and does not change after calling \code{\link[DBI:dbFetch]{DBI::dbFetch()}}.
 \code{NA_integer_} or \code{NA_numeric_} are allowed if the number of rows affected is not known.
 
-For queries issued with \code{\link[=dbSendQuery]{dbSendQuery()}},
+For queries issued with \code{\link[DBI:dbSendQuery]{DBI::dbSendQuery()}},
 zero is returned before
 and after the call to \code{dbFetch()}.
 \code{NA} values are not allowed.
@@ -64,12 +64,12 @@ to ensure that this step is always executed.
 
 
 Attempting to get the rows affected for a result set cleared with
-\code{\link[=dbClearResult]{dbClearResult()}} gives an error.
+\code{\link[DBI:dbClearResult]{DBI::dbClearResult()}} gives an error.
 
 }
 
 \examples{
-\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
 dbWriteTable(con, "mtcars", mtcars)

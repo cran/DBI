@@ -7,8 +7,8 @@
 dbWriteTable(conn, name, value, ...)
 }
 \arguments{
-\item{conn}{A \linkS4class{DBIConnection} object, as returned by
-\code{\link[=dbConnect]{dbConnect()}}.}
+\item{conn}{A \link[=DBIConnection-class]{DBI::DBIConnection} object,
+as returned by \code{\link[=dbConnect]{dbConnect()}}.}
 
 \item{name}{The table name, passed on to \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}}. Options are:
 \itemize{
@@ -58,7 +58,7 @@ an error is raised; the remote table remains unchanged.
 An error is raised when calling this method for a closed
 or invalid connection.
 An error is also raised
-if \code{name} cannot be processed with \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}} or
+if \code{name} cannot be processed with \code{\link[DBI:dbQuoteIdentifier]{DBI::dbQuoteIdentifier()}} or
 if this results in a non-scalar.
 Invalid values for the additional arguments \code{row.names},
 \code{overwrite}, \code{append}, \code{field.types}, and \code{temporary}
@@ -100,7 +100,7 @@ to support databases that allow non-syntactic names for their objects:
 \itemize{
 \item If an unquoted table name as string: \code{dbWriteTable()} will do the quoting,
 perhaps by calling \code{dbQuoteIdentifier(conn, x = name)}
-\item If the result of a call to \code{\link[=dbQuoteIdentifier]{dbQuoteIdentifier()}}: no more quoting is done
+\item If the result of a call to \code{\link[DBI:dbQuoteIdentifier]{DBI::dbQuoteIdentifier()}}: no more quoting is done
 }
 
 The \code{value} argument must be a data frame
@@ -130,7 +130,7 @@ also for table names
 and column names.
 
 The following data types must be supported at least,
-and be read identically with \code{\link[=dbReadTable]{dbReadTable()}}:
+and be read identically with \code{\link[DBI:dbReadTable]{DBI::dbReadTable()}}:
 \itemize{
 \item integer
 \item numeric
@@ -176,10 +176,10 @@ The \code{field.types} argument must be a named character vector with at most
 one entry for each column.
 It indicates the SQL data type to be used for a new column.
 If a column is missed from \code{field.types}, the type is inferred
-from the input data with \code{\link[=dbDataType]{dbDataType()}}.
+from the input data with \code{\link[DBI:dbDataType]{DBI::dbDataType()}}.
 
 The interpretation of \link{rownames} depends on the \code{row.names} argument,
-see \code{\link[=sqlRownamesToColumn]{sqlRownamesToColumn()}} for details:
+see \code{\link[DBI:rownames]{DBI::sqlRownamesToColumn()}} for details:
 \itemize{
 \item If \code{FALSE} or \code{NULL}, row names are ignored.
 \item If \code{TRUE}, row names are converted to a column named "row_names",
@@ -196,7 +196,7 @@ The default is \code{row.names = FALSE}.
 }
 
 \examples{
-\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (requireNamespace("RSQLite", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
 dbWriteTable(con, "mtcars", mtcars[1:5, ])

@@ -34,7 +34,18 @@
 #' dbReadTable(con, "mtcars")
 #'
 #' dbDisconnect(con)
-setGeneric("dbReadTable",
-  def = function(conn, name, ...) standardGeneric("dbReadTable"),
+setGeneric(
+  "dbReadTable",
+  def = function(conn, name, ...) {
+    otel_local_active_span(
+      "dbReadTable",
+      conn,
+      label = .dbi_get_collection_name(name, conn),
+      attributes = list(
+        db.collection.name = .dbi_get_collection_name(name, conn)
+      )
+    )
+    standardGeneric("dbReadTable")
+  },
   valueClass = "data.frame"
 )
